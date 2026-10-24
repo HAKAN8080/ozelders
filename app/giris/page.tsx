@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { GirisForm } from "@/app/giris/giris-form";
 
@@ -18,7 +19,9 @@ export default function GirisPage() {
             Kayıt olduğunuz e-posta ve şifreyle giriş yapın.
           </p>
         </div>
-        <GirisForm />
+        <Suspense>
+          <GirisForm />
+        </Suspense>
         <Link href="/" className="text-primary underline-offset-4 hover:underline">
           Ana sayfa
         </Link>

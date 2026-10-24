@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { KayitForm } from "@/app/kayit/kayit-form";
@@ -36,10 +37,12 @@ export default async function KayitPage() {
             </Link>
           </div>
         ) : (
-          <KayitForm
-            mode={session.userId ? "complete" : "signup"}
-            email={session.email}
-          />
+          <Suspense>
+            <KayitForm
+              mode={session.userId ? "complete" : "signup"}
+              email={session.email}
+            />
+          </Suspense>
         )}
       </div>
     </main>

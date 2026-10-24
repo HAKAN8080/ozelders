@@ -82,6 +82,179 @@ export type Database = {
         }
         Relationships: []
       }
+      exam_attempts: {
+        Row: {
+          access_token: string
+          answers: Json
+          created_at: string
+          display_name: string | null
+          exam_id: string
+          grade: number | null
+          id: string
+          results: Json
+          student_id: string | null
+          total_net: number
+          user_id: string | null
+        }
+        Insert: {
+          access_token?: string
+          answers: Json
+          created_at?: string
+          display_name?: string | null
+          exam_id: string
+          grade?: number | null
+          id?: string
+          results: Json
+          student_id?: string | null
+          total_net: number
+          user_id?: string | null
+        }
+        Update: {
+          access_token?: string
+          answers?: Json
+          created_at?: string
+          display_name?: string | null
+          exam_id?: string
+          grade?: number | null
+          id?: string
+          results?: Json
+          student_id?: string | null
+          total_net?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_attempts_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_attempts_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_attempts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_questions: {
+        Row: {
+          correct: string
+          exam_id: string
+          kazanim: string | null
+          no: number
+          section: string
+          topic: string | null
+        }
+        Insert: {
+          correct: string
+          exam_id: string
+          kazanim?: string | null
+          no: number
+          section: string
+          topic?: string | null
+        }
+        Update: {
+          correct?: string
+          exam_id?: string
+          kazanim?: string | null
+          no?: number
+          section?: string
+          topic?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_questions_exam_id_section_fkey"
+            columns: ["exam_id", "section"]
+            isOneToOne: false
+            referencedRelation: "exam_sections"
+            referencedColumns: ["exam_id", "code"]
+          },
+        ]
+      }
+      exam_sections: {
+        Row: {
+          code: string
+          exam_id: string
+          name: string
+          position: number
+          question_count: number
+        }
+        Insert: {
+          code: string
+          exam_id: string
+          name: string
+          position: number
+          question_count?: number
+        }
+        Update: {
+          code?: string
+          exam_id?: string
+          name?: string
+          position?: number
+          question_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_sections_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exams: {
+        Row: {
+          booklet_label: string | null
+          booklet_url: string | null
+          created_at: string
+          duration_min: number
+          grade: number
+          id: string
+          published_at: string | null
+          slug: string
+          status: Database["public"]["Enums"]["exam_status"]
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          booklet_label?: string | null
+          booklet_url?: string | null
+          created_at?: string
+          duration_min: number
+          grade?: number
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["exam_status"]
+          subtitle?: string | null
+          title: string
+        }
+        Update: {
+          booklet_label?: string | null
+          booklet_url?: string | null
+          created_at?: string
+          duration_min?: number
+          grade?: number
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["exam_status"]
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           created_at: string
@@ -1080,6 +1253,10 @@ export type Database = {
         Args: { p_new_teacher: string; p_package: string; p_reason: string }
         Returns: number
       }
+      claim_exam_attempt: {
+        Args: { p_attempt: string; p_token: string }
+        Returns: boolean
+      }
       current_fee: {
         Args: { p_on?: string; p_teacher: string }
         Returns: number
@@ -1091,15 +1268,29 @@ export type Database = {
           recording_path: string
         }[]
       }
+      get_exam_result: {
+        Args: { p_attempt: string; p_token?: string }
+        Returns: Json
+      }
       is_admin: { Args: never; Returns: boolean }
       is_parent_of: { Args: { p_student: string }; Returns: boolean }
       mark_recordings_deleted: { Args: { p_ids: string[] }; Returns: number }
       package_used: { Args: { p_package: string }; Returns: number }
       payout_period: { Args: { p_ts: string }; Returns: string }
+      submit_exam_attempt: {
+        Args: {
+          p_answers: Json
+          p_exam: string
+          p_grade?: number
+          p_name?: string
+        }
+        Returns: Json
+      }
       teaches_student: { Args: { p_student: string }; Returns: boolean }
     }
     Enums: {
       assessment_type: "tani" | "ara" | "donem_sonu"
+      exam_status: "taslak" | "yayinda" | "arsiv"
       lesson_status:
         | "planlandi"
         | "tamamlandi"
@@ -1266,6 +1457,7 @@ export const Constants = {
   public: {
     Enums: {
       assessment_type: ["tani", "ara", "donem_sonu"],
+      exam_status: ["taslak", "yayinda", "arsiv"],
       lesson_status: [
         "planlandi",
         "tamamlandi",

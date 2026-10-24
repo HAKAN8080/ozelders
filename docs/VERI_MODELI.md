@@ -227,3 +227,25 @@ Bulgularını listele, sonra düzelt.
 - Çocuk verisi minimum: ad + sınıf. Ek alan eklemeden önce sor.
 - Tüm zamanlar `timestamptz`, gösterim `Europe/Istanbul`.
 - Fiyat ve kurallar `package_products`, `pricing_settings`, `tier_rates` tablolarında; kodda sabit sayı yok.
+
+---
+
+## 8. Sınav modülü (ücretsiz denemeler)
+
+**Tablolar:** `exams` (sınav, kitapçık bağlantısı, süre, durum) · `exam_sections` (Matematik, Fen; soru sayısı) · `exam_questions` (cevap anahtarı + konu) · `exam_attempts` (öğrencinin cevapları, sonuç, toplam net).
+
+**Güvenlik kuralları**
+- `exam_questions` (cevap anahtarı) **hiçbir istemciye açık değil**. Puanlama sadece `submit_exam_attempt()` içinde, veritabanında yapılır.
+- Kitapçık PDF'i **barındırılmaz**; `booklet_url` resmi kaynağa yeni sekmede açılır.
+- Kayıtsız kullanıcı deneme çözebilir. Sonuca yalnızca kendisine verilen gizli `access_token` ile erişir (`/deneme/[slug]/sonuc/[id]?t=...`).
+- Net, sıralama herkese; **konu konu rapor ve soru soru cevaplar yalnızca giriş yapmış kullanıcıya** (veli hesabı kayıt teşviki).
+- Giriş yapan kullanıcı kayıtsız çözdüğü denemeyi `claim_exam_attempt()` ile hesabına bağlar.
+- Ad alanı sadece harf ve boşluk kabul eder, 40 karakterle sınırlı; soyad istenmez.
+
+**Akış:** `/deneme` → `/deneme/[slug]` (kitapçığı aç, süreyi başlat, optik form; cevaplar tarayıcıda saklanır) → `/deneme/[slug]/sonuc/[id]`.
+
+**Net:** doğru − yanlış / 3 (LGS kuralı).
+
+**İlk sınav:** `2026-lgs-sayisal` (A kitapçığı, 40 soru, 80 dk). Cevap anahtarı kitapçığın son sayfasından alındı ve doğrulandı. Konular ünite düzeyinde yaklaşık eşleştirmedir; admin ekranında düzeltilecek.
+
+**Sıradaki:** admin ekranı (PDF yükle → cevap anahtarı ve konu önerisi → kontrol tablosu → yayınla).

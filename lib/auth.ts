@@ -164,3 +164,14 @@ function metaRecord(value: unknown): Record<string, unknown> {
   }
   return {};
 }
+
+/**
+ * Giriş/kayıt sonrası dönülecek adres. Sadece site içi yollar kabul edilir
+ * (açık yönlendirme saldırısına karşı: "//evil.com", "/\\evil.com" reddedilir).
+ */
+export function safeNext(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const v = value.trim();
+  if (!v.startsWith("/") || v.startsWith("//") || v.startsWith("/\\") || v.length > 300) return null;
+  return v;
+}

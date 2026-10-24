@@ -30,9 +30,10 @@ export async function getActiveProducts(): Promise<Product[]> {
     .eq("is_active", true)
     .order("price", { ascending: true });
 
-  // Hata önbelleğe alınmasın diye fırlatılır; sayfa yakalayıp mesaj gösterir.
-  if (error || !data) {
-    throw new Error(`Paketler okunamadı: ${error?.message ?? "veri yok"}`);
+  if (error || !Array.isArray(data)) {
+    // Geçici hata: boş liste kısa süre önbellekte kalır, kısa sürede yeniden denenir.
+    cacheLife("seconds");
+    return [];
   }
   return data;
 }

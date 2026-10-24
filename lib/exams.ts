@@ -1,0 +1,104 @@
+import { createClient } from "@supabase/supabase-js";
+import { cacheLife, cacheTag } from "next/cache";
+
+import type { Database } from "@/lib/database.types";
+import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
+
+export type ExamSection = { code: string; name: string; position: number; question_count: number };
+export type PublicExam = {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  grade: number;
+  booklet_url: string | null;
+  booklet_label: string | null;
+  duration_min: number;
+  published_at: string | null;
+  sections: ExamSection[];
+};
+
+export type SectionResult = {
+  code: string;
+  name: string;
+  dogru: number;
+  yanlis: number;
+  bos: number;
+  net: number;
+};
+export type TopicResult = {
+  section: string;
+  topic: string;
+  questions: string;
+  total: number;
+  correct: number;
+};
+export type QuestionDetail = {
+  section: string;
+  no: number;
+  correct: string;
+  topic: string | null;
+  answer: string | null;
+};
+export type ExamResult = {
+  exam: { slug: string; title: string; subtitle: string | null };
+  name: string | null;
+  created_at: string;
+  results: SectionResult[];
+  total_net: number;
+  rank: number;
+  participants: number;
+  is_owner: boolean;
+  claimable: boolean;
+  detail: QuestionDetail[] | null;
+  topics: TopicResult[] | null;
+};
+
+function publicClient() {
+  return createClient<Database>(getSupabaseUrl(), getSupabasePublishableKey(), {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+/**
+ * Yayındaki sınavlar. Cevap anahtarı burada yok: soru tablosu herkese kapalıdır,
+ * sadece bölüm adları ve soru sayıları açıktır. 10 dakika önbellekli.
+ */
+export async function getPublishedExams(): Promise<PublicExam[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("exams");
+
+  const { data, error } = await publicClient()
+    .from("exams")
+    .select(
+      "id, slug, title, subtitle, grade, booklet_url, booklet_label, duration_min, published_at, exam_sections(code, name, position, question_count)",
+    )
+    .eq("status", "yayinda")
+    .order("published_at", { ascending: false });
+
+  if (error || !Array.isArray(data)) {
+    // Geçici hata: boş liste kısa süre önbellekte kalır, kısa sürede yeniden denenir.
+    cacheLife("seconds");
+    return [];
+  }
+
+  return data.map(({ exam_sections, ...e }) => ({
+    ...e,
+    sections: [...(exam_sections ?? [])].sort((a, b) => a.position - b.position),
+  }));
+}
+
+export async function getPublishedExam(slug: string): Promise<PublicExam | null> {
+  const exams = await getPublishedExams();
+  return exams.find((e) => e.slug === slug) ?? null;
+}
+
+export function totalQuestions(exam: PublicExam): number {
+  return exam.sections.reduce((sum, s) => sum + s.question_count, 0);
+}
+
+const netFormat = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+export function formatNet(n: number): string {
+  return netFormat.format(n);
+}

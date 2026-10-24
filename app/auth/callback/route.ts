@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { ensureVeliProfile } from "@/lib/auth";
+import { ensureVeliProfile, safeNext } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -18,6 +18,7 @@ export async function GET(request: Request) {
   }
 
   const profile = await ensureVeliProfile();
-  const next = profile === "ok" ? "/panel" : "/kayit";
+  const wanted = safeNext(searchParams.get("next"));
+  const next = profile === "ok" ? (wanted ?? "/panel") : "/kayit";
   return NextResponse.redirect(`${origin}${next}`);
 }

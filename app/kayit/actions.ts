@@ -10,6 +10,7 @@ import {
   normalizePassword,
   normalizePersonName,
   normalizeTrPhone,
+  safeNext,
 } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -57,7 +58,9 @@ export async function signUpVeli(
     email,
     password,
     options: {
-      emailRedirectTo: `${await siteOrigin()}/auth/callback`,
+      emailRedirectTo: `${await siteOrigin()}/auth/callback${
+        safeNext(formData.get("next")) ? `?next=${encodeURIComponent(safeNext(formData.get("next"))!)}` : ""
+      }`,
       data: {
         full_name: fullName,
         phone,
@@ -89,7 +92,7 @@ export async function signUpVeli(
     return { ok: false, error: "Hesap kaydı tamamlanamadı. Yeniden deneyin." };
   }
 
-  redirect("/panel");
+  redirect(safeNext(formData.get("next")) ?? "/panel");
 }
 
 export async function completeVeliProfile(
@@ -101,7 +104,7 @@ export async function completeVeliProfile(
     redirect("/giris");
   }
   if (session.profile?.role === "veli") {
-    redirect("/panel");
+    redirect(safeNext(formData.get("next")) ?? "/panel");
   }
   if (session.profile) {
     return { ok: false, error: "Bu hesap veli kaydı için kullanılamaz." };
@@ -140,7 +143,7 @@ export async function completeVeliProfile(
     return { ok: false, error: "Hesap kaydı tamamlanamadı. Yeniden deneyin." };
   }
 
-  redirect("/panel");
+  redirect(safeNext(formData.get("next")) ?? "/panel");
 }
 
 async function siteOrigin(): Promise<string> {

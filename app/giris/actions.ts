@@ -5,8 +5,10 @@ import { redirect } from "next/navigation";
 import {
   authErrorMessage,
   ensureVeliProfile,
+  getSessionProfile,
   normalizeEmail,
   normalizePassword,
+  safeNext,
 } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -31,13 +33,19 @@ export async function signInWithEmail(
     return { ok: false, error: authErrorMessage(error.message) };
   }
 
+  const next = safeNext(formData.get("next"));
   const profile = await ensureVeliProfile();
   if (profile === "blocked") {
+    // Veli olmayan hesaplar (admin, öğretmen) kendi alanlarına gider
+    const session = await getSessionProfile();
+    if (session.profile?.role === "admin") {
+      redirect(next ?? "/");
+    }
     return { ok: false, error: "Bu hesap veli hesabı değil." };
   }
   if (profile === "missing") {
-    redirect("/kayit");
+    redirect(next ? `/kayit?next=${encodeURIComponent(next)}` : "/kayit");
   }
 
-  redirect("/panel");
+  redirect(next ?? "/panel");
 }

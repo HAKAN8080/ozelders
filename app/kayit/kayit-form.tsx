@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { completeVeliProfile, signUpVeli } from "@/app/kayit/actions";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ export function KayitForm({
     mode === "signup" ? signUpVeli : completeVeliProfile,
     null,
   );
+  const next = useSearchParams().get("next") ?? "";
 
   if (state?.ok) {
     return (
@@ -37,6 +39,7 @@ export function KayitForm({
 
   return (
     <form action={action} className="flex flex-col gap-5">
+      <input type="hidden" name="next" value={next} />
       <p className="text-lg leading-relaxed text-muted">
         Veli hesabında adınız, e-postanız, şifreniz ve telefonunuz saklanır.
         Çocuğunuz için yalnızca ad ve sınıf istenir.
