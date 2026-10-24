@@ -50,12 +50,13 @@ async function AuthActions() {
   if (!session.userId) {
     return <GuestActions />;
   }
+  const isAdmin = session.profile?.role === "admin";
   return (
     <Link
-      href="/panel"
+      href={isAdmin ? "/admin" : "/panel"}
       className="rounded-md bg-primary px-5 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-hover"
     >
-      Hesabım
+      {isAdmin ? "Yönetim" : "Hesabım"}
     </Link>
   );
 }

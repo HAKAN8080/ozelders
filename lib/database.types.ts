@@ -1236,6 +1236,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_create_exam: { Args: { p: Json }; Returns: string }
       apply_payment: {
         Args: { p_payload: Json; p_provider: string; p_ref: string }
         Returns: string

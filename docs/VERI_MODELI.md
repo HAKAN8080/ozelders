@@ -249,3 +249,9 @@ Bulgularını listele, sonra düzelt.
 **İlk sınav:** `2026-lgs-sayisal` (A kitapçığı, 40 soru, 80 dk). Cevap anahtarı kitapçığın son sayfasından alındı ve doğrulandı. Konular ünite düzeyinde yaklaşık eşleştirmedir; admin ekranında düzeltilecek.
 
 **Sıradaki:** admin ekranı (PDF yükle → cevap anahtarı ve konu önerisi → kontrol tablosu → yayınla).
+
+### 8.x Yönetim ekranı (sınavlar)
+- `/admin/sinavlar`: tüm sınavlar (durum, soru, çözen, ort. net).
+- `/admin/sinavlar/yeni`: PDF tarayıcıda okunur (unpdf), sunucuya yüklenmez. Cevap anahtarı + konu önerileri tabloya dolar, admin kontrol eder → `admin_create_exam` ile **taslak** oluşur.
+- `/admin/sinavlar/[id]`: bilgiler, cevap ve konu düzenleme, Yayınla / Yayından kaldır / Arşiv / Sil (yalnız çözülmemiş taslak). Cevap anahtarı değişirse eski sonuçlar yeniden puanlanmaz.
+- Admin girişinde üst menüde "Yönetim" bağlantısı görünür.
