@@ -1,28 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+
+// Fontlar projeye gömülü (Google'a istek gitmez). Türkçe karakterler latin-ext'te.
+import "@fontsource/ibm-plex-sans/latin-400.css";
+import "@fontsource/ibm-plex-sans/latin-ext-400.css";
+import "@fontsource/ibm-plex-sans/latin-500.css";
+import "@fontsource/ibm-plex-sans/latin-ext-500.css";
+import "@fontsource/ibm-plex-sans/latin-600.css";
+import "@fontsource/ibm-plex-sans/latin-ext-600.css";
+import "@fontsource/source-serif-4/latin-600.css";
+import "@fontsource/source-serif-4/latin-ext-600.css";
+import "@fontsource/source-serif-4/latin-700.css";
+import "@fontsource/source-serif-4/latin-ext-700.css";
+import "@fontsource/caveat/latin-500.css";
+import "@fontsource/caveat/latin-ext-500.css";
+import "@fontsource/caveat/latin-700.css";
+import "@fontsource/caveat/latin-ext-700.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-sans",
-  subsets: ["latin", "latin-ext"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "latin-ext"],
-});
-
 export const metadata: Metadata = {
-  title: "Özel Ders",
-  description: "Veli hesabı, öğretmen başvurusu ve ders yönetimi.",
+  title: "ÖzelDersBul — LGS matematik özel ders",
+  description:
+    "Ücretsiz LGS denemesini çöz, eksik kazanımlarını konu konu gör, o konularda seçilmiş bir öğretmenle birebir çalış.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="tr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="tr" className="h-full antialiased">
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
