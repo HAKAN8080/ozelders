@@ -1,4 +1,7 @@
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -11,9 +14,17 @@ export default function Home() {
           Veli hesabı, öğretmen başvurusu ve ders yönetimi bu uygulama
           üzerinden yürür.
         </p>
-        <Button type="button" className="w-full sm:w-fit">
-          Ücretsiz Tanı Sınavı
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button type="button" className="w-full sm:w-fit">
+            Ücretsiz Tanı Sınavı
+          </Button>
+          <Link
+            href="/giris"
+            className={cn(buttonVariants({ variant: "outline" }), "w-full sm:w-fit")}
+          >
+            Giriş yap
+          </Link>
+        </div>
       </div>
     </main>
   );
