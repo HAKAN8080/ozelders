@@ -5,7 +5,7 @@ import { GirisForm } from "@/app/giris/giris-form";
 
 export const metadata: Metadata = {
   title: "Giriş — Özel Ders",
-  description: "E-posta veya SMS kodu ile giriş yapın.",
+  description: "E-posta ve şifre ile giriş yapın.",
 };
 
 export default function GirisPage() {
@@ -15,8 +15,7 @@ export default function GirisPage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Giriş</h1>
           <p className="mt-3 text-lg leading-relaxed text-muted">
-            E-posta veya cep telefonunuza gelen tek kullanımlık kodla giriş
-            yapın. Hesabınız yoksa kodu doğruladıktan sonra veli kaydı açılır.
+            Kayıt olduğunuz e-posta ve şifreyle giriş yapın.
           </p>
         </div>
         <GirisForm />

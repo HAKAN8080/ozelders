@@ -46,7 +46,7 @@ export async function addChild(
     return { ok: false, error: "Çocuk eklenemedi. Yeniden deneyin." };
   }
 
-  revalidatePath("/veli");
+  revalidatePath("/panel");
   return { ok: true };
 }
 

@@ -75,24 +75,92 @@ export function normalizePersonName(input: string, max: number): string | null {
   return name;
 }
 
+export function normalizePassword(input: string): string | null {
+  if (input.length < 8 || input.length > 72) {
+    return null;
+  }
+  return input;
+}
+
 export function authErrorMessage(message: string): string {
   const lower = message.toLowerCase();
-  if (
-    lower.includes("expired") ||
-    lower.includes("invalid") ||
-    lower.includes("otp")
-  ) {
-    return "Kod geçersiz veya süresi dolmuş. Yeni kod isteyip yeniden deneyin.";
+  if (lower.includes("invalid login") || lower.includes("invalid credentials")) {
+    return "E-posta veya şifre hatalı.";
+  }
+  if (lower.includes("already registered") || lower.includes("already been registered")) {
+    return "Bu e-posta ile kayıt var. Giriş yapın.";
+  }
+  if (lower.includes("email not confirmed")) {
+    return "Girişten önce e-postanızdaki onay bağlantısını açın.";
+  }
+  if (lower.includes("password")) {
+    return "Şifre en az 8 karakter olmalı.";
   }
   if (lower.includes("rate") || lower.includes("too many")) {
     return "Çok fazla deneme yapıldı. Bir süre sonra yeniden deneyin.";
   }
-  if (
-    lower.includes("sms") ||
-    lower.includes("phone provider") ||
-    lower.includes("error sending")
-  ) {
-    return "Kod gönderilemedi. Numarayı kontrol edip yeniden deneyin.";
-  }
   return "İşlem tamamlanamadı. Bilgileri kontrol edip yeniden deneyin.";
+}
+
+export async function ensureVeliProfile(): Promise<
+  "ok" | "missing" | "blocked"
+> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
+  const userId = data?.claims?.sub;
+  if (error || !userId) {
+    return "missing";
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profile?.role === "veli") {
+    return "ok";
+  }
+  if (profile) {
+    return "blocked";
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+  const meta = metaRecord(userData.user?.user_metadata);
+  const fullName =
+    typeof meta.full_name === "string"
+      ? normalizePersonName(meta.full_name, 80)
+      : null;
+  const phone =
+    typeof meta.phone === "string" ? normalizeTrPhone(meta.phone) : null;
+  const kvkkAt =
+    typeof meta.kvkk_aydinlatma_at === "string"
+      ? meta.kvkk_aydinlatma_at
+      : null;
+  if (!fullName || !phone || !kvkkAt) {
+    return "missing";
+  }
+
+  const { error: insertError } = await supabase.from("profiles").insert({
+    id: userId,
+    role: "veli",
+    full_name: fullName,
+    email: userData.user?.email ?? null,
+    phone,
+    kvkk_aydinlatma_at: kvkkAt,
+    pazarlama_izni: meta.pazarlama_izni === true,
+  });
+
+  if (insertError && insertError.code !== "23505") {
+    return "missing";
+  }
+
+  return "ok";
+}
+
+function metaRecord(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object") {
+    return value as Record<string, unknown>;
+  }
+  return {};
 }

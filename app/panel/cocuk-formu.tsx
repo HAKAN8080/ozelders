@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 
-import { addChild } from "@/app/veli/actions";
+import { addChild } from "@/app/panel/actions";
 import { Button } from "@/components/ui/button";
 
 const fieldClass =
@@ -20,7 +20,7 @@ export function CocukFormu() {
 
   return (
     <form ref={formRef} action={action} className="flex flex-col gap-4">
-      <h2 className="text-2xl font-semibold">Çocuk ekle</h2>
+      <h2 className="text-2xl font-semibold">Çocuğumu ekle</h2>
       <label className="flex flex-col gap-2">
         <span className="font-medium">Ad</span>
         <input

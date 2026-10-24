@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { ensureVeliProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -16,18 +17,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/giris`);
   }
 
-  const { data } = await supabase.auth.getClaims();
-  const userId = data?.claims?.sub;
-  if (!userId) {
-    return NextResponse.redirect(`${origin}/giris`);
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", userId)
-    .maybeSingle();
-
-  const next = profile?.role === "veli" ? "/veli" : "/kayit";
+  const profile = await ensureVeliProfile();
+  const next = profile === "ok" ? "/panel" : "/kayit";
   return NextResponse.redirect(`${origin}${next}`);
 }

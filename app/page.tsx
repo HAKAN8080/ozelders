@@ -19,6 +19,12 @@ export default function Home() {
             Ücretsiz Tanı Sınavı
           </Button>
           <Link
+            href="/kayit"
+            className={cn(buttonVariants({ variant: "outline" }), "w-full sm:w-fit")}
+          >
+            Kayıt ol
+          </Link>
+          <Link
             href="/giris"
             className={cn(buttonVariants({ variant: "outline" }), "w-full sm:w-fit")}
           >

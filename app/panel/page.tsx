@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { signOut } from "@/app/veli/actions";
-import { CocukFormu } from "@/app/veli/cocuk-formu";
+import { signOut } from "@/app/panel/actions";
+import { CocukFormu } from "@/app/panel/cocuk-formu";
 import { Button } from "@/components/ui/button";
 import { getSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export const instant = false;
 
-export default async function VeliPage() {
+export default async function PanelPage() {
   const session = await getSessionProfile();
   if (!session.userId) {
     redirect("/giris");

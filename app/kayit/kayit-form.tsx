@@ -1,31 +1,47 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 
-import { createVeliProfile } from "@/app/kayit/actions";
+import { completeVeliProfile, signUpVeli } from "@/app/kayit/actions";
 import { Button } from "@/components/ui/button";
 
 const fieldClass =
   "h-12 w-full rounded-lg border border-border bg-background px-4 text-lg text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 export function KayitForm({
+  mode,
   email,
-  phone,
 }: {
+  mode: "signup" | "complete";
   email: string | null;
-  phone: string | null;
 }) {
-  const [state, action, pending] = useActionState(createVeliProfile, null);
+  const [state, action, pending] = useActionState(
+    mode === "signup" ? signUpVeli : completeVeliProfile,
+    null,
+  );
+
+  if (state?.ok) {
+    return (
+      <div className="flex flex-col gap-4 text-lg leading-relaxed">
+        <p>
+          Hesabınız oluştu. E-postanızdaki onay bağlantısını açın, sonra giriş
+          yapın.
+        </p>
+        <Link href="/giris" className="text-primary underline-offset-4 hover:underline">
+          Giriş yap
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form action={action} className="flex flex-col gap-5">
       <p className="text-lg leading-relaxed text-muted">
-        Hesabınızda adınız ve doğruladığınız iletişim bilgisi saklanır.
-        Çocuğunuz için yalnızca ad ve sınıf istenir. Soyad, T.C. kimlik
-        numarası ve okul adı alınmaz.
+        Veli hesabında adınız, e-postanız, şifreniz ve telefonunuz saklanır.
+        Çocuğunuz için yalnızca ad ve sınıf istenir.
       </p>
-      {email ? <p>E-posta: {email}</p> : null}
-      {phone ? <p>Telefon: {phone}</p> : null}
+      {mode === "complete" && email ? <p>E-posta: {email}</p> : null}
       <label className="flex flex-col gap-2">
         <span className="font-medium">Adınız soyadınız</span>
         <input
@@ -36,6 +52,45 @@ export function KayitForm({
           maxLength={80}
         />
       </label>
+      {mode === "signup" ? (
+        <>
+          <label className="flex flex-col gap-2">
+            <span className="font-medium">E-posta</span>
+            <input
+              className={fieldClass}
+              name="email"
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              required
+              placeholder="ornek@eposta.com"
+            />
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className="font-medium">Şifre</span>
+            <input
+              className={fieldClass}
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+            />
+          </label>
+        </>
+      ) : null}
+      <label className="flex flex-col gap-2">
+        <span className="font-medium">Telefon</span>
+        <input
+          className={fieldClass}
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          inputMode="tel"
+          required
+          placeholder="5xx xxx xx xx"
+        />
+      </label>
       <label className="flex items-start gap-3">
         <input
           className="mt-1 size-6 shrink-0 accent-primary"
@@ -44,7 +99,7 @@ export function KayitForm({
           required
         />
         <span>
-          KVKK aydınlatma metnini okudum. Adımın, iletişim bilgimin ve
+          KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve
           çocuğumun adıyla sınıfının işlenmesini anladım.
         </span>
       </label>
@@ -62,8 +117,11 @@ export function KayitForm({
         </p>
       ) : null}
       <Button type="submit" disabled={pending}>
-        {pending ? "Kaydediliyor" : "Veli hesabını aç"}
+        {pending ? "Kaydediliyor" : "Kayıt ol"}
       </Button>
+      <Link href="/giris" className="text-primary underline-offset-4 hover:underline">
+        Hesabınız varsa giriş yapın
+      </Link>
     </form>
   );
 }
