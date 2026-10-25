@@ -310,7 +310,7 @@ function Faq() {
     ],
     [
       "Branş testinde neler soruluyor?",
-      "Ders vermek istediğin sınıf düzeyinin konularından, süreli bir çevrim içi test. %85 ve üstü bir sonraki adıma geçer. Her test bir kez çözülür.",
+      "Her branşın her kademesi (3–4, 5–8, 9–12. sınıf) için 20 soruluk, 30 dakikalık çevrim içi bir test: 15 temel, 5 ileri düzey soru. 17 doğru ve üstü geçer, yanlış doğruyu götürmez. Başvurduğun aralıkta birden fazla kademe varsa her birini ayrı çözebilirsin; geçtiğin kademede ders verirsin. Her test bir kez çözülür.",
     ],
     [
       "Belgelerimi yüklemem gerekiyor mu?",

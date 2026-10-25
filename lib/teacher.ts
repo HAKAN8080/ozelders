@@ -64,7 +64,7 @@ export type Stage = "basvuru" | "test" | "demo" | "belge" | "oryantasyon" | "gol
 /** Başvuranın gördüğü huni adımları (sırasıyla). */
 export const FUNNEL: { stage: Stage; title: string; body: string }[] = [
   { stage: "basvuru", title: "Başvuru formu", body: "Branşların, sınıf aralığın ve deneyimin. 5 dakika." },
-  { stage: "test", title: "Branş testi", body: "Çevrim içi, süreli. %85 ve üstü bir sonraki adıma geçer." },
+  { stage: "test", title: "Branş testi", body: "Branşın ve kademen için 20 soru, 30 dakika. 17 doğru ve üstü geçer." },
   { stage: "demo", title: "Canlı demo ders", body: "20 dakika, bir değerlendiriciyle. Konu hâkimiyeti, anlatım, etkileşim." },
   { stage: "belge", title: "Belge doğrulama", body: "e-Devlet barkodlu diploma ve adli sicil kaydı. Kopya saklamayız." },
   { stage: "oryantasyon", title: "Sözleşme ve oryantasyon", body: "Bağımsız öğretmen sözleşmesi ve ödeme hesabı onayı." },

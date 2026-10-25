@@ -1130,6 +1130,7 @@ export type Database = {
           branch_test_at: string | null
           branch_test_attempt_id: string | null
           branch_test_score: number | null
+          branch_tests: Json
           contract_signed_at: string | null
           contract_version: string | null
           created_at: string
@@ -1177,6 +1178,7 @@ export type Database = {
           branch_test_at?: string | null
           branch_test_attempt_id?: string | null
           branch_test_score?: number | null
+          branch_tests?: Json
           contract_signed_at?: string | null
           contract_version?: string | null
           created_at?: string
@@ -1224,6 +1226,7 @@ export type Database = {
           branch_test_at?: string | null
           branch_test_attempt_id?: string | null
           branch_test_score?: number | null
+          branch_tests?: Json
           contract_signed_at?: string | null
           contract_version?: string | null
           created_at?: string
@@ -1391,6 +1394,7 @@ export type Database = {
           activated_at: string | null
           band_changed_at: string | null
           bio: string | null
+          branch_levels: Json
           commission_band: string
           created_at: string
           display_name: string
@@ -1407,6 +1411,7 @@ export type Database = {
           activated_at?: string | null
           band_changed_at?: string | null
           bio?: string | null
+          branch_levels?: Json
           commission_band?: string
           created_at?: string
           display_name: string
@@ -1423,6 +1428,7 @@ export type Database = {
           activated_at?: string | null
           band_changed_at?: string | null
           bio?: string | null
+          branch_levels?: Json
           commission_band?: string
           created_at?: string
           display_name?: string
@@ -1530,6 +1536,7 @@ export type Database = {
         Args: { p_attempt: string; p_token?: string }
         Returns: Json
       }
+      grade_band: { Args: { g: number }; Returns: unknown }
       is_admin: { Args: never; Returns: boolean }
       is_parent_of: { Args: { p_student: string }; Returns: boolean }
       mark_recordings_deleted: { Args: { p_ids: string[] }; Returns: number }
@@ -1549,6 +1556,19 @@ export type Database = {
         Returns: Json
       }
       teacher_application_save: { Args: { p: Json }; Returns: string }
+      teacher_branch_tests: {
+        Args: never
+        Returns: {
+          duration_min: number
+          exam_id: string
+          grades_max: number
+          grades_min: number
+          question_count: number
+          slug: string
+          subject: string
+          title: string
+        }[]
+      }
       teaches_student: { Args: { p_student: string }; Returns: boolean }
     }
     Enums: {

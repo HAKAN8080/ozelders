@@ -73,7 +73,7 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
   const { data: app } = await supabase
     .from("teacher_applications")
     .select(
-      "id, stage, subjects, grades_min, grades_max, submitted_at, rejected_at, rejection_reason, branch_test_score, demo_availability, demo_scheduled_at, demo_meeting_url, intro_video_url, criminal_record_consent_at, diploma_verified_at, criminal_record_verified_at, contract_signed_at",
+      "id, stage, subjects, grades_min, grades_max, submitted_at, rejected_at, rejection_reason, branch_test_score, demo_availability, demo_scheduled_at, demo_meeting_url, intro_video_url, branch_tests, criminal_record_consent_at, diploma_verified_at, criminal_record_verified_at, contract_signed_at",
     )
     .eq("profile_id", userId)
     .maybeSingle();
@@ -119,6 +119,8 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
   }
 
   const idx = stageIndex(app.stage);
+  const recorded = (Array.isArray(app.branch_tests) ? app.branch_tests : []) as unknown as Recorded[];
+  const passed = recorded.filter((r) => r.passed);
   return (
     <>
       {justSent ? (
@@ -128,13 +130,23 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
       ) : null}
       <Progress current={idx} />
       <Summary subjects={app.subjects} gMin={app.grades_min} gMax={app.grades_max} />
-      {app.stage === "test" ? <TestStep subjects={app.subjects} userId={userId} /> : null}
+      {passed.length ? (
+        <p className="m-0 -mt-4 text-[16px] text-primary">
+          Geçtiğin testler:{" "}
+          <strong>
+            {passed
+              .map((r) => `${branchName(r.subject)} ${Math.max(r.grades_min, app.grades_min)}.–${Math.min(r.grades_max, app.grades_max)}. sınıf`)
+              .join(", ")}
+          </strong>
+        </p>
+      ) : null}
+      {app.stage === "test" ? <TestStep userId={userId} recorded={recorded} optional={false} /> : null}
       {app.stage === "demo" ? (
         <section className={card}>
           <StepHead
             n={3}
             title="Canlı demo ders"
-            body={`Branş testini %${formatNet(Number(app.branch_test_score ?? 0)).replace(/,00$/, "")} ile geçtin, tebrikler. Şimdi bir değerlendiriciyle 20 dakikalık çevrim içi bir ders yapacaksın: bir konuyu ${app.grades_min}.–${app.grades_max}. sınıf düzeyinde anlatırsın, değerlendirici öğrenci gibi sorular sorar.`}
+            body="Branş testini geçtin, tebrikler. Şimdi bir değerlendiriciyle 20 dakikalık çevrim içi bir ders yapacaksın: geçtiğin kademeden bir konuyu anlatırsın, değerlendirici öğrenci gibi sorular sorar."
           />
           {app.demo_scheduled_at ? (
             <div className="tahta flex flex-col gap-2 rounded-[10px] p-5 text-[#f2f5f1]">
@@ -189,6 +201,7 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
           )}
         </section>
       ) : null}
+      {["demo", "belge", "oryantasyon"].includes(app.stage) ? <TestStep userId={userId} recorded={recorded} optional /> : null}
       {app.stage === "golge" || app.stage === "aktif" ? (
         <section className="tahta flex flex-col gap-3 rounded-[10px] p-7 text-[#f2f5f1] sm:p-9">
           <span className="font-hand text-[30px] text-white">aramıza hoş geldin ✓</span>
@@ -245,50 +258,63 @@ function StepHead({ n, title, body }: { n: number; title: string; body: string }
   );
 }
 
-async function TestStep({ subjects, userId }: { subjects: string[]; userId: string }) {
+type Recorded = { exam_id: string; score: number; passed: boolean; subject: string; grades_min: number; grades_max: number };
+
+async function TestStep({ userId, recorded, optional }: { userId: string; recorded: Recorded[]; optional: boolean }) {
   const supabase = await createClient();
-  const { data: exams } = await supabase
-    .from("exams")
-    .select("id, slug, title, duration_min, exam_sections(code, question_count)")
-    .eq("purpose", "brans_testi")
-    .eq("status", "yayinda");
-  // Ana branş önce
-  const tests = (exams ?? [])
-    .filter((e) => (e.exam_sections ?? []).some((s) => subjects.includes(s.code)))
-    .sort((a, b) => rank(a, subjects) - rank(b, subjects));
-  const ids = tests.map((t) => t.id);
+  // Branş + kademe eşleşmesi veritabanında (başvurunun branşları ve sınıf aralığı)
+  const { data: tests } = await supabase.rpc("teacher_branch_tests");
+  const list = tests ?? [];
+  const done = new Map(recorded.map((r) => [r.exam_id, r]));
+  const ids = list.map((t) => t.exam_id);
   const { data: attempts } = ids.length
     ? await supabase.from("exam_attempts").select("id, exam_id, total_net, created_at").eq("user_id", userId).in("exam_id", ids).order("created_at")
     : { data: [] as { id: string; exam_id: string; total_net: number; created_at: string }[] };
   const first = new Map<string, { id: string; total_net: number }>();
   for (const a of attempts ?? []) if (!first.has(a.exam_id)) first.set(a.exam_id, a);
 
+  const open = list.filter((t) => !done.has(t.exam_id));
+  if (optional && open.length === 0) return null;
+
   return (
     <section className={card}>
-      <StepHead
-        n={2}
-        title="Branş testi"
-        body={`Çevrim içi ve süreli. %${BRANCH_TEST_PASS} ve üstü demo derse geçer. Her test bir kez çözülür: tekrar çözsen de ilk denemen sayılır. Sessiz bir ortamda, tek oturumda çöz.`}
-      />
-      {tests.length === 0 ? (
+      {optional ? (
+        <div className="flex flex-col gap-2">
+          <h2 className="m-0 text-xl font-semibold">Diğer kademe testlerin (isteğe bağlı)</h2>
+          <p className="m-0 max-w-[46em] text-[16px] leading-relaxed text-[#3d4743]">
+            Başvurduğun sınıf aralığında başka kademeler de var. Bu testleri de geçersen o sınıflarda da ders verebilirsin;
+            geçemezsen mevcut onayın etkilenmez.
+          </p>
+        </div>
+      ) : (
+        <StepHead
+          n={2}
+          title="Branş testi"
+          body={`Her test bir branş ve bir kademe içindir (3–4, 5–8 ya da 9–12. sınıf). %${BRANCH_TEST_PASS} ve üstü demo derse geçer; geçtiğin kademede ders verirsin. Her test bir kez çözülür, tekrar çözsen de ilk denemen sayılır.`}
+        />
+      )}
+      {list.length === 0 ? (
         <p className="m-0 rounded-md bg-primary-soft px-4 py-3 text-[16px]" role="status">
-          {branchName(subjects[0])} için branş testini hazırlıyoruz. Hazır olduğunda e-postayla haber vereceğiz; başvurun kayıtlı.
+          Seçtiğin branş ve sınıf aralığı için branş testini hazırlıyoruz. Hazır olduğunda e-postayla haber vereceğiz; başvurun kayıtlı.
         </p>
       ) : (
         <ul className="m-0 flex list-none flex-col gap-3 p-0">
-          {tests.map((t) => {
-            const q = (t.exam_sections ?? []).reduce((n, s) => n + s.question_count, 0);
-            const att = first.get(t.id);
+          {list.map((t) => {
+            const rec = done.get(t.exam_id);
+            const att = first.get(t.exam_id);
             return (
-              <li key={t.id} className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border p-4">
+              <li key={t.exam_id} className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border p-4">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-lg font-semibold">{t.title}</span>
                   <span className="text-[15px] text-muted">
-                    {q} soru · {t.duration_min} dakika
-                    {att ? ` · çözüldü: ${formatNet(Number(att.total_net))} net` : ""}
+                    {branchName(t.subject)} · {t.grades_min}.–{t.grades_max}. sınıf · {t.question_count} soru · {t.duration_min} dakika
                   </span>
                 </div>
-                {att ? (
+                {rec ? (
+                  <span className={`rounded px-3 py-1.5 text-[15px] font-semibold ${rec.passed ? "bg-primary-soft text-primary" : "bg-[#fdecea] text-destructive"}`}>
+                    %{formatNet(Number(rec.score)).replace(/,00$/, "")} · {rec.passed ? "geçtin ✓" : "baraj altı"}
+                  </span>
+                ) : att ? (
                   <form action={recordBranchTest}>
                     <input type="hidden" name="attempt" value={att.id} />
                     <button type="submit" className="rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover">
@@ -307,9 +333,4 @@ async function TestStep({ subjects, userId }: { subjects: string[]; userId: stri
       )}
     </section>
   );
-}
-
-function rank(e: { exam_sections: { code: string }[] | null }, subjects: string[]): number {
-  const i = Math.min(...(e.exam_sections ?? []).map((s) => subjects.indexOf(s.code)).filter((x) => x >= 0));
-  return Number.isFinite(i) ? i : 99;
 }

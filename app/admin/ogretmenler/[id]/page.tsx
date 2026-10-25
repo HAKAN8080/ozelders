@@ -97,6 +97,16 @@ export default async function ApplicationDetail(props: PageProps<"/admin/ogretme
               ["Vergi durumu", a.tax_status ?? "—"],
             ]}
           />
+          {Array.isArray(a.branch_tests) && a.branch_tests.length ? (
+            <ul className="m-0 flex list-none flex-col gap-1 p-0 text-[15px]">
+              {(a.branch_tests as unknown as { exam_id: string; subject: string; grades_min: number; grades_max: number; score: number; passed: boolean }[]).map((b) => (
+                <li key={b.exam_id}>
+                  {branchName(b.subject)} {b.grades_min}.–{b.grades_max}. sınıf: <strong>%{Number(b.score)}</strong>{" "}
+                  <span className={b.passed ? "text-primary" : "text-destructive"}>{b.passed ? "geçti" : "baraj altı"}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {attempt ? (
             <Link href={`/deneme/${attempt.slug}/sonuc/${attempt.id}`} className="font-semibold text-primary hover:underline">
               Branş testi cevapları ({attempt.title}) →
