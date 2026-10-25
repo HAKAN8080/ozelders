@@ -298,6 +298,12 @@ function RejectPanel({ id, pending, run }: { id: string; pending: boolean; run: 
           <label className="flex flex-col gap-1.5">
             <span className="text-[15px] font-medium">Başvurana gösterilecek gerekçe</span>
             <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} className={field} />
+            <span className="text-sm text-muted">
+              Adli sicil nedeniyle ret: gerekçeye kaydın içeriğini yazma (KVKK, özel nitelikli veri).{" "}
+              <button type="button" onClick={() => setReason("Belge doğrulama tamamlanamadı.")} className="font-semibold text-primary underline">
+                “Belge doğrulama tamamlanamadı.” yaz
+              </button>
+            </span>
           </label>
           <div className="flex gap-3">
             <button

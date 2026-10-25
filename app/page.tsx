@@ -265,7 +265,7 @@ function Teachers() {
   const stages = [
     ["Branş testi", "Ders verdiği sınıf düzeyinde branş soruları, %85 başarı şartı."],
     ["Canlı demo ders", "Konu hâkimiyeti, anlatım ve etkileşim puanlanır."],
-    ["Belge doğrulama", "Kimlik, diploma ve adli sicil kaydı her yıl yenilenir."],
+    ["Belge doğrulama", "Kimlik ve diploma doğrulanır, adli sicil kaydı her yıl yenilenir. Belge kopyası saklanmaz."],
     ["Gözetimli ilk dersler", "İlk 3 ders kıdemli bir öğretmen tarafından incelenir."],
   ];
   return (
