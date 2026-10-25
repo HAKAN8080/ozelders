@@ -1495,6 +1495,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_activate_teacher: { Args: { p_app: string }; Returns: undefined }
       admin_approve_teacher: {
         Args: { p_app: string; p_display_name: string }
         Returns: string
@@ -1556,6 +1557,7 @@ export type Database = {
         Returns: Json
       }
       teacher_application_save: { Args: { p: Json }; Returns: string }
+      teacher_save_availability: { Args: { p_slots: Json }; Returns: number }
       teacher_branch_tests: {
         Args: never
         Returns: {

@@ -121,7 +121,7 @@ export const teacherMail = {
       "Başvurun onaylandı. İlk 3 dersin kıdemli bir öğretmenle birlikte incelenecek; amaç not vermek değil, ilk haftalarını kolaylaştırmak.",
       "Ödeme hesabını açman için ayrıca bilgi göndereceğiz. Biz de öğretmeniz: sen derse odaklan, gerisini biz hallederiz.",
     ],
-    cta: { label: "Hesabıma git", href: APPLY },
+    cta: { label: "Öğretmen paneline git", href: "/ogretmen" },
   }),
   rejected: (to: string, reason: string): Mail => ({
     to,

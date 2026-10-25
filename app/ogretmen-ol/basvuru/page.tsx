@@ -211,6 +211,9 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
               ? "İlk 3 dersin kıdemli bir öğretmenle birlikte incelenecek; amaç not vermek değil, ilk haftalarını kolaylaştırmak. Takvimini ve öğrenci önerilerini öğretmen panelinden yöneteceksin."
               : "Öğrenci önerileri ve takvimin öğretmen panelinde."}
           </p>
+          <Link href="/ogretmen" className="self-start rounded-md bg-white px-6 py-3.5 font-semibold text-primary hover:bg-primary-soft">
+            Öğretmen paneline git →
+          </Link>
         </section>
       ) : null}
     </>

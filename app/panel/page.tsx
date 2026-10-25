@@ -25,7 +25,7 @@ export default async function PanelPage() {
     redirect("/admin");
   }
   if (session.profile.role !== "veli") {
-    redirect("/ogretmen-ol/basvuru");
+    redirect("/ogretmen");
   }
 
   const supabase = await createClient();

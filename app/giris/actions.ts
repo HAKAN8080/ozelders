@@ -42,7 +42,7 @@ export async function signInWithEmail(
       redirect(next ?? "/admin");
     }
     if (session.profile?.role === "ogretmen") {
-      redirect(next ?? "/ogretmen-ol/basvuru");
+      redirect(next ?? "/ogretmen");
     }
     return { ok: false, error: "Bu hesap veli hesabı değil." };
   }

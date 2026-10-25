@@ -138,14 +138,11 @@ export async function approveTeacher(appId: string, displayName: string): Promis
 }
 
 export async function activateTeacher(appId: string): Promise<AdminResult> {
-  const { supabase, app, adminId } = await ctx(appId);
+  const { supabase, app } = await ctx(appId);
   if (app.stage !== "golge") return { ok: false, error: "Yalnız gölge dönemdeki öğretmen aktif yapılır." };
-  const now = new Date().toISOString();
-  const { error: e1 } = await supabase.from("teachers").update({ status: "aktif" }).eq("profile_id", app.profile_id);
-  if (e1) return { ok: false, error: e1.message };
-  const { error: e2 } = await supabase.from("teacher_applications").update({ stage: "aktif", updated_at: now }).eq("id", appId);
-  if (e2) return { ok: false, error: e2.message };
-  await log(supabase, adminId, "teacher_activate", appId);
+  // teachers.status kolonu doğrudan yazılamaz; yetkili fonksiyonla
+  const { error } = await supabase.rpc("admin_activate_teacher", { p_app: appId });
+  if (error) return { ok: false, error: error.message };
   return done(appId, "Öğretmen aktif.");
 }
 

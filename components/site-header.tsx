@@ -55,7 +55,7 @@ async function AuthActions() {
   const isAdmin = role === "admin";
   return (
     <Link
-      href={isAdmin ? "/admin" : role === "ogretmen" ? "/ogretmen-ol/basvuru" : "/panel"}
+      href={isAdmin ? "/admin" : role === "ogretmen" ? "/ogretmen" : "/panel"}
       className="rounded-md bg-primary px-5 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-hover"
     >
       {isAdmin ? "Yönetim" : "Hesabım"}
