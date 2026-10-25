@@ -11,6 +11,7 @@ export function AdminShell({ title, children, actions }: { title: string; childr
             </Link>
             <nav aria-label="Yönetim menüsü" className="flex gap-5 text-[15px]">
               <Link href="/admin/sinavlar" className="text-[#d6dbd8] hover:text-white">Sınavlar</Link>
+              <Link href="/admin/ogretmenler" className="text-[#d6dbd8] hover:text-white">Öğretmenler</Link>
             </nav>
           </div>
           <Link href="/" className="text-[15px] text-[#d6dbd8] hover:text-white">Siteye dön →</Link>

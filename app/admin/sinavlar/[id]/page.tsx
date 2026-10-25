@@ -24,7 +24,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
   const [{ data: exam }, { data: sections }, { data: questions }, { count }, { data: imgRows }] = await Promise.all([
     supabase
       .from("exams")
-      .select("id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, status, published_at")
+      .select("id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, purpose, status, published_at")
       .eq("id", id)
       .maybeSingle(),
     supabase.from("exam_sections").select("code, name, position").eq("exam_id", id).order("position"),
@@ -71,6 +71,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
           booklet_path: exam.booklet_path,
           booklet_label: exam.booklet_label ?? "",
           duration_min: exam.duration_min,
+          purpose: exam.purpose === "brans_testi" ? "brans_testi" : "deneme",
         }}
         sections={editable}
         attemptCount={count ?? 0}

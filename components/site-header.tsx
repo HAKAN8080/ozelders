@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/#nasil", label: "Nasıl Çalışır" },
   { href: "/#paketler", label: "Paketler" },
   { href: "/#ogretmenler", label: "Öğretmenlerimiz" },
+  { href: "/ogretmen-ol", label: "Öğretmen ol" },
 ];
 
 function Logo() {
@@ -50,10 +51,11 @@ async function AuthActions() {
   if (!session.userId) {
     return <GuestActions />;
   }
-  const isAdmin = session.profile?.role === "admin";
+  const role = session.profile?.role;
+  const isAdmin = role === "admin";
   return (
     <Link
-      href={isAdmin ? "/admin" : "/panel"}
+      href={isAdmin ? "/admin" : role === "ogretmen" ? "/ogretmen-ol/basvuru" : "/panel"}
       className="rounded-md bg-primary px-5 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-hover"
     >
       {isAdmin ? "Yönetim" : "Hesabım"}

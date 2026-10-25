@@ -23,7 +23,7 @@ export default async function AdminExamsPage() {
 
   const { data: exams } = await supabase
     .from("exams")
-    .select("id, slug, title, status, grade, kind, duration_min, created_at, exam_sections(question_count)")
+    .select("id, slug, title, status, grade, kind, purpose, duration_min, created_at, exam_sections(question_count)")
     .order("created_at", { ascending: false });
   const { data: attempts } = await supabase.from("exam_attempts").select("exam_id, total_net");
 
@@ -68,7 +68,7 @@ export default async function AdminExamsPage() {
                     <td className="px-5 py-4">
                       <div className="font-semibold">{e.title}</div>
                       <div className="text-sm text-muted">
-                        {kindInfo(e.kind).short} · {gradeLabel(e.grade)} · {e.duration_min} dk · /deneme/{e.slug}
+                        {e.purpose === "brans_testi" ? "Branş testi · " : ""}{kindInfo(e.kind).short} · {gradeLabel(e.grade)} · {e.duration_min} dk · /deneme/{e.slug}
                       </div>
                     </td>
                     <td className="px-5 py-4">

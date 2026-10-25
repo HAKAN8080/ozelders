@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { KayitForm } from "@/app/kayit/kayit-form";
-import { ensureVeliProfile, getSessionProfile } from "@/lib/auth";
+import { ensureVeliProfile, getSessionProfile, safeNext } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Kayıt ol — Özel Ders",
@@ -12,23 +12,25 @@ export const metadata: Metadata = {
 
 export const instant = false;
 
-export default async function KayitPage() {
+export default async function KayitPage(props: PageProps<"/kayit">) {
+  const next = safeNext((await props.searchParams).next);
+  const teacher = next?.startsWith("/ogretmen-ol") ?? false;
   const session = await getSessionProfile();
   if (session.profile?.role === "veli") {
-    redirect("/panel");
+    redirect(next ?? "/panel");
   }
 
   if (session.userId && !session.profile) {
     const ensured = await ensureVeliProfile();
     if (ensured === "ok") {
-      redirect("/panel");
+      redirect(next ?? "/panel");
     }
   }
 
   return (
     <main className="flex flex-1 flex-col bg-background px-4 py-10 text-foreground sm:px-6">
       <div className="flex w-full max-w-xl flex-col gap-6">
-        <h1 className="text-3xl font-semibold tracking-tight">Kayıt ol</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">{teacher ? "Öğretmen başvurusu için hesap aç" : "Kayıt ol"}</h1>
         {session.profile ? (
           <div className="flex flex-col gap-4 text-lg leading-relaxed">
             <p>Bu hesap veli kaydı için kullanılamaz.</p>

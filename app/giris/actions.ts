@@ -39,7 +39,10 @@ export async function signInWithEmail(
     // Veli olmayan hesaplar (admin, öğretmen) kendi alanlarına gider
     const session = await getSessionProfile();
     if (session.profile?.role === "admin") {
-      redirect(next ?? "/");
+      redirect(next ?? "/admin");
+    }
+    if (session.profile?.role === "ogretmen") {
+      redirect(next ?? "/ogretmen-ol/basvuru");
     }
     return { ok: false, error: "Bu hesap veli hesabı değil." };
   }

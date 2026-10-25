@@ -41,6 +41,7 @@ export const SUBJECTS: { code: string; name: string; group: SubjectGroup }[] = [
   { code: "fen", name: "Fen Bilimleri", group: "İlkokul–Ortaokul" },
   { code: "turkce", name: "Türkçe", group: "İlkokul–Ortaokul" },
   { code: "hayatbilgisi", name: "Hayat Bilgisi", group: "İlkokul–Ortaokul" },
+  { code: "sinif", name: "Sınıf Öğretmenliği (branş testi)", group: "İlkokul–Ortaokul" },
   { code: "sosyal", name: "Sosyal Bilgiler", group: "İlkokul–Ortaokul" },
   { code: "inkilap", name: "T.C. İnkılap Tarihi ve Atatürkçülük", group: "İlkokul–Ortaokul" },
   { code: "din", name: "Din Kültürü ve Ahlak Bilgisi", group: "İlkokul–Ortaokul" },

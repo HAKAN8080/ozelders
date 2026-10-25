@@ -28,6 +28,7 @@ type ExamMeta = {
   booklet_path: string | null;
   booklet_label: string;
   duration_min: number;
+  purpose: "deneme" | "brans_testi";
 };
 
 const field =
@@ -91,6 +92,7 @@ export function ExamEditor({
             booklet_url: meta.booklet_url,
             booklet_label: meta.booklet_label,
             duration_min: meta.duration_min,
+            purpose: meta.purpose,
           },
           sections.flatMap((s) => s.questions.map((q) => ({ section: s.code, no: q.no, correct: q.correct, topic: q.topic }))),
         ),
@@ -207,6 +209,13 @@ export function ExamEditor({
             setDirty(true);
           }}
         />
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[15px] font-medium">Kullanım</span>
+          <select className={field} value={meta.purpose} onChange={(e) => upd("purpose", e.target.value as ExamMeta["purpose"])}>
+            <option value="deneme">Deneme (öğrenci listesinde görünür)</option>
+            <option value="brans_testi">Öğretmen branş testi (listede görünmez)</option>
+          </select>
+        </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Süre (dakika)</span>
           <input className={field} type="number" min={5} max={300} value={meta.duration_min} onChange={(e) => upd("duration_min", Number(e.target.value))} />

@@ -22,6 +22,7 @@ export function KayitForm({
     null,
   );
   const next = useSearchParams().get("next") ?? "";
+  const teacher = next.startsWith("/ogretmen-ol");
 
   if (state?.ok) {
     return (
@@ -41,8 +42,9 @@ export function KayitForm({
     <form action={action} className="flex flex-col gap-5">
       <input type="hidden" name="next" value={next} />
       <p className="text-lg leading-relaxed text-muted">
-        Veli hesabında adınız, e-postanız, şifreniz ve telefonunuz saklanır.
-        Çocuğunuz için yalnızca ad ve sınıf istenir.
+        {teacher
+          ? "Öğretmen başvurun bu hesaba kaydedilir. Adın, e-postan, şifren ve telefonun saklanır; başvurunun her adımında sana buradan haber veririz."
+          : "Veli hesabında adınız, e-postanız, şifreniz ve telefonunuz saklanır. Çocuğunuz için yalnızca ad ve sınıf istenir."}
       </p>
       {mode === "complete" && email ? <p>E-posta: {email}</p> : null}
       <label className="flex flex-col gap-2">
@@ -102,8 +104,9 @@ export function KayitForm({
           required
         />
         <span>
-          KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve
-          çocuğumun adıyla sınıfının işlenmesini anladım.
+          {teacher
+            ? "KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve başvuru bilgilerimin işlenmesini anladım."
+            : "KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve çocuğumun adıyla sınıfının işlenmesini anladım."}
         </span>
       </label>
       <label className="flex items-start gap-3">

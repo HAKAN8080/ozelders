@@ -94,6 +94,7 @@ export async function saveExam(
     booklet_url: string;
     booklet_label: string;
     duration_min: number;
+    purpose: "deneme" | "brans_testi";
   },
   questions: { section: string; no: number; correct: string; topic: string }[],
 ): Promise<ActionResult> {
@@ -118,6 +119,7 @@ export async function saveExam(
       booklet_url: meta.booklet_url.trim() || null,
       booklet_label: meta.booklet_label.trim() || null,
       duration_min: meta.duration_min,
+      purpose: meta.purpose === "brans_testi" ? "brans_testi" : "deneme",
     })
     .eq("id", examId);
   if (e1) return { ok: false, error: `Bilgiler kaydedilemedi: ${e1.message}` };

@@ -280,6 +280,9 @@ function Teachers() {
             Çocuğunuzun karşısına çıkan her öğretmen dört aşamadan geçer. Aşamaları atlamak mümkün değildir.
           </p>
           <p className="m-0 mt-1 -rotate-1 font-hand text-[26px] text-primary">ve dersler hep kayıtlı ✓</p>
+          <Link href="/ogretmen-ol" className="mt-2 self-start font-semibold text-primary hover:underline">
+            Öğretmen misin? Üyelik ücreti yok, başvur →
+          </Link>
         </div>
         <ol className="m-0 grid min-w-0 flex-[1_1_560px] list-none grid-cols-[repeat(auto-fit,minmax(240px,1fr))] border-t border-border p-0">
           {stages.map(([title, body], i) => (

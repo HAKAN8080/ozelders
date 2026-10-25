@@ -128,7 +128,22 @@ async function Result({
         <p className="m-0 text-sm text-muted">Net hesabı: {penaltyLabel(exam?.wrong_penalty ?? 3).toLocaleLowerCase("tr")}.</p>
       </section>
 
-      <Estimate result={result} exam={exam} next={selfUrl} />
+      {exam?.purpose === "brans_testi" ? (
+        <section className="tahta flex flex-wrap items-center justify-between gap-5 rounded-[10px] p-7 text-[#f2f5f1] sm:p-9">
+          <div className="flex max-w-[36em] flex-col gap-2">
+            <p className={`${eyebrow} m-0 text-[#cfe3d6]`}>Öğretmen branş testi</p>
+            <h2 className="m-0 font-serif text-[28px] leading-[1.2] font-bold">Sonucunu başvuruna işle.</h2>
+            <p className="m-0 text-[16px] leading-relaxed text-[#dce9e0]">
+              Cevap anahtarı branş testlerinde gösterilmez. Başvuru sayfandaki “Sonucu başvuruma işle” düğmesiyle bir sonraki adıma geç.
+            </p>
+          </div>
+          <Link href="/ogretmen-ol/basvuru" className="rounded-md bg-white px-6 py-4 font-semibold text-primary hover:bg-primary-soft">
+            Başvuruma dön
+          </Link>
+        </section>
+      ) : (
+        <Estimate result={result} exam={exam} next={selfUrl} />
+      )}
 
       {result.claimable && token ? (
         <form action={claimAttempt} className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-primary bg-primary-soft p-5">
@@ -142,7 +157,7 @@ async function Result({
         </form>
       ) : null}
 
-      {result.topics ? (
+      {exam?.purpose === "brans_testi" ? null : result.topics ? (
         <>
           <TopicReport topics={result.topics} sections={result.results.map((s) => ({ code: s.code, name: s.name }))} />
           <Recommendation topics={result.topics} />

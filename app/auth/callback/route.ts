@@ -19,6 +19,12 @@ export async function GET(request: Request) {
 
   const profile = await ensureVeliProfile();
   const wanted = safeNext(searchParams.get("next"));
-  const next = profile === "ok" ? (wanted ?? "/panel") : "/kayit";
+  // "blocked": veli dışı hesap (öğretmen, admin) → istenen sayfa; "missing": profil tamamlanmalı
+  const next =
+    profile === "ok"
+      ? (wanted ?? "/panel")
+      : profile === "blocked"
+        ? (wanted ?? "/")
+        : `/kayit${wanted ? `?next=${encodeURIComponent(wanted)}` : ""}`;
   return NextResponse.redirect(`${origin}${next}`);
 }

@@ -21,8 +21,11 @@ export default async function PanelPage() {
   if (!session.profile) {
     redirect("/kayit");
   }
+  if (session.profile.role === "admin") {
+    redirect("/admin");
+  }
   if (session.profile.role !== "veli") {
-    redirect("/giris");
+    redirect("/ogretmen-ol/basvuru");
   }
 
   const supabase = await createClient();
