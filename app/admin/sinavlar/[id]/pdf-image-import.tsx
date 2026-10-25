@@ -62,10 +62,10 @@ export function PdfImageImport({ sections, imgs }: { sections: EditableSection[]
   return (
     <section className="flex flex-col gap-4 rounded-[10px] border border-border bg-background p-5 sm:p-6">
       <div className="flex flex-col gap-1">
-        <h2 className="m-0 text-xl font-semibold">PDF&apos;ten soru resimleri</h2>
+        <h2 className="m-0 text-lg font-semibold">Soruları ayrı resim olarak kes (isteğe bağlı)</h2>
         <p className="m-0 max-w-[52em] text-[15px] leading-relaxed text-[#3d4743]">
-          Kendi hazırladığın deneme PDF&apos;ini seç; sorular numaralarına göre tek tek kesilir, önizlemede kontrol edip yüklersin. PDF&apos;in
-          kendisi sunucuya gitmez, yalnızca soru resimleri yüklenir. Resmi kitapçıklar için bunu kullanma, onlara bağlantı ver.
+          Kitapçık PDF&apos;i yerine her soruyu kendi kartında göstermek istersen: PDF&apos;i seç, sorular numaralarına göre kesilir,
+          önizlemede kontrol edip yüklersin. Soru resimleri varsa öğrenci kitapçık yerine soru kartlarını görür.
         </p>
       </div>
 

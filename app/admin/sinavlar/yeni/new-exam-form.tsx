@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { createExam } from "@/app/admin/sinavlar/actions";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
 import { parseExamPages } from "@/lib/exam-pdf";
+import { setPendingPdf } from "@/lib/pending-pdf";
 import { guessTopic } from "@/lib/topic-guess";
 
 const field =
@@ -36,11 +37,24 @@ function guessTitle(firstPage: string): string {
   return [year, "LGS", part].filter(Boolean).join(" ").trim();
 }
 
+/** Kendi PDF'imizde dersi metinden tahmin et (yalnızca varsayılan seçim için). */
+function guessSubject(text: string): string {
+  const u = text.toLocaleUpperCase("tr");
+  if (/FEN BİLİMLERİ|FEN BILIMLERI/.test(u)) return "fen";
+  if (/TÜRK DİLİ|TÜRKÇE|EDEBİYAT/.test(u)) return "turkce";
+  if (/İNKILAP/.test(u)) return "inkilap";
+  if (/DİN KÜLTÜRÜ/.test(u)) return "din";
+  if (/İNGİLİZCE|ENGLISH/.test(u)) return "ingilizce";
+  return "matematik";
+}
+
 export function NewExamForm() {
   const [sections, setSections] = useState<EditableSection[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [reading, setReading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  /** Cevap anahtarı olmayan kendi PDF'imiz: oluşturulunca soru resimleri bundan kesilir */
+  const [ownFile, setOwnFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
@@ -64,6 +78,32 @@ export function NewExamForm() {
       const { totalPages, text } = await extractText(pdf, { mergePages: false });
       const pages = text as string[];
       const parsed = parseExamPages(pages);
+      setOwnFile(null);
+      if (!parsed.sections.length) {
+        // Resmi kitapçık değil: kendi denememiz. Soru numaralarını say, bölümü aç.
+        const { detectQuestionCounts } = await import("@/lib/pdf-crop");
+        const { sizes } = await detectQuestionCounts(file);
+        if (!sizes.length) {
+          setSections([]);
+          setWarnings([
+            "PDF'te soru numarası (1., 2., 3. …) bulunamadı; taranmış bir görüntü olabilir. Aşağıdan bölümü elle ekle, sınavı oluştur, sonra düzenleme ekranında “Her sayfa bir soru” ile resimleri ekle.",
+          ]);
+          return;
+        }
+        const guess = guessSubject(pages.join(" "));
+        const order = [guess, ...SECTION_PRESETS.map((p) => p.code).filter((c) => c !== guess)];
+        setSections(
+          sizes.map((n, i) => {
+            const preset = SECTION_PRESETS.find((p) => p.code === order[i]) ?? SECTION_PRESETS[i];
+            return { code: preset.code, name: preset.name, questions: Array.from({ length: n }, (_, k) => ({ no: k + 1, correct: "", topic: "" })) };
+          }),
+        );
+        setOwnFile(file);
+        setWarnings([
+          `Kendi denemen olarak algılandı: ${sizes.join(" + ")} soru bulundu (cevap anahtarı yok). Bölüm adını kontrol et, cevapları gir ya da yapıştır. Sınavı oluşturunca bu PDF sitemize yüklenecek ve öğrenci cevap kâğıdının yanında açacak.`,
+        ]);
+        return;
+      }
       setWarnings(parsed.warnings);
       setSections(
         parsed.sections.map((s) => ({
@@ -103,6 +143,7 @@ export function NewExamForm() {
 
   function submit() {
     setError(null);
+    setPendingPdf(ownFile);
     startTransition(async () => {
       const res = await createExam({
         slug,
@@ -118,7 +159,10 @@ export function NewExamForm() {
           questions: s.questions.map((q) => ({ no: q.no, correct: q.correct, topic: q.topic })),
         })),
       });
-      if (res && !res.ok) setError(res.error);
+      if (res && !res.ok) {
+        setPendingPdf(null);
+        setError(res.error);
+      }
     });
   }
 
@@ -199,7 +243,7 @@ export function NewExamForm() {
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Kitapçık bağlantısı (resmi kaynak)</span>
           <input className={field} value={bookletUrl} onChange={(e) => setBookletUrl(e.target.value)} placeholder="https://…" inputMode="url" />
-          <span className="text-sm text-muted">Resmi kitapçık için. Kendi denememizse boş bırak; soru resimlerini bir sonraki ekranda eklersin.</span>
+          <span className="text-sm text-muted">Yalnızca resmi kitapçık için. Kendi denememizse boş bırak; PDF sitemize yüklenir.</span>
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Kitapçık notu</span>
@@ -212,7 +256,26 @@ export function NewExamForm() {
           <h2 className="m-0 text-xl font-semibold">3. Cevapları ve konuları kontrol et</h2>
           {sections.map((s, i) => (
             <QuestionTable
-              key={s.code}
+              key={i}
+              headerActions={
+                ownFile ? (
+                  <select
+                    aria-label="Bölüm (ders)"
+                    value={s.code}
+                    onChange={(e) => {
+                      const preset = SECTION_PRESETS.find((p) => p.code === e.target.value)!;
+                      setSections(sections.map((x, j) => (j === i ? { ...x, code: preset.code, name: preset.name } : x)));
+                    }}
+                    className="h-10 rounded-md border border-border bg-background px-2 text-sm font-semibold"
+                  >
+                    {SECTION_PRESETS.filter((p) => p.code === s.code || !sections.some((x) => x.code === p.code)).map((p) => (
+                      <option key={p.code} value={p.code}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : null
+              }
               section={s}
               onChange={(next) => setSections(sections.map((x, j) => (j === i ? next : x)))}
             />

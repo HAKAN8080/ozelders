@@ -69,6 +69,14 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
     setLoaded(true);
   }, [exam.slug]);
 
+  // Masaüstünde kitapçık varsayılan olarak cevap kâğıdının yanında açılır
+  useEffect(() => {
+    if (exam.booklet_src && window.matchMedia("(min-width: 1024px)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- ekran genişliği yalnızca tarayıcıda bilinir
+      setSplit(true);
+    }
+  }, [exam.booklet_src]);
+
   useEffect(() => {
     if (loaded) save(exam.slug, { answers, startedAt });
   }, [answers, startedAt, exam.slug, loaded]);
@@ -127,7 +135,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
   }
 
   const hasImages = Object.keys(exam.images).length > 0;
-  const canSplit = !hasImages && !!exam.booklet_url;
+  const canSplit = !hasImages && !!exam.booklet_src;
   const showSplit = split && canSplit;
 
   const startButton =
@@ -274,16 +282,16 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
   );
 
   // 1) Resmi kitapçık yan yana: solda kitapçık (kendi adresinden), sağda cevap kâğıdı
-  if (showSplit && exam.booklet_url) {
+  if (showSplit && exam.booklet_src) {
     return (
       <div className="defter flex min-h-full flex-1 flex-col text-foreground">
         {header}
         <main className="grid flex-1 grid-cols-[minmax(0,1fr)_440px] gap-6 px-6 pt-6 pb-10">
           <div className="sticky top-4 flex h-[calc(100vh-2rem)] flex-col gap-2">
-            <iframe src={exam.booklet_url} title="Sınav kitapçığı" className="w-full flex-1 rounded-[10px] border border-border bg-white" />
+            <iframe src={exam.booklet_src} title="Sınav kitapçığı" className="w-full flex-1 rounded-[10px] border border-border bg-white" />
             <p className="m-0 text-sm text-muted">
               Kitapçık burada görünmüyorsa{" "}
-              <a href={exam.booklet_url} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary">
+              <a href={exam.booklet_src} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary">
                 yeni sekmede aç
               </a>
               .
@@ -406,7 +414,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
               Soruları kitapçıktan oku, cevapları bu sayfadaki optik forma işaretle.
               <span className="hidden lg:inline"> Bilgisayardaysan kitapçığı bu sayfada, cevap kâğıdının yanında da açabilirsin.</span>
             </p>
-            {exam.booklet_url ? (
+            {exam.booklet_src ? (
               <div className="flex flex-col gap-2.5">
                 <button
                   type="button"
@@ -417,7 +425,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
                   Kitapçığı yanda aç
                 </button>
                 <a
-                  href={exam.booklet_url}
+                  href={exam.booklet_src}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2.5 rounded-md bg-primary px-5 py-4 text-[17px] font-semibold text-primary-foreground no-underline hover:bg-primary-hover lg:border lg:border-primary lg:bg-background lg:text-primary lg:hover:bg-primary-soft"

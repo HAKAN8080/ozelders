@@ -261,6 +261,7 @@ export type Database = {
       exams: {
         Row: {
           booklet_label: string | null
+          booklet_path: string | null
           booklet_url: string | null
           created_at: string
           duration_min: number
@@ -274,6 +275,7 @@ export type Database = {
         }
         Insert: {
           booklet_label?: string | null
+          booklet_path?: string | null
           booklet_url?: string | null
           created_at?: string
           duration_min: number
@@ -287,6 +289,7 @@ export type Database = {
         }
         Update: {
           booklet_label?: string | null
+          booklet_path?: string | null
           booklet_url?: string | null
           created_at?: string
           duration_min?: number

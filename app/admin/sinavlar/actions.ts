@@ -121,8 +121,8 @@ export async function setExamStatus(examId: string, status: "taslak" | "yayinda"
     if (!secs?.length || secs.some((s) => s.question_count < 1)) {
       return { ok: false, error: "Yayınlamadan önce her bölümde en az bir soru olmalı." };
     }
-    const { data: exam } = await supabase.from("exams").select("booklet_url, published_at").eq("id", examId).single();
-    if (!exam?.booklet_url) {
+    const { data: exam } = await supabase.from("exams").select("booklet_url, booklet_path, published_at").eq("id", examId).single();
+    if (!exam?.booklet_url && !exam?.booklet_path) {
       // Kitapçık bağlantısı yoksa her sorunun resmi olmalı (kendi hazırladığımız deneme).
       const total = secs.reduce((n, s) => n + s.question_count, 0);
       const { count } = await supabase
@@ -132,7 +132,7 @@ export async function setExamStatus(examId: string, status: "taslak" | "yayinda"
       if ((count ?? 0) < total) {
         return {
           ok: false,
-          error: `Yayınlamak için ya kitapçık bağlantısı gir ya da tüm sorulara resim ekle (${count ?? 0}/${total} resim var).`,
+          error: `Yayınlamak için kitapçık PDF'ini yükle, resmi kitapçık bağlantısı gir ya da tüm sorulara resim ekle (${count ?? 0}/${total} resim var).`,
         };
       }
     }
@@ -158,10 +158,12 @@ export async function deleteDraftExam(examId: string): Promise<ActionResult> {
   const { count } = await supabase.from("exam_attempts").select("id", { count: "exact", head: true }).eq("exam_id", examId);
   if ((count ?? 0) > 0) return { ok: false, error: "Çözülmüş sınav silinemez; arşive al." };
   const { data: imgs } = await supabase.from("exam_question_images").select("path").eq("exam_id", examId);
+  const { data: bk } = await supabase.from("exams").select("booklet_path").eq("id", examId).maybeSingle();
   const { data: deleted, error } = await supabase.from("exams").delete().eq("id", examId).eq("status", "taslak").select("id");
   if (error) return { ok: false, error: error.message };
   if (!deleted?.length) return { ok: false, error: "Yalnızca taslak sınav silinebilir." };
   if (imgs?.length) await supabase.storage.from("exam-images").remove(imgs.map((i) => i.path));
+  if (bk?.booklet_path) await supabase.storage.from("exam-booklets").remove([bk.booklet_path]);
   redirect("/admin/sinavlar");
 }
 
@@ -221,4 +223,37 @@ export async function removeQuestionImage(examId: string, section: string, no: n
   if (old?.length) await supabase.storage.from("exam-images").remove(old.map((o) => o.path));
   updateTag("exams");
   return { ok: true };
+}
+
+/**
+ * Kendi denememizin kitapçık PDF'ini sınava bağlar (dosyayı tarayıcı doğrudan depoya yükler).
+ * path null ise kaldırır. Eski dosya depodan silinir.
+ */
+export async function setExamBooklet(examId: string, path: string | null): Promise<ActionResult> {
+  await requireAdmin(`/admin/sinavlar/${examId}`);
+  if (!UUID.test(examId)) return { ok: false, error: "Geçersiz sınav." };
+  if (path !== null && (!path.startsWith(`${examId}/`) || !/^[0-9a-f-]+\/kitapcik-[a-z0-9-]+\.pdf$/.test(path))) {
+    return { ok: false, error: "Geçersiz dosya yolu." };
+  }
+  const supabase = await createClient();
+  const { data: old } = await supabase.from("exams").select("booklet_path, status").eq("id", examId).maybeSingle();
+  if (!old) return { ok: false, error: "Sınav bulunamadı." };
+  if (path === null && old.status === "yayinda") {
+    const [{ data: ex }, { count }, { data: secs }] = await Promise.all([
+      supabase.from("exams").select("booklet_url").eq("id", examId).single(),
+      supabase.from("exam_question_images").select("no", { count: "exact", head: true }).eq("exam_id", examId),
+      supabase.from("exam_sections").select("question_count").eq("exam_id", examId),
+    ]);
+    const total = (secs ?? []).reduce((n, s) => n + s.question_count, 0);
+    if (!ex?.booklet_url && (count ?? 0) < total) {
+      return { ok: false, error: "Yayındaki sınavın tek kitapçığı bu. Kaldırmadan önce sınavı yayından kaldır." };
+    }
+  }
+  const { error } = await supabase.from("exams").update({ booklet_path: path }).eq("id", examId);
+  if (error) return { ok: false, error: `Kitapçık kaydedilemedi: ${error.message}` };
+  if (old.booklet_path && old.booklet_path !== path) {
+    await supabase.storage.from("exam-booklets").remove([old.booklet_path]);
+  }
+  updateTag("exams");
+  return { ok: true, message: path ? "Kitapçık PDF'i yüklendi." : "Kitapçık PDF'i kaldırıldı." };
 }

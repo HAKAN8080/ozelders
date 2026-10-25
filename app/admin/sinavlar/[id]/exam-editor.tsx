@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { deleteDraftExam, saveExam, setExamStatus, type ActionResult } from "@/app/admin/sinavlar/actions";
+import { BookletUpload } from "@/app/admin/sinavlar/[id]/booklet-upload";
 import { PdfImageImport } from "@/app/admin/sinavlar/[id]/pdf-image-import";
 import { BulkImageButton, ImageCell, useQuestionImages } from "@/app/admin/sinavlar/[id]/question-images";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
@@ -19,6 +20,7 @@ type ExamMeta = {
   subtitle: string;
   grade: number;
   booklet_url: string;
+  booklet_path: string | null;
   booklet_label: string;
   duration_min: number;
 };
@@ -46,6 +48,7 @@ export function ExamEditor({
   const [pending, startTransition] = useTransition();
 
   const imgs = useQuestionImages(exam.id, images);
+  const [bookletPath, setBookletPath] = useState(exam.booklet_path);
   const totalQ = sections.reduce((n, s) => n + s.questions.length, 0);
   const missing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct).length, 0);
 
@@ -145,17 +148,22 @@ export function ExamEditor({
         </p>
       ) : null}
 
-      <section className="flex flex-col gap-2 rounded-[10px] border border-border bg-background p-5 text-[15px] leading-relaxed">
+      <section className="flex flex-col gap-1.5 rounded-[10px] border border-border bg-background p-5 text-[15px] leading-relaxed">
         <h2 className="m-0 text-lg font-semibold">Öğrenci soruları nereden görecek?</h2>
         <p className="m-0 text-[#3d4743]">
-          <strong>Resmi kitapçık:</strong> aşağıya kitapçığın resmi bağlantısını gir; öğrenci kitapçığı cevap kâğıdının yanında açar, dosya bizde durmaz.
+          <strong>Kendi denememiz:</strong> kitapçık PDF&apos;ini aşağıdan yükle, cevap kâğıdının yanında açılır.
           <br />
-          <strong>Kendi denememiz:</strong> PDF&apos;ini aşağıdan yükle, sorular otomatik kesilsin; ya da tablodaki &ldquo;Resim&rdquo; sütunundan
-          soruları tek tek ekle / değiştir.
+          <strong>Resmi sınav:</strong> PDF yükleme; &ldquo;Kitapçık bağlantısı&rdquo; alanına resmi adresi gir, kendi sitesinden açılır.
         </p>
         <p className="m-0 font-semibold">
-          Soru resmi: {imgs.count} / {totalQ}
-          {meta.booklet_url ? " · kitapçık bağlantısı var" : ""}
+          Şu an:{" "}
+          {bookletPath
+            ? "kitapçık PDF'i bizde (yan ekranda açılır)"
+            : meta.booklet_url
+              ? "resmi bağlantıdan açılır"
+              : imgs.count
+                ? `soru resimleri (${imgs.count} / ${totalQ})`
+                : "henüz kitapçık yok — yayınlanamaz"}
         </p>
         {imgs.error ? (
           <p className="m-0 text-destructive" role="alert">
@@ -164,7 +172,14 @@ export function ExamEditor({
         ) : null}
       </section>
 
-      <PdfImageImport sections={sections} imgs={imgs} />
+      <BookletUpload examId={exam.id} initialPath={exam.booklet_path} onChange={setBookletPath} />
+
+      <details className="rounded-[10px] border border-border bg-background [&_section]:border-0">
+        <summary className="cursor-pointer px-5 py-4 text-[15px] font-semibold">
+          Gelişmiş: soruları ayrı resim olarak kes {imgs.count ? `· ${imgs.count} resim var` : ""}
+        </summary>
+        <PdfImageImport sections={sections} imgs={imgs} />
+      </details>
 
       <section className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 rounded-[10px] border border-border bg-background p-6">
         <h2 className="col-span-full m-0 text-xl font-semibold">Sınav bilgileri</h2>
@@ -205,9 +220,10 @@ export function ExamEditor({
           key={s.code}
           section={s}
           fixedCount
-          extraHeader="Resim"
-          renderExtra={(q) => <ImageCell section={s.code} no={q.no} imgs={imgs} />}
-          headerActions={<BulkImageButton section={s} imgs={imgs} />}
+          // Kitapçık PDF'i varken soru resmi sütunu gereksiz; resim eklenmişse yine görünsün
+          extraHeader={bookletPath && !imgs.count ? undefined : "Resim"}
+          renderExtra={bookletPath && !imgs.count ? undefined : (q) => <ImageCell section={s.code} no={q.no} imgs={imgs} />}
+          headerActions={bookletPath && !imgs.count ? undefined : <BulkImageButton section={s} imgs={imgs} />}
           onChange={(next) => {
             setSections(sections.map((x, j) => (j === i ? next : x)));
             setDirty(true);

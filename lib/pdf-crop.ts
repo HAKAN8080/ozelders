@@ -77,25 +77,7 @@ export async function cropExamPdf(
   }
 
   // 2) Soru numarası adaylarını topla (sayfa → sütun → yukarıdan aşağı)
-  const all: Marker[] = [];
-  for (let p = 0; p < pages.length; p++) {
-    const { items, w } = pages[p];
-    // İki sütunlu düzende sağ sütun sayfanın ortasından biraz önce başlayabilir (LGS: ~%47)
-    const colOf = (x: number) => (x > w * SPLIT ? 1 : 0);
-    const colLeft = [0, 1].map((c) => Math.min(...items.filter((it) => colOf(it.transform[0]) === c).map((it) => it.transform[0]), Infinity));
-    const cands = items
-      .map((it) => {
-        const m = it.str.trim().match(/^(\d{1,2})\s?[.)]/);
-        if (!m) return null;
-        const x = it.transform[0];
-        const col = colOf(x);
-        if (x - colLeft[col] > 30 * SCALE) return null; // satır başında değil
-        return { no: Number(m[1]), page: p, col, top: it.transform[1] - it.height, x };
-      })
-      .filter((m): m is Marker => !!m)
-      .sort((a, b) => a.col - b.col || a.top - b.top);
-    all.push(...cands);
-  }
+  const all = collectCandidates(pages);
 
   // Her "1." adayından başlayarak sırayla eşleştir; en uzun diziyi seç.
   // Böylece kapaktaki "1. … 2. … 3." gibi numaralı açıklamalar soru sanılmaz.
@@ -294,4 +276,69 @@ async function cut(src: HTMLCanvasElement, x0: number, y0: number, x1: number, y
   const blob = await new Promise<Blob | null>((res) => out.toBlob(res, "image/webp", 0.85));
   if (!blob) return null;
   return { blob, url: URL.createObjectURL(blob), width: out.width, height: out.height };
+}
+
+function collectCandidates(pages: PageInfo[]): Marker[] {
+  const all: Marker[] = [];
+  for (let p = 0; p < pages.length; p++) {
+    const { items, w } = pages[p];
+    // İki sütunlu düzende sağ sütun sayfanın ortasından biraz önce başlayabilir (LGS: ~%47)
+    const colOf = (x: number) => (x > w * SPLIT ? 1 : 0);
+    const colLeft = [0, 1].map((c) => Math.min(...items.filter((it) => colOf(it.transform[0]) === c).map((it) => it.transform[0]), Infinity));
+    const cands = items
+      .map((it) => {
+        const m = it.str.trim().match(/^(\d{1,2})\s?[.)]/);
+        if (!m) return null;
+        const x = it.transform[0];
+        const col = colOf(x);
+        if (x - colLeft[col] > 30 * SCALE) return null; // satır başında değil
+        return { no: Number(m[1]), page: p, col, top: it.transform[1] - it.height, x };
+      })
+      .filter((m): m is Marker => !!m)
+      .sort((a, b) => a.col - b.col || a.top - b.top);
+    all.push(...cands);
+  }
+  return all;
+}
+
+/**
+ * Cevap anahtarı olmayan (kendi hazırladığımız) PDF'te soru sayısını bulur.
+ * Numaralar 1'den sırayla aranır; "1." yeniden başlarsa yeni bölüm sayılır.
+ * Dönen dizi: bölüm başına soru sayısı (ör. [20, 20]). Hiç bulunamazsa [].
+ */
+export async function detectQuestionCounts(file: File): Promise<{ sizes: number[]; pages: number }> {
+  const { getDocumentProxy } = await import("unpdf");
+  const pdf = await getDocumentProxy(new Uint8Array(await file.arrayBuffer()));
+  const pages: PageInfo[] = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({ scale: SCALE });
+    const h = Math.ceil(vp.height);
+    const tc = await page.getTextContent();
+    const items = (tc.items as TextItem[])
+      .filter((it) => typeof it.str === "string" && it.str.trim())
+      .map((it) => ({ str: it.str, transform: [it.transform[4] * SCALE, h - it.transform[5] * SCALE], height: it.height * SCALE, width: it.width * SCALE }));
+    pages.push({ items, w: Math.ceil(vp.width), h });
+    page.cleanup();
+  }
+  const all = collectCandidates(pages);
+  let best: number[] = [];
+  for (let i = 0; i < all.length; i++) {
+    if (all[i].no !== 1) continue;
+    const sizes = [0];
+    let expected = 1;
+    for (let j = i; j < all.length; j++) {
+      const n = all[j].no;
+      if (n === expected) {
+        sizes[sizes.length - 1]++;
+        expected++;
+      } else if (n === 1 && expected > 3) {
+        sizes.push(1);
+        expected = 2;
+      }
+    }
+    const total = sizes.reduce((x, y) => x + y, 0);
+    if (total >= best.reduce((x, y) => x + y, 0)) best = sizes;
+  }
+  return { sizes: best.filter((n) => n > 0), pages: pdf.numPages };
 }

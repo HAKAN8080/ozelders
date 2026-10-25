@@ -44,3 +44,10 @@ export function naturalSort(files: File[]): File[] {
   const c = new Intl.Collator("tr", { numeric: true, sensitivity: "base" });
   return [...files].sort((a, b) => c.compare(a.name, b.name));
 }
+
+export const EXAM_BOOKLET_BUCKET = "exam-booklets";
+
+/** Kendi denemelerimizin kitapçık PDF'i (bizim depoda). */
+export function bookletPublicUrl(path: string): string {
+  return `${getSupabaseUrl()}/storage/v1/object/public/${EXAM_BOOKLET_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
+}

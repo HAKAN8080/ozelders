@@ -23,7 +23,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
   const [{ data: exam }, { data: sections }, { data: questions }, { count }, { data: imgRows }] = await Promise.all([
     supabase
       .from("exams")
-      .select("id, slug, title, subtitle, grade, booklet_url, booklet_label, duration_min, status, published_at")
+      .select("id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, status, published_at")
       .eq("id", id)
       .maybeSingle(),
     supabase.from("exam_sections").select("code, name, position").eq("exam_id", id).order("position"),
@@ -52,7 +52,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
     >
       {sp.yeni ? (
         <p className="m-0 rounded-md bg-primary-soft p-4 text-[15px]" role="status">
-          Sınav <strong>taslak</strong> olarak oluşturuldu. Cevapları ve konuları son kez kontrol et; kitapçık bağlantısını gir ya da soru resimlerini ekle, sonra yayınla.
+          Sınav <strong>taslak</strong> olarak oluşturuldu. Cevapları ve konuları son kez kontrol et; kitapçık PDF&apos;ini yükle (ya da resmi kitapçık bağlantısını gir), sonra yayınla.
         </p>
       ) : null}
       <ExamEditor
@@ -64,6 +64,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
           subtitle: exam.subtitle ?? "",
           grade: exam.grade,
           booklet_url: exam.booklet_url ?? "",
+          booklet_path: exam.booklet_path,
           booklet_label: exam.booklet_label ?? "",
           duration_min: exam.duration_min,
         }}
