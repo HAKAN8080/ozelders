@@ -104,9 +104,12 @@ export function KayitForm({
           required
         />
         <span>
+          <Link href="/kvkk" target="_blank" className="font-semibold text-primary underline-offset-4 hover:underline">
+            KVKK aydınlatma metnini
+          </Link>{" "}
           {teacher
-            ? "KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve başvuru bilgilerimin işlenmesini anladım."
-            : "KVKK aydınlatma metnini okudum. Adımın, e-postamın, telefonumun ve çocuğumun adıyla sınıfının işlenmesini anladım."}
+            ? "okudum. Adımın, e-postamın, telefonumun ve başvuru bilgilerimin işlenmesini anladım."
+            : "okudum. Adımın, e-postamın, telefonumun ve çocuğumun adıyla sınıfının işlenmesini anladım."}
         </span>
       </label>
       <label className="flex items-start gap-3">

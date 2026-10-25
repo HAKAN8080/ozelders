@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
 import type { Database, Json } from "@/lib/database.types";
+import { sendMail, teacherMail, type Mail } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 import { DEMO_PASS, DEMO_RUBRIC, demoScore } from "@/lib/teacher";
 
@@ -23,6 +25,15 @@ async function ctx(appId: string) {
   if (!app) throw new Error("Başvuru bulunamadı");
   return { supabase, app, adminId: session.userId! };
 }
+
+/** Başvurana e-posta (yanıttan sonra gönderilir; hata işlemi bozmaz). */
+async function notify(supabase: Awaited<ReturnType<typeof createClient>>, profileId: string, make: (to: string) => Mail) {
+  const { data } = await supabase.from("profiles").select("email").eq("id", profileId).maybeSingle();
+  const to = data?.email;
+  if (to) after(() => sendMail(make(to)));
+}
+
+const whenFmt = new Intl.DateTimeFormat("tr-TR", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Istanbul" });
 
 function done(appId: string, message: string): AdminResult {
   revalidatePath(`/admin/ogretmenler/${appId}`);
@@ -45,7 +56,8 @@ export async function scheduleDemo(appId: string, at: string, url: string): Prom
     .update({ demo_scheduled_at: when.toISOString(), demo_meeting_url: url || null, demo_evaluator_id: adminId, updated_at: new Date().toISOString() })
     .eq("id", appId);
   if (error) return { ok: false, error: error.message };
-  return done(appId, "Demo ders planlandı. Başvuran bu saati kendi sayfasında görür.");
+  await notify(supabase, app.profile_id, (to) => teacherMail.demoScheduled(to, whenFmt.format(when), url || null));
+  return done(appId, "Demo ders planlandı; başvurana e-posta gönderildi.");
 }
 
 export async function scoreDemo(appId: string, rubric: Record<string, number>, idVerified: boolean, note: string): Promise<AdminResult> {
@@ -76,6 +88,9 @@ export async function scoreDemo(appId: string, rubric: Record<string, number>, i
     .eq("id", appId);
   if (error) return { ok: false, error: error.message };
   await log(supabase, adminId, pass ? "teacher_demo_pass" : "teacher_demo_fail", appId, { score });
+  await notify(supabase, app.profile_id, (to) =>
+    pass ? teacherMail.demoPassed(to) : teacherMail.rejected(to, "Demo ders değerlendirmesinde baraj puanına ulaşılamadı."),
+  );
   return done(appId, pass ? `Demo puanı ${score}: belge aşamasına geçti.` : `Demo puanı ${score}: baraj altında, başvuru sonuçlandırıldı.`);
 }
 
@@ -108,15 +123,17 @@ export async function verifyDocuments(
   const { error } = await supabase.from("teacher_applications").update(patch).eq("id", appId);
   if (error) return { ok: false, error: error.message };
   await log(supabase, adminId, "teacher_documents", appId, { id: v.id, diploma: v.diploma, criminal: v.criminal });
+  if (all) await notify(supabase, app.profile_id, (to) => teacherMail.docsVerified(to));
   return done(appId, all ? "Belgeler doğrulandı, barkodlar silindi. Sözleşme aşamasına geçti." : "Kaydedildi.");
 }
 
 export async function approveTeacher(appId: string, displayName: string): Promise<AdminResult> {
-  const { supabase } = await ctx(appId);
+  const { supabase, app } = await ctx(appId);
   const name = displayName.trim().replace(/\s+/g, " ");
   if (name.length < 3 || name.length > 40) return { ok: false, error: "Vitrin adı 3–40 karakter olmalı (ör. Ayşe Ö.)." };
   const { error } = await supabase.rpc("admin_approve_teacher", { p_app: appId, p_display_name: name });
   if (error) return { ok: false, error: error.message };
+  await notify(supabase, app.profile_id, (to) => teacherMail.approved(to));
   return done(appId, "Onaylandı: öğretmen gölge dönemde, başlangıç bandında (%30).");
 }
 
@@ -145,5 +162,6 @@ export async function rejectApplication(appId: string, reason: string): Promise<
     .eq("id", appId);
   if (error) return { ok: false, error: error.message };
   await log(supabase, adminId, "teacher_reject", appId, { reason: r });
+  await notify(supabase, app.profile_id, (to) => teacherMail.rejected(to, r));
   return done(appId, "Başvuru sonuçlandırıldı.");
 }

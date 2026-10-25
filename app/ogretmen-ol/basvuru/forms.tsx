@@ -191,7 +191,10 @@ export function DocumentsForm() {
       <label className="flex items-start gap-3 text-[16px] leading-relaxed">
         <input type="checkbox" name="criminal_record_consent" required className={check} />
         <span>
-          Çocuklarla çalışacağım için adli sicil kaydımın barkodla doğrulanmasına açık rıza veriyorum. Belge kopyası
+          <a href="/kvkk" target="_blank" className="font-semibold text-primary underline">
+            KVKK aydınlatma metnini
+          </a>{" "}
+          okudum. Çocuklarla çalışacağım için adli sicil kaydımın barkodla doğrulanmasına açık rıza veriyorum. Belge kopyası
           saklanmadığını, barkodların doğrulamadan sonra silindiğini ve kaydın her yıl yenileneceğini biliyorum.
         </span>
       </label>
@@ -239,7 +242,10 @@ export function AgreementForm() {
         <label className="flex items-start gap-3">
           <input type="checkbox" name="contract" required className={check} />
           <span>
-            Öğretmen hizmet sözleşmesini (sürüm 2026-10) okudum ve kabul ediyorum: komisyon bantları, ders başı taban
+            <a href="/ogretmen-sozlesmesi" target="_blank" className="font-semibold text-primary underline">
+              Öğretmen hizmet sözleşmesini
+            </a>{" "}
+            (sürüm 2026-10) okudum ve kabul ediyorum: komisyon bantları, ders başı taban
             ücret, 72 saatlik itiraz süresi, haftalık ödeme, haksız alınan ücretin sonraki ödemelerden mahsubu ve öğrenciyle
             platform dışında ücretli ders yapmama.
           </span>
