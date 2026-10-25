@@ -2,6 +2,12 @@
 
 **Karar:** Veli ödemesi lisanslı ödeme kuruluşunun pazaryeri ürünü üzerinden alınır ve bölünür. Öğretmenin payı doğrudan öğretmene (bireysel alt üye) gider; para ÖzelDersBul hesabına girmez. ÖzelDersBul yalnız kendi hizmet bedelini/komisyonunu faturalar. Bordro (A), serbest meslek makbuzu (B), gider pusulası (C) ileride değerlendirilecek.
 
+## Komisyon (karar: 2026-10-25)
+- Standart komisyon **%30**; öğretmen 3 ayda bir otomatik karneyle **%27 / %24 / %20** bantlarına iner. Bonus yok.
+- Karne (100 puan): paket yenileme 30, öğrenci gelişimi 25, veli puanı 20, güvenilirlik 15, ders raporu 10. Dönemde < 24 ders → bant korunur; dönemde en fazla 1 bant değişir.
+- Öğretmen payı (`subMerchantPrice`) = kalem fiyatı × (1 − bant komisyonu), **ödeme anındaki bantla** sabitlenir.
+- Sağlayıcı: **PayTR** (mevcut ilişki). Bireysel (vergi levhasız) alt mağaza kabulü teyit edilecek; olmazsa iyzico yedek.
+
 ## Neden
 - Kayıtsız (şahıs) öğretmene ödemeyi biz yaparsak bordro ya da %20 stopajlı belge zorunlu; haftalık düzenli ders "arızi" sayılmaz.
 - 1 Ocak 2025'ten beri aracı hizmet sağlayıcılar satıcılara yaptıkları ödemelerden %1 stopaj keser (CK 9284). Pazaryeri modelinde bu yükümlülüğün kimde olduğu YMM'ye sorulacak.
