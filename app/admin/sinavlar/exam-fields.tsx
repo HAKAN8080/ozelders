@@ -1,6 +1,6 @@
 "use client";
 
-import { EXAM_KINDS, GRADES, gradeLabel, kindInfo, penaltyLabel, SUBJECTS, type ExamKind } from "@/lib/exam-kinds";
+import { EXAM_KINDS, GRADES, gradeLabel, kindInfo, penaltyLabel, SUBJECT_GROUPS, SUBJECTS, type ExamKind } from "@/lib/exam-kinds";
 
 const field =
   "h-12 w-full rounded-lg border border-border bg-background px-4 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -73,7 +73,7 @@ export function SubjectSelect({
   placeholder?: string;
   label?: string;
 }) {
-  const groups = ["Ortaokul", "Lise", "YKS"] as const;
+  const groups = SUBJECT_GROUPS;
   return (
     <select
       aria-label={label}

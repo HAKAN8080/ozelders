@@ -10,7 +10,8 @@ const totalQuestions = (e: PublicExam) => e.sections.reduce((n, s) => n + s.ques
 
 const GROUPS = [
   { key: "hepsi", label: "Tümü", test: () => true },
-  { key: "ortaokul", label: "Ortaokul · LGS", test: (e: PublicExam) => e.kind === "lgs" || e.grade <= 8 },
+  { key: "ilkokul", label: "İlkokul (3–4)", test: (e: PublicExam) => e.grade <= 4 },
+  { key: "ortaokul", label: "Ortaokul · LGS (5–8)", test: (e: PublicExam) => e.kind === "lgs" || (e.grade >= 5 && e.grade <= 8) },
   { key: "lise", label: "Lise", test: (e: PublicExam) => e.grade >= 9 && !["tyt", "ayt", "ydt"].includes(e.kind) },
   { key: "yks", label: "YKS · TYT-AYT", test: (e: PublicExam) => ["tyt", "ayt", "ydt"].includes(e.kind) },
 ] as const;

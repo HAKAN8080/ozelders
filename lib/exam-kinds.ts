@@ -1,4 +1,4 @@
-/** Sınav türleri, dersler ve sınıflar. Ortaokul (LGS) + lise (YKS) + okul denemeleri. */
+/** Sınav türleri, dersler ve sınıflar. 3.–12. sınıf: okul dersleri (10 yılın 8'i) + LGS (8. sınıf) + YKS (12. sınıf / mezun). */
 
 export type ExamKind = "lgs" | "tyt" | "ayt" | "ydt" | "okul" | "diger";
 
@@ -22,7 +22,7 @@ export function kindInfo(code: string) {
   return EXAM_KINDS.find((k) => k.code === code) ?? EXAM_KINDS[EXAM_KINDS.length - 1];
 }
 
-export const GRADES = [5, 6, 7, 8, 9, 10, 11, 12] as const;
+export const GRADES = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 export function gradeLabel(g: number) {
   return g === 12 ? "12. sınıf / mezun" : `${g}. sınıf`;
@@ -33,13 +33,18 @@ export function penaltyLabel(p: number) {
 }
 
 /** Bölüm (ders) seçenekleri. Kod veritabanında ^[a-z]{2,20}$ olmalı. */
-export const SUBJECTS: { code: string; name: string; group: "Ortaokul" | "Lise" | "YKS" }[] = [
-  { code: "matematik", name: "Matematik", group: "Ortaokul" },
-  { code: "fen", name: "Fen Bilimleri", group: "Ortaokul" },
-  { code: "turkce", name: "Türkçe", group: "Ortaokul" },
-  { code: "inkilap", name: "T.C. İnkılap Tarihi ve Atatürkçülük", group: "Ortaokul" },
-  { code: "din", name: "Din Kültürü ve Ahlak Bilgisi", group: "Ortaokul" },
-  { code: "ingilizce", name: "İngilizce", group: "Ortaokul" },
+export const SUBJECT_GROUPS = ["İlkokul–Ortaokul", "Lise", "YKS"] as const;
+export type SubjectGroup = (typeof SUBJECT_GROUPS)[number];
+
+export const SUBJECTS: { code: string; name: string; group: SubjectGroup }[] = [
+  { code: "matematik", name: "Matematik", group: "İlkokul–Ortaokul" },
+  { code: "fen", name: "Fen Bilimleri", group: "İlkokul–Ortaokul" },
+  { code: "turkce", name: "Türkçe", group: "İlkokul–Ortaokul" },
+  { code: "hayatbilgisi", name: "Hayat Bilgisi", group: "İlkokul–Ortaokul" },
+  { code: "sosyal", name: "Sosyal Bilgiler", group: "İlkokul–Ortaokul" },
+  { code: "inkilap", name: "T.C. İnkılap Tarihi ve Atatürkçülük", group: "İlkokul–Ortaokul" },
+  { code: "din", name: "Din Kültürü ve Ahlak Bilgisi", group: "İlkokul–Ortaokul" },
+  { code: "ingilizce", name: "İngilizce", group: "İlkokul–Ortaokul" },
   { code: "edebiyat", name: "Türk Dili ve Edebiyatı", group: "Lise" },
   { code: "fizik", name: "Fizik", group: "Lise" },
   { code: "kimya", name: "Kimya", group: "Lise" },
@@ -82,6 +87,8 @@ export function guessSubject(text: string): string {
   if (/DİN KÜLTÜRÜ/.test(u)) return "din";
   if (/İNGİLİZCE|ENGLISH/.test(u)) return "ingilizce";
   if (/TÜRKÇE/.test(u)) return "turkce";
+  if (/HAYAT BİLGİSİ/.test(u)) return "hayatbilgisi";
+  if (/SOSYAL BİLGİLER/.test(u)) return "sosyal";
   return "matematik";
 }
 

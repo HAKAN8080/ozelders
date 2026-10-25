@@ -59,14 +59,15 @@ function Hero() {
       <ChalkFormulas />
       <div className="relative mx-auto flex max-w-[1200px] flex-wrap items-center gap-14 px-4 pt-16 pb-20 sm:px-6 lg:pt-22 lg:pb-24">
         <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
-          <p className={`${eyebrow} m-0 text-primary`}>Ortaokul ve lise · LGS · YKS · okul dersleri</p>
+          <p className={`${eyebrow} m-0 text-primary`}>3.–12. sınıf · tüm okul dersleri · LGS ve YKS hazırlık</p>
           <h1 className="m-0 font-serif text-4xl leading-[1.08] font-bold tracking-[-0.01em] sm:text-5xl lg:text-[56px]">
             Hedef okuluna kaç net uzaktasın?
             <span className="mt-3 block text-[0.62em] leading-[1.2] text-primary">Tek denemede öğren, doğru öğretmenle kapat.</span>
           </h1>
           <p className="m-0 max-w-[34em] text-[19px] leading-relaxed text-[#3d4743]">
-            Ücretsiz denemeyi çöz; tahmini puanını, Türkiye sıralamanı ve hedef lisene ya da bölümüne kalan
-            neti hemen gör. Eksik konuların için seçilmiş bir öğretmenle birebir çalış.
+            3. sınıftan 12. sınıfa, okul derslerinde de sınav yılında da: ücretsiz denemeyi çöz, eksik konularını
+            gör. LGS ya da YKS yılındaysan tahmini puanını ve hedefine kalan neti de. Eksiklerin için seçilmiş bir
+            öğretmenle birebir çalış.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
@@ -262,7 +263,7 @@ function PackageGridSkeleton() {
 
 function Teachers() {
   const stages = [
-    ["Branş testi", "Kendi branşında LGS/YKS düzeyinde sorular, %85 başarı şartı."],
+    ["Branş testi", "Ders verdiği sınıf düzeyinde branş soruları, %85 başarı şartı."],
     ["Canlı demo ders", "Konu hâkimiyeti, anlatım ve etkileşim puanlanır."],
     ["Belge doğrulama", "Kimlik, diploma ve adli sicil kaydı her yıl yenilenir."],
     ["Gözetimli ilk dersler", "İlk 3 ders kıdemli bir öğretmen tarafından incelenir."],

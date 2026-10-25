@@ -23,7 +23,7 @@ export default function DenemePage() {
               Çöz, netini gör, eksiğini bul.
             </h1>
             <p className="m-0 max-w-[36em] text-[19px] leading-relaxed text-[#3d4743]">
-              Ortaokuldan liseye, LGS&apos;den YKS&apos;ye. Kitapçık cevap kâğıdının yanında açılır, netin ve sıralaman
+              3. sınıftan 12. sınıfa: okul dersleri, LGS ve YKS. Kitapçık cevap kâğıdının yanında açılır, netin ve sıralaman
               hemen hesaplanır. Kayıt olmadan başlayabilirsin.
             </p>
           </div>
