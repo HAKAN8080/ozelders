@@ -11,11 +11,11 @@ Net hesabı = yanlış götürmez → düzenleyicide Kullanım = Öğretmen bran
 
 | Test | Durum |
 |---|---|
-| Ortaokul Matematik (5–8) | hazır, yüklenmedi |
-| Ortaokul Fen Bilimleri (5–8) | hazır, bağımsız kontrol yapıldı, yüklenmedi |
-| Ortaokul Türkçe (5–8) | hazır, bağımsız kontrol yapıldı, yüklenmedi |
-| Ortaokul İngilizce (5–8) | hazır, bağımsız kontrol yapıldı, yüklenmedi |
-| Lise Matematik (9–12, 5 şık) | hazır, bağımsız kontrol yapıldı, yüklenmedi |
-| Sınıf Öğretmenliği (3–4) | hazır, bağımsız kontrol yapıldı, yüklenmedi |
+| Ortaokul Matematik (5–8) | yayında (/deneme/matematik) |
+| Ortaokul Fen Bilimleri (5–8) | yayında, bağımsız kontrol yapıldı |
+| Ortaokul Türkçe (5–8) | yayında, bağımsız kontrol yapıldı |
+| Ortaokul İngilizce (5–8) | yayında, bağımsız kontrol yapıldı |
+| Lise Matematik (9–12, 5 şık) | yayında, bağımsız kontrol yapıldı |
+| Sınıf Öğretmenliği (3–4) | yayında, bağımsız kontrol yapıldı |
 
 Yeni test: `_lib.build()` ile; `python3 <test>.py` HTML ve anahtarı `out/`a yazar.
