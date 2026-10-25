@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 
 import { getSessionProfile } from "@/lib/auth";
-import { adminRecipients, formatWhen, introMail, sendMail } from "@/lib/email";
+import { adminRecipients, formatWhen, introMail, orderMail, sendMail } from "@/lib/email";
 import { emailOf } from "@/lib/notify";
 import { GOALS, type Pref } from "@/lib/requests";
 import { createClient } from "@/lib/supabase/server";
@@ -100,4 +100,38 @@ export async function cancelIntro(offerId: string, requestId: string): Promise<A
   if (error) return { ok: false, error: dbError(error.message, "İptal edilemedi.") };
   revalidatePath(`/panel/talep/${requestId}`);
   return { ok: true, message: "İstek iptal edildi; başka bir öğretmen seçebilirsin." };
+}
+
+export async function choosePackage(requestId: string, productCode: string): Promise<ActResult> {
+  const s = await veli();
+  if (!UUID.test(requestId) || !/^[A-Z0-9_]{2,20}$/.test(productCode)) return { ok: false, error: "Geçersiz seçim." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("create_package_order", { p_request: requestId, p_product: productCode });
+  if (error) return { ok: false, error: dbError(error.message, "Paket seçimi kaydedilemedi. Yeniden dene.") };
+  const { data: o } = await supabase
+    .from("package_orders")
+    .select("student_name, grade, price, lesson_count, product_code, teachers(display_name)")
+    .eq("request_id", requestId)
+    .eq("status", "odeme_bekliyor")
+    .maybeSingle();
+  const teacher = (o?.teachers as unknown as { display_name: string } | null)?.display_name ?? "";
+  const email = s.email;
+  after(async () => {
+    if (!o) return;
+    const line = `${o.student_name} (${o.grade}. sınıf) · ${teacher} · ${o.product_code} · ${o.lesson_count} ders · ${Number(o.price).toLocaleString("tr-TR")} TL`;
+    await sendMail({ to: adminRecipients(), subject: `[Yönetim] Paket seçildi: ${o.product_code}`, title: "Bir veli paket seçti", body: [line, "Ödeme adımı PayTR pazaryeri entegrasyonu açılınca bağlanacak."] });
+    if (email) await sendMail(orderMail(email, teacher, o.product_code, o.lesson_count, Number(o.price), requestId));
+  });
+  revalidatePath(`/panel/talep/${requestId}`);
+  return { ok: true, message: "Paket seçimin kaydedildi. Ödeme adımı için sana e-posta göndereceğiz." };
+}
+
+export async function reopenRequest(requestId: string): Promise<ActResult> {
+  await veli();
+  if (!UUID.test(requestId)) return { ok: false, error: "Geçersiz talep." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("reopen_lesson_request", { p_request: requestId });
+  if (error) return { ok: false, error: dbError(error.message, "Talep yeniden açılamadı.") };
+  revalidatePath(`/panel/talep/${requestId}`);
+  return { ok: true, message: "Tamam; listeden başka bir öğretmenle tanışabilirsin." };
 }

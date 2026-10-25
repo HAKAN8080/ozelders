@@ -715,6 +715,16 @@ export type Database = {
           },
         ]
       }
+      package_orders: {
+        Row: { created_at: string; grade: number; id: string; lesson_count: number; parent_id: string; price: number; product_code: string; request_id: string; status: string; student_id: string; student_name: string; teacher_id: string }
+        Insert: { created_at?: string; grade: number; id?: string; lesson_count: number; parent_id: string; price: number; product_code: string; request_id: string; status?: string; student_id: string; student_name: string; teacher_id: string }
+        Update: { created_at?: string; grade?: number; id?: string; lesson_count?: number; parent_id?: string; price?: number; product_code?: string; request_id?: string; status?: string; student_id?: string; student_name?: string; teacher_id?: string }
+        Relationships: [
+          { foreignKeyName: "package_orders_request_id_fkey"; columns: ["request_id"]; isOneToOne: false; referencedRelation: "lesson_requests"; referencedColumns: ["id"] },
+          { foreignKeyName: "package_orders_teacher_id_fkey"; columns: ["teacher_id"]; isOneToOne: false; referencedRelation: "teachers"; referencedColumns: ["profile_id"] },
+          { foreignKeyName: "package_orders_parent_id_fkey"; columns: ["parent_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
+        ]
+      }
       package_products: {
         Row: {
           code: string
@@ -1669,6 +1679,8 @@ export type Database = {
         Args: { p_attempt: string; p_token: string }
         Returns: boolean
       }
+      create_package_order: { Args: { p_product: string; p_request: string }; Returns: string }
+      reopen_lesson_request: { Args: { p_request: string }; Returns: undefined }
       create_lesson_request: { Args: { p: Json }; Returns: string }
       current_fee: {
         Args: { p_on?: string; p_teacher: string }

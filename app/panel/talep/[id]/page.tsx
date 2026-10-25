@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { CancelButton, TeacherList, type Option } from "@/app/panel/talep/[id]/teacher-list";
+import { CancelButton, PackageChooser, TeacherList, type Option } from "@/app/panel/talep/[id]/teacher-list";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSessionProfile } from "@/lib/auth";
 import { formatWhen } from "@/lib/email";
 import { goalLabel, prefSummary, type Pref } from "@/lib/requests";
+import { getActiveProducts } from "@/lib/products";
 import { createClient } from "@/lib/supabase/server";
 import { branchName } from "@/lib/teacher";
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = { title: "Öğretmen seç — ÖzelDersBul", r
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Offer = { id: string; teacher_id: string; status: string; starts_at: string; expires_at: string; meeting_url: string | null; teachers: { display_name: string } | null };
+type Offer = { id: string; teacher_id: string; status: string; starts_at: string; ends_at: string; expires_at: string; meeting_url: string | null; teachers: { display_name: string } | null };
 
 export default async function RequestPage(props: PageProps<"/panel/talep/[id]">) {
   const { id } = await props.params;
@@ -31,18 +32,23 @@ export default async function RequestPage(props: PageProps<"/panel/talep/[id]">)
     .maybeSingle();
   if (!r) notFound();
   const st = r.students as unknown as { first_name: string; grade: number };
-  const [{ data: opts }, { data: offers }] = await Promise.all([
+  const [{ data: opts }, { data: offers }, { data: order }, products] = await Promise.all([
     supabase.rpc("request_teacher_options", { p_request: id }),
     supabase
       .from("intro_offers")
-      .select("id, teacher_id, status, starts_at, expires_at, meeting_url, teachers(display_name)")
+      .select("id, teacher_id, status, starts_at, ends_at, expires_at, meeting_url, teachers(display_name)")
       .eq("request_id", id)
       .order("created_at", { ascending: false }),
+    supabase.from("package_orders").select("product_code, price, lesson_count").eq("request_id", id).eq("status", "odeme_bekliyor").maybeSingle(),
+    getActiveProducts().catch(() => []),
   ]);
   const options = (opts ?? []) as unknown as Option[];
   const list = (offers ?? []) as unknown as Offer[];
   const now = new Date().getTime();
-  const live = list.find((o) => (o.status === "bekliyor" && Date.parse(o.expires_at) > now) || (o.status === "kabul" && Date.parse(o.starts_at) > now - 3600000));
+  const live = list.find((o) => (o.status === "bekliyor" && Date.parse(o.expires_at) > now) || (o.status === "kabul" && Date.parse(o.ends_at) > now));
+  // Tanışma yapıldı: kabul edilmiş ve saati geçmiş; talep hâlâ bu öğretmenle eşleşik
+  const done = r.status === "eslesti" ? list.find((o) => o.status === "kabul" && Date.parse(o.ends_at) <= now) : undefined;
+  const mainProducts = products.filter((p) => p.kind === "ana");
   const last = !live ? list[0] : null;
   const lastFailed = last && (last.status === "ret" || last.status === "suresi_doldu" || (last.status === "bekliyor" && Date.parse(last.expires_at) <= now));
 
@@ -65,6 +71,23 @@ export default async function RequestPage(props: PageProps<"/panel/talep/[id]">)
               </Link>
             </p>
           </div>
+
+          {done ? (
+            <section className="flex flex-col gap-5 rounded-[10px] border border-primary bg-background p-6 sm:p-8">
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-semibold uppercase tracking-[0.08em] text-primary">Tanışma yapıldı</span>
+                <h2 className="m-0 font-serif text-2xl font-bold">{done.teachers?.display_name} ile devam etmek ister misin?</h2>
+                <p className="m-0 text-[16px] text-[#3d4743]">
+                  Paketini seç; taahhüt ve otomatik yenileme yok. Ödemen ders ders güvenli hesapta bekler, yapılmayan dersin parası iade edilir.
+                </p>
+              </div>
+              <PackageChooser
+                requestId={id}
+                products={mainProducts.map((p) => ({ code: p.code, name: p.name, lessons: p.lesson_count, price: Number(p.price), days: p.validity_days }))}
+                current={order ? { code: order.product_code, price: Number(order.price), lessons: order.lesson_count } : null}
+              />
+            </section>
+          ) : null}
 
           {live ? (
             <section className="tahta flex flex-col gap-3 rounded-[10px] p-6 text-[#f2f5f1] sm:p-8" aria-live="polite">
@@ -106,7 +129,7 @@ export default async function RequestPage(props: PageProps<"/panel/talep/[id]">)
             </p>
           ) : null}
 
-          {options.length ? (
+          {r.status !== "acik" ? null : options.length ? (
             <>
               <p className="m-0 text-[16px] text-[#3d4743]">
                 <strong>{options.length}</strong> öğretmen dersine, sınıfına ve saatlerine uyuyor. Hepsi branş testi, demo ders ve belge

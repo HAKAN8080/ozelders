@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import { cancelIntro, loadSlots, requestIntro, type ActResult } from "@/app/panel/talep/actions";
+import { cancelIntro, choosePackage, loadSlots, reopenRequest, requestIntro, type ActResult } from "@/app/panel/talep/actions";
 
 export type Option = {
   teacher_id: string;
@@ -153,6 +153,57 @@ export function CancelButton({ offerId, requestId, label }: { offerId: string; r
         className="self-start rounded-md border border-[rgb(242_245_241/0.5)] px-4 py-2.5 font-semibold text-white hover:bg-white/10"
       >
         {label}
+      </button>
+      <Msg msg={msg} />
+    </div>
+  );
+}
+
+type Product = { code: string; name: string; lessons: number; price: number; days: number };
+const tl = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
+
+export function PackageChooser({ requestId, products, current }: { requestId: string; products: Product[]; current: { code: string; price: number; lessons: number } | null }) {
+  const [msg, setMsg] = useState<ActResult | null>(null);
+  const [pending, start] = useTransition();
+  const router = useRouter();
+  const run = (fn: () => Promise<ActResult>) =>
+    start(async () => {
+      const r = await fn();
+      setMsg(r);
+      if (r.ok) router.refresh();
+    });
+  return (
+    <div className="flex flex-col gap-4">
+      {current ? (
+        <p className="m-0 rounded-md bg-primary-soft px-4 py-3 text-[16px] text-primary" role="status">
+          Seçimin: <strong>{products.find((p) => p.code === current.code)?.name ?? current.code}</strong> · {current.lessons} ders · {tl.format(current.price)}. Ödeme
+          adımı için sana e-posta göndereceğiz; istersen aşağıdan değiştirebilirsin.
+        </p>
+      ) : null}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-3">
+        {products.map((p) => {
+          const on = current?.code === p.code;
+          return (
+            <div key={p.code} className={`flex flex-col gap-2 rounded-[10px] border p-4 ${on ? "border-primary bg-primary-soft" : "border-border"}`}>
+              <span className="font-semibold">{p.name}</span>
+              <span className="font-serif text-2xl font-bold tabular-nums">{tl.format(p.price)}</span>
+              <span className="text-sm text-muted">
+                {p.lessons} ders · ders başı {tl.format(p.price / p.lessons)} · {Math.round(p.days / 7)} hafta
+              </span>
+              <button
+                type="button"
+                disabled={pending || on}
+                onClick={() => run(() => choosePackage(requestId, p.code))}
+                className="mt-1 rounded-md bg-primary px-4 py-2.5 font-semibold text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
+              >
+                {on ? "Seçildi ✓" : "Bu paketi seç"}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <button type="button" disabled={pending} onClick={() => run(() => reopenRequest(requestId))} className="self-start text-[15px] font-semibold text-muted hover:text-primary hover:underline">
+        Devam etmek istemiyorum, başka bir öğretmenle tanışayım
       </button>
       <Msg msg={msg} />
     </div>

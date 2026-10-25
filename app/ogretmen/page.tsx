@@ -46,7 +46,7 @@ export default async function TeacherPanel() {
   const now = new Date();
   const from = new Date(now.getTime() - 7 * 86400000).toISOString();
   const to = new Date(now.getTime() + 21 * 86400000).toISOString();
-  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }, { data: offers }] = await Promise.all([
+  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }, { data: offers }, { data: orders }] = await Promise.all([
     supabase.from("teacher_availability").select("weekday, start_time, end_time").eq("teacher_id", session.userId).order("weekday").order("start_time"),
     supabase.from("teacher_payout_info").select("submerchant_status, iban_last4").eq("profile_id", session.userId).maybeSingle(),
     supabase
@@ -63,6 +63,7 @@ export default async function TeacherPanel() {
       .eq("status", "tamamlandi")
       .gte("starts_at", new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString()),
     supabase.rpc("teacher_intro_offers"),
+    supabase.from("package_orders").select("id, student_name, grade, product_code, lesson_count, created_at").eq("teacher_id", session.userId).eq("status", "odeme_bekliyor").order("created_at"),
   ]);
   const pendingOffers = (offers ?? []).filter((o) => o.status === "bekliyor");
   const acceptedOffers = (offers ?? []).filter((o) => o.status === "kabul");
@@ -187,7 +188,15 @@ export default async function TeacherPanel() {
                 Veliler seni listeden seçip ücretsiz 20 dakikalık tanışma dersi ister. 24 saat içinde yanıt ver; reddetmek karneni etkilemez.
               </p>
             </div>
-            {pendingOffers.length === 0 && acceptedOffers.length === 0 ? (
+            {(orders ?? []).map((o) => (
+              <div key={o.id} className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-primary bg-primary-soft px-4 py-3">
+                <span>
+                  <strong>Paket seçildi ✓</strong> {o.student_name} · {o.grade}. sınıf · {o.lesson_count} ders
+                </span>
+                <span className="text-sm text-primary">Ödeme tamamlanınca ders saatlerini birlikte planlayacaksınız</span>
+              </div>
+            ))}
+            {pendingOffers.length === 0 && acceptedOffers.length === 0 && !(orders ?? []).length ? (
               <p className="m-0 rounded-md bg-[#f6f8f7] px-4 py-3 text-[16px]">Şu an bekleyen istek yok.</p>
             ) : null}
             {pendingOffers.map((o) => (

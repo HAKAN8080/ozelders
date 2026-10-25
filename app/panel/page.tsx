@@ -46,10 +46,10 @@ export default async function PanelPage() {
   ]);
   const now = new Date().getTime();
   const reqState = (r: { status: string; intro_offers: { status: string; starts_at: string; expires_at: string }[] | null }) => {
-    const o = (r.intro_offers ?? []).find((x) => (x.status === "bekliyor" && Date.parse(x.expires_at) > now) || (x.status === "kabul" && Date.parse(x.starts_at) > now - 3600000));
+    const o = (r.intro_offers ?? []).find((x) => (x.status === "bekliyor" && Date.parse(x.expires_at) > now) || (x.status === "kabul" && Date.parse(x.starts_at) + 20 * 60000 > now));
     if (o?.status === "kabul") return `Tanışma: ${dt.format(new Date(o.starts_at))}`;
     if (o) return "Öğretmen onayı bekleniyor";
-    return r.status === "eslesti" ? "Öğretmen belirlendi" : "Öğretmen seç";
+    return r.status === "eslesti" ? "Tanışma yapıldı · paketini seç" : "Öğretmen seç";
   };
 
   return (

@@ -172,3 +172,16 @@ export const introMail = {
     cta: { label: "Öğretmen listesine dön", href: `/panel/talep/${requestId}` },
   }),
 };
+
+export function orderMail(to: string, teacher: string, product: string, lessons: number, price: number, requestId: string): Mail {
+  return {
+    to,
+    subject: `Paket seçimin alındı · ${lessons} ders`,
+    title: "Paket seçimin alındı.",
+    body: [
+      `${teacher} ile ${lessons} derslik ${product.toLocaleLowerCase("tr")} paket: ${price.toLocaleString("tr-TR")} TL, tek çekim.`,
+      "Ödeme adımı için sana ayrıca e-posta göndereceğiz. Ödemen ders ders güvenli hesapta bekler; yapılmayan dersin parası iade edilir.",
+    ],
+    cta: { label: "Talebimi aç", href: `/panel/talep/${requestId}` },
+  };
+}
