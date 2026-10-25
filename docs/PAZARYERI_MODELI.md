@@ -4,7 +4,9 @@
 
 ## Komisyon (karar: 2026-10-25)
 - Standart komisyon **%30**; öğretmen 3 ayda bir otomatik karneyle **%27 / %24 / %20** bantlarına iner. Bonus yok.
-- Karne = Gelişim 60 (aylık takip denemesinde yüzdelik artışı, aynı denemeyi çözenlere göre) + Memnuniyet 40 (öğrenci/veli puanları) − hizmet kesintisi en fazla 15 (takvime uyum 8, yanıt hızı 4, ders raporu 3). Red oranı cezalandırılmaz (bağımsızlık / işçi sayılma riski). Her ay 1 takip denemesi zorunlu; katılım < %70 → gelişim puanı katılım oranıyla çarpılır. Dönemde < 24 ders veya < 3 öğrencinin deneme verisi → bant korunur; dönemde en fazla 1 bant değişir.
+- Karne = Gelişim 60 (3 aylık takip denemesinde, öğretmenin branşındaki bölümde yüzdelik artışı; aynı denemeyi çözenlere göre) + Memnuniyet 40 (30 öğrenci/veli puanı + 10 paket yenileme oranı) − hizmet kesintisi en fazla 15 (takvime uyum 8, yanıt hızı 4, ders raporu 3). Red oranı cezalandırılmaz (bağımsızlık / işçi sayılma riski).
+- Takip denemesi 3 ayda bir (aralık, mart, haziran, eylül son iki hafta, 14 gün açık); yılda 4 dönem × 4 seviye = 16 deneme, kendimiz hazırlarız. Katılım < %70 → gelişim puanı katılım oranıyla çarpılır. Dönemde < 24 ders veya < 3 öğrencinin deneme verisi → bant korunur; dönemde en fazla 1 bant değişir.
+- **Paket = bir ders + bir öğretmen; serbest kredi yok** (pazaryerinde kalem ödeme anında öğretmenin alt üyeliğine bağlanır). İki ders → iki paket. İlk öğretmen değişikliği ücretsiz; gelişim, dönemde verilen ders sayısı oranında iki öğretmene bölünür. Dönemde < 4 ders → o öğrenci o öğretmenin hesabına girmez.
 - Taban ücret: öğretmen payı hiçbir pakette ders başı 650 ₺'nin altına düşmez (fark komisyondan).
 - Öğretmen payı (`subMerchantPrice`) = kalem fiyatı × (1 − bant komisyonu), **ödeme anındaki bantla** sabitlenir.
 - Sağlayıcı: **PayTR** (mevcut ilişki). Bireysel (vergi levhasız) alt mağaza kabulü teyit edilecek; olmazsa iyzico yedek.
