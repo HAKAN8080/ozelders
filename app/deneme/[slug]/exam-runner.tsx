@@ -6,9 +6,10 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 
 import { submitExam } from "@/app/deneme/[slug]/actions";
 import { examImageUrl, imageKey } from "@/lib/exam-images";
+import { GRADES, gradeLabel, penaltyLabel } from "@/lib/exam-kinds";
 import type { PublicExam } from "@/lib/exams";
 
-const LETTERS = ["A", "B", "C", "D"] as const;
+const ALL_LETTERS = ["A", "B", "C", "D", "E"] as const;
 type Answers = Record<string, Record<string, string>>;
 type Saved = { answers: Answers; startedAt: number | null };
 
@@ -55,6 +56,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
   const [grade, setGrade] = useState<number>(exam.grade);
   const [confirming, setConfirming] = useState(false);
   const [split, setSplit] = useState(false);
+  const letters = ALL_LETTERS.slice(0, exam.option_count === 5 ? 5 : 4);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -172,9 +174,9 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
             onChange={(e) => setGrade(Number(e.target.value))}
             className="h-12 rounded-lg border border-border bg-background px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            {[5, 6, 7, 8].map((g) => (
+            {GRADES.map((g) => (
               <option key={g} value={g}>
-                {g}. sınıf
+                {gradeLabel(g)}
               </option>
             ))}
           </select>
@@ -239,7 +241,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
           {Array.from({ length: sec.question_count }, (_, i) => i + 1).map((no) => (
             <div key={no} className="flex items-center gap-2.5 border-b border-[#eef2ef] py-0.5">
               <span className="w-8 text-right text-[15px] font-semibold text-[#3d4743] tabular-nums">{no}.</span>
-              <Bubbles sectionName={sec.name} no={no} chosen={answers[sec.code]?.[String(no)]} locked={locked} onPick={(L) => pick(sec.code, no, L)} />
+              <Bubbles letters={letters} sectionName={sec.name} no={no} chosen={answers[sec.code]?.[String(no)]} locked={locked} onPick={(L) => pick(sec.code, no, L)} />
             </div>
           ))}
         </fieldset>
@@ -320,7 +322,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
               <ul className="m-0 flex flex-col gap-2 pl-5 text-[15px] leading-relaxed text-[#3d4743]">
                 <li>Süreyi başlatınca sorular açılır.</li>
                 <li>Her sorunun altındaki şıkka tıkla. Tekrar tıklarsan silinir.</li>
-                <li>Boş bırakmak serbest. 3 yanlış 1 doğruyu götürür.</li>
+                <li>Boş bırakmak serbest. {penaltyLabel(exam.wrong_penalty)}.</li>
               </ul>
               {startButton}
               {timeUpNote}
@@ -388,7 +390,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
                         ) : (
                           <p className="m-0 text-muted">Bu sorunun resmi yok.</p>
                         )}
-                        <Bubbles sectionName={sec.name} no={no} chosen={answers[sec.code]?.[String(no)]} locked={locked} onPick={(L) => pick(sec.code, no, L)} />
+                        <Bubbles letters={letters} sectionName={sec.name} no={no} chosen={answers[sec.code]?.[String(no)]} locked={locked} onPick={(L) => pick(sec.code, no, L)} />
                       </article>
                     );
                   })}
@@ -442,7 +444,7 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
             <h2 className="m-0 text-xl font-semibold">2. Süreyi başlat, işaretle</h2>
             <ul className="m-0 flex flex-col gap-2.5 pl-5 text-[15px] leading-relaxed text-[#3d4743]">
               <li>Bir şıkka tıkla, işaretlensin. Aynı şıkka tekrar tıklarsan silinir.</li>
-              <li>Boş bırakmak serbest. 3 yanlış 1 doğruyu götürür.</li>
+              <li>Boş bırakmak serbest. {penaltyLabel(exam.wrong_penalty)}.</li>
               <li>Cevapların bu cihazda saklanır; sayfa kapansa da kaybolmaz.</li>
             </ul>
             {startButton ? <div className="mt-2 flex flex-col">{startButton}</div> : null}
@@ -465,12 +467,14 @@ export function ExamRunner({ exam }: { exam: PublicExam }) {
 }
 
 function Bubbles({
+  letters,
   sectionName,
   no,
   chosen,
   locked,
   onPick,
 }: {
+  letters: readonly string[];
   sectionName: string;
   no: number;
   chosen: string | undefined;
@@ -479,7 +483,7 @@ function Bubbles({
 }) {
   return (
     <div className="flex gap-2.5">
-      {LETTERS.map((L) => {
+      {letters.map((L) => {
         const on = chosen === L;
         return (
           <button

@@ -18,9 +18,9 @@ import "@fontsource/caveat/latin-ext-700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ÖzelDersBul — LGS matematik özel ders",
+  title: "ÖzelDersBul — LGS, YKS ve okul dersleri için özel ders",
   description:
-    "Ücretsiz LGS denemesini çöz, eksik kazanımlarını konu konu gör, o konularda seçilmiş bir öğretmenle birebir çalış.",
+    "Ücretsiz LGS ve YKS denemelerini çöz, eksik konularını gör, o konularda seçilmiş bir öğretmenle birebir çalış. 5–12. sınıf.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

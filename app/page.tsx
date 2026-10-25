@@ -36,7 +36,7 @@ function Hero() {
     <section className="defter border-b border-border">
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-14 px-4 pt-16 pb-20 sm:px-6 lg:pt-22 lg:pb-24">
         <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
-          <p className={`${eyebrow} m-0 text-primary`}>LGS matematik · 5–8. sınıf</p>
+          <p className={`${eyebrow} m-0 text-primary`}>Ortaokul ve lise · LGS · YKS · okul dersleri</p>
           <h1 className="m-0 font-serif text-4xl leading-[1.08] font-bold tracking-[-0.01em] sm:text-5xl lg:text-[56px]">
             Eksiğini ölçelim.
             <br />
@@ -240,7 +240,7 @@ function PackageGridSkeleton() {
 
 function Teachers() {
   const stages = [
-    ["Branş testi", "LGS soruları, %85 başarı şartı."],
+    ["Branş testi", "Kendi branşında LGS/YKS düzeyinde sorular, %85 başarı şartı."],
     ["Canlı demo ders", "Konu hâkimiyeti, anlatım ve etkileşim puanlanır."],
     ["Belge doğrulama", "Kimlik, diploma ve adli sicil kaydı her yıl yenilenir."],
     ["Gözetimli ilk dersler", "İlk 3 ders kıdemli bir öğretmen tarafından incelenir."],

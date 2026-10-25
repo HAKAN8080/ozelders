@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export type ChildState = { ok: true } | { ok: false; error: string } | null;
 
-const grades = new Set([5, 6, 7, 8]);
+const grades = new Set([5, 6, 7, 8, 9, 10, 11, 12]);
 
 export async function addChild(
   _prev: ChildState,
@@ -32,7 +32,7 @@ export async function addChild(
 
   const grade = Number(formData.get("grade"));
   if (!grades.has(grade)) {
-    return { ok: false, error: "Sınıf 5, 6, 7 veya 8 olmalı." };
+    return { ok: false, error: "Sınıf 5 ile 12 arasında olmalı." };
   }
 
   const supabase = await createClient();

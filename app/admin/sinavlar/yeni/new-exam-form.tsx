@@ -3,7 +3,9 @@
 import { useState, useTransition } from "react";
 
 import { createExam } from "@/app/admin/sinavlar/actions";
+import { ExamRulesFields, SubjectSelect, type ExamRules } from "@/app/admin/sinavlar/exam-fields";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
+import { guessKind, guessSubject, kindInfo, SUBJECTS } from "@/lib/exam-kinds";
 import { parseExamPages } from "@/lib/exam-pdf";
 import { setPendingPdf } from "@/lib/pending-pdf";
 import { guessTopic } from "@/lib/topic-guess";
@@ -11,14 +13,6 @@ import { guessTopic } from "@/lib/topic-guess";
 const field =
   "h-12 w-full rounded-lg border border-border bg-background px-4 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
-const SECTION_PRESETS = [
-  { code: "matematik", name: "Matematik" },
-  { code: "fen", name: "Fen Bilimleri" },
-  { code: "turkce", name: "Türkçe" },
-  { code: "inkilap", name: "T.C. İnkılap Tarihi ve Atatürkçülük" },
-  { code: "din", name: "Din Kültürü ve Ahlak Bilgisi" },
-  { code: "ingilizce", name: "İngilizce" },
-];
 
 function slugify(s: string) {
   return s
@@ -37,17 +31,6 @@ function guessTitle(firstPage: string): string {
   return [year, "LGS", part].filter(Boolean).join(" ").trim();
 }
 
-/** Kendi PDF'imizde dersi metinden tahmin et (yalnızca varsayılan seçim için). */
-function guessSubject(text: string): string {
-  const u = text.toLocaleUpperCase("tr");
-  if (/FEN BİLİMLERİ|FEN BILIMLERI/.test(u)) return "fen";
-  if (/TÜRK DİLİ|TÜRKÇE|EDEBİYAT/.test(u)) return "turkce";
-  if (/İNKILAP/.test(u)) return "inkilap";
-  if (/DİN KÜLTÜRÜ/.test(u)) return "din";
-  if (/İNGİLİZCE|ENGLISH/.test(u)) return "ingilizce";
-  return "matematik";
-}
-
 export function NewExamForm() {
   const [sections, setSections] = useState<EditableSection[]>([]);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -59,7 +42,8 @@ export function NewExamForm() {
   const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
   const [subtitle, setSubtitle] = useState("");
-  const [grade, setGrade] = useState(8);
+  const [rules, setRules] = useState<ExamRules>({ kind: "lgs", grade: 8, option_count: 4, wrong_penalty: 3 });
+  const [addCode, setAddCode] = useState("");
   const [duration, setDuration] = useState(80);
   const [bookletUrl, setBookletUrl] = useState("");
   const [bookletLabel, setBookletLabel] = useState("");
@@ -90,14 +74,20 @@ export function NewExamForm() {
           ]);
           return;
         }
-        const guess = guessSubject(pages.join(" "));
-        const order = [guess, ...SECTION_PRESETS.map((p) => p.code).filter((c) => c !== guess)];
+        const all = pages.join(" ");
+        const guess = guessSubject(all);
+        const order = [guess, ...SUBJECTS.map((p) => p.code).filter((c) => c !== guess)];
         setSections(
           sizes.map((n, i) => {
-            const preset = SECTION_PRESETS.find((p) => p.code === order[i]) ?? SECTION_PRESETS[i];
-            return { code: preset.code, name: preset.name, questions: Array.from({ length: n }, (_, k) => ({ no: k + 1, correct: "", topic: "" })) };
+            const subj = SUBJECTS.find((p) => p.code === order[i]) ?? SUBJECTS[i];
+            return { code: subj.code, name: subj.name, questions: Array.from({ length: n }, (_, k) => ({ no: k + 1, correct: "", topic: "" })) };
           }),
         );
+        const gk = guessKind(all);
+        const k = kindInfo(gk.kind);
+        const g = gk.grade ?? k.grade;
+        // Ortaokul okul denemeleri genelde 4 şıklı
+        setRules({ kind: k.code, grade: g, option_count: k.code === "okul" && g <= 8 ? 4 : k.optionCount, wrong_penalty: k.penalty });
         setOwnFile(file);
         setWarnings([
           `Kendi denemen olarak algılandı: ${sizes.join(" + ")} soru bulundu (cevap anahtarı yok). Bölüm adını kontrol et, cevapları gir ya da yapıştır. Sınavı oluşturunca bu PDF sitemize yüklenecek ve öğrenci cevap kâğıdının yanında açacak.`,
@@ -105,6 +95,7 @@ export function NewExamForm() {
         return;
       }
       setWarnings(parsed.warnings);
+      setRules({ kind: "lgs", grade: 8, option_count: 4, wrong_penalty: 3 });
       setSections(
         parsed.sections.map((s) => ({
           code: s.code,
@@ -135,10 +126,9 @@ export function NewExamForm() {
     }
   }
 
-  function addSection(code: string) {
-    const preset = SECTION_PRESETS.find((p) => p.code === code);
-    if (!preset || sections.some((s) => s.code === code)) return;
-    setSections([...sections, { code, name: preset.name, questions: Array.from({ length: 20 }, (_, i) => ({ no: i + 1, correct: "", topic: "" })) }]);
+  function addSection(code: string, name: string) {
+    if (sections.some((s) => s.code === code)) return;
+    setSections([...sections, { code, name, questions: Array.from({ length: 20 }, (_, i) => ({ no: i + 1, correct: "", topic: "" })) }]);
   }
 
   function submit() {
@@ -149,7 +139,10 @@ export function NewExamForm() {
         slug,
         title,
         subtitle,
-        grade,
+        grade: rules.grade,
+        kind: rules.kind,
+        option_count: rules.option_count,
+        wrong_penalty: rules.wrong_penalty,
         booklet_url: bookletUrl.trim(),
         booklet_label: bookletLabel,
         duration_min: duration,
@@ -166,15 +159,17 @@ export function NewExamForm() {
     });
   }
 
-  const totalMissing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct).length, 0);
+  const valid = rules.option_count === 4 ? "ABCD" : "ABCDE";
+  const totalMissing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct || !valid.includes(q.correct)).length, 0);
 
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-4 rounded-[10px] border border-border bg-background p-6">
         <h2 className="m-0 text-xl font-semibold">1. Kitapçık PDF’ini seç</h2>
-        <p className="m-0 max-w-[48em] text-[15px] leading-relaxed text-[#3d4743]">
-          PDF bu tarayıcıda okunur, <strong>sunucuya yüklenmez ve saklanmaz</strong>. Cevap anahtarı sayfasından cevaplar,
-          sorulardan konu önerileri çıkarılır. Öğrenciler kitapçığı aşağıda gireceğin resmi bağlantıdan açar.
+        <p className="m-0 max-w-[52em] text-[15px] leading-relaxed text-[#3d4743]">
+          <strong>Kendi denemen</strong> (cevap anahtarı yok): soru sayısı bulunur, sınav oluşunca PDF sitemize yüklenir ve öğrenci yan
+          ekranda açar. <strong>Resmi LGS kitapçığı</strong> (cevap anahtarlı): cevaplar ve konular okunur, PDF yüklenmez; resmi bağlantısını
+          girersin.
         </p>
         <label className="flex w-fit cursor-pointer items-center gap-3 rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary-hover">
           <input type="file" accept="application/pdf" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
@@ -186,13 +181,18 @@ export function NewExamForm() {
             {w}
           </p>
         ))}
-        <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4 text-[15px]">
-          <span className="text-muted">Kendi denememiz ya da eksik bölüm için elle ekle (cevapları yapıştır, soru sayısı ona göre ayarlanır):</span>
-          {SECTION_PRESETS.filter((p) => !sections.some((s) => s.code === p.code)).map((p) => (
-            <button key={p.code} type="button" onClick={() => addSection(p.code)} className="rounded-md border border-border px-3 py-1.5 hover:bg-primary-soft">
-              + {p.name}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4 text-[15px]">
+          <span className="text-muted">PDF&apos;siz ya da eksik bölüm için elle ekle (cevapları yapıştırınca soru sayısı ayarlanır):</span>
+          <SubjectSelect
+            value={addCode}
+            taken={sections.map((x) => x.code)}
+            placeholder="+ Bölüm ekle…"
+            label="Bölüm ekle"
+            onChange={(code, name) => {
+              addSection(code, name);
+              setAddCode("");
+            }}
+          />
         </div>
       </section>
 
@@ -207,7 +207,7 @@ export function NewExamForm() {
               setTitle(e.target.value);
               if (!slugTouched) setSlug(slugify(e.target.value));
             }}
-            placeholder="2026 LGS Sözel Bölüm"
+            placeholder="2026 TYT Deneme 1"
           />
         </label>
         <label className="flex flex-col gap-1.5">
@@ -226,16 +226,7 @@ export function NewExamForm() {
           <span className="text-[15px] font-medium">Alt başlık</span>
           <input className={field} value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
         </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[15px] font-medium">Sınıf</span>
-          <select className={field} value={grade} onChange={(e) => setGrade(Number(e.target.value))}>
-            {[5, 6, 7, 8].map((g) => (
-              <option key={g} value={g}>
-                {g}. sınıf
-              </option>
-            ))}
-          </select>
-        </label>
+        <ExamRulesFields value={rules} onChange={setRules} />
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Süre (dakika)</span>
           <input className={field} type="number" min={5} max={300} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
@@ -257,24 +248,22 @@ export function NewExamForm() {
           {sections.map((s, i) => (
             <QuestionTable
               key={i}
+              optionCount={rules.option_count}
               headerActions={
-                ownFile ? (
-                  <select
-                    aria-label="Bölüm (ders)"
+                <>
+                  <SubjectSelect
                     value={s.code}
-                    onChange={(e) => {
-                      const preset = SECTION_PRESETS.find((p) => p.code === e.target.value)!;
-                      setSections(sections.map((x, j) => (j === i ? { ...x, code: preset.code, name: preset.name } : x)));
-                    }}
-                    className="h-10 rounded-md border border-border bg-background px-2 text-sm font-semibold"
+                    taken={sections.map((x) => x.code)}
+                    onChange={(code, name) => setSections(sections.map((x, j) => (j === i ? { ...x, code, name } : x)))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSections(sections.filter((_, j) => j !== i))}
+                    className="h-10 rounded-md px-2 text-sm text-destructive hover:underline"
                   >
-                    {SECTION_PRESETS.filter((p) => p.code === s.code || !sections.some((x) => x.code === p.code)).map((p) => (
-                      <option key={p.code} value={p.code}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                ) : null
+                    Bölümü sil
+                  </button>
+                </>
               }
               section={s}
               onChange={(next) => setSections(sections.map((x, j) => (j === i ? next : x)))}

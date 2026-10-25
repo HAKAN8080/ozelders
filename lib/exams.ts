@@ -19,6 +19,9 @@ export type PublicExam = {
   /** true: PDF bizim depoda (kendi denememiz) */
   booklet_hosted: boolean;
   duration_min: number;
+  kind: string;
+  option_count: number;
+  wrong_penalty: number;
   published_at: string | null;
   sections: ExamSection[];
   /** Kendi denemelerimizde soru resimleri; anahtar "bolum:no". Resmi kitapçıklı sınavda boş. */
@@ -79,7 +82,7 @@ export async function getPublishedExams(): Promise<PublicExam[]> {
   const { data, error } = await publicClient()
     .from("exams")
     .select(
-      "id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, published_at, exam_sections(code, name, position, question_count), exam_question_images(section, no, path, width, height)",
+      "id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, published_at, exam_sections(code, name, position, question_count), exam_question_images(section, no, path, width, height)",
     )
     .eq("status", "yayinda")
     .order("published_at", { ascending: false });

@@ -6,6 +6,7 @@ import { AdminShell } from "@/app/admin/admin-shell";
 import { ExamEditor } from "@/app/admin/sinavlar/[id]/exam-editor";
 import { requireAdmin } from "@/lib/admin";
 import { imageKey } from "@/lib/exam-images";
+import type { ExamKind } from "@/lib/exam-kinds";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
@@ -23,7 +24,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
   const [{ data: exam }, { data: sections }, { data: questions }, { count }, { data: imgRows }] = await Promise.all([
     supabase
       .from("exams")
-      .select("id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, status, published_at")
+      .select("id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, status, published_at")
       .eq("id", id)
       .maybeSingle(),
     supabase.from("exam_sections").select("code, name, position").eq("exam_id", id).order("position"),
@@ -63,6 +64,9 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
           title: exam.title,
           subtitle: exam.subtitle ?? "",
           grade: exam.grade,
+          kind: exam.kind as ExamKind,
+          option_count: exam.option_count,
+          wrong_penalty: exam.wrong_penalty,
           booklet_url: exam.booklet_url ?? "",
           booklet_path: exam.booklet_path,
           booklet_label: exam.booklet_label ?? "",

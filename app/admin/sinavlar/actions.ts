@@ -21,11 +21,23 @@ export type NewExamPayload = {
   title: string;
   subtitle: string;
   grade: number;
+  kind: string;
+  option_count: number;
+  wrong_penalty: number;
   booklet_url: string;
   booklet_label: string;
   duration_min: number;
   sections: { code: string; name: string; questions: { no: number; correct: string; topic: string }[] }[];
 };
+
+const KINDS = new Set(["lgs", "tyt", "ayt", "ydt", "okul", "diger"]);
+
+function validateRules(p: { kind: string; option_count: number; wrong_penalty: number }): string | null {
+  if (!KINDS.has(p.kind)) return "Geçersiz sınav türü.";
+  if (p.option_count !== 4 && p.option_count !== 5) return "Şık sayısı 4 ya da 5 olmalı.";
+  if (![0, 3, 4].includes(p.wrong_penalty)) return "Geçersiz net hesabı.";
+  return null;
+}
 
 function validateMeta(p: Pick<NewExamPayload, "slug" | "title" | "grade" | "booklet_url" | "duration_min">): string | null {
   if (!/^[a-z0-9-]{3,80}$/.test(p.slug)) return "Kısa ad yalnızca küçük harf, rakam ve tire içermeli (ör. 2025-lgs-sayisal).";
@@ -39,15 +51,16 @@ function validateMeta(p: Pick<NewExamPayload, "slug" | "title" | "grade" | "book
 export async function createExam(payload: NewExamPayload): Promise<ActionResult> {
   await requireAdmin("/admin/sinavlar/yeni");
 
-  const metaError = validateMeta(payload);
+  const metaError = validateMeta(payload) ?? validateRules(payload);
   if (metaError) return { ok: false, error: metaError };
+  const letter = payload.option_count === 4 ? /^[A-D]$/ : LETTER;
   if (!Array.isArray(payload.sections) || payload.sections.length < 1 || payload.sections.length > 8) {
     return { ok: false, error: "En az bir bölüm olmalı." };
   }
   for (const s of payload.sections) {
     if (!/^[a-z0-9]{2,20}$/.test(s.code) || !s.name?.trim()) return { ok: false, error: "Bölüm adı/kodu geçersiz." };
     if (s.questions.length < 1 || s.questions.length > 100) return { ok: false, error: `${s.name}: soru sayısı 1–100 olmalı.` };
-    const missing = s.questions.filter((q) => !LETTER.test(q.correct)).map((q) => q.no);
+    const missing = s.questions.filter((q) => !letter.test(q.correct)).map((q) => q.no);
     if (missing.length) return { ok: false, error: `${s.name}: ${missing.join(", ")}. soruların cevabı eksik.` };
   }
 
@@ -71,14 +84,25 @@ export async function createExam(payload: NewExamPayload): Promise<ActionResult>
 
 export async function saveExam(
   examId: string,
-  meta: { title: string; subtitle: string; grade: number; booklet_url: string; booklet_label: string; duration_min: number },
+  meta: {
+    title: string;
+    subtitle: string;
+    grade: number;
+    kind: string;
+    option_count: number;
+    wrong_penalty: number;
+    booklet_url: string;
+    booklet_label: string;
+    duration_min: number;
+  },
   questions: { section: string; no: number; correct: string; topic: string }[],
 ): Promise<ActionResult> {
   await requireAdmin(`/admin/sinavlar/${examId}`);
   if (!UUID.test(examId)) return { ok: false, error: "Geçersiz sınav." };
-  const metaError = validateMeta({ ...meta, slug: "gecici-ad" });
+  const metaError = validateMeta({ ...meta, slug: "gecici-ad" }) ?? validateRules(meta);
   if (metaError) return { ok: false, error: metaError };
-  const bad = questions.filter((q) => !LETTER.test(q.correct));
+  const letter = meta.option_count === 4 ? /^[A-D]$/ : LETTER;
+  const bad = questions.filter((q) => !letter.test(q.correct));
   if (bad.length) return { ok: false, error: `Cevabı eksik sorular: ${bad.map((q) => `${q.section} ${q.no}`).join(", ")}` };
 
   const supabase = await createClient();
@@ -88,6 +112,9 @@ export async function saveExam(
       title: meta.title.trim(),
       subtitle: meta.subtitle.trim() || null,
       grade: meta.grade,
+      kind: meta.kind,
+      option_count: meta.option_count,
+      wrong_penalty: meta.wrong_penalty,
       booklet_url: meta.booklet_url.trim() || null,
       booklet_label: meta.booklet_label.trim() || null,
       duration_min: meta.duration_min,

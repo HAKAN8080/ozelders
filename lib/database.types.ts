@@ -266,12 +266,15 @@ export type Database = {
           created_at: string
           duration_min: number
           grade: number
+          option_count: number
           id: string
+          kind: string
           published_at: string | null
           slug: string
           status: Database["public"]["Enums"]["exam_status"]
           subtitle: string | null
           title: string
+          wrong_penalty: number
         }
         Insert: {
           booklet_label?: string | null
@@ -280,7 +283,9 @@ export type Database = {
           created_at?: string
           duration_min: number
           grade?: number
+          option_count?: number
           id?: string
+          kind?: string
           published_at?: string | null
           slug: string
           status?: Database["public"]["Enums"]["exam_status"]
@@ -294,12 +299,15 @@ export type Database = {
           created_at?: string
           duration_min?: number
           grade?: number
+          option_count?: number
           id?: string
+          kind?: string
           published_at?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["exam_status"]
           subtitle?: string | null
           title?: string
+          wrong_penalty?: number
         }
         Relationships: []
       }

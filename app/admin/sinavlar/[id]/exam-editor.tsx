@@ -8,7 +8,9 @@ import { deleteDraftExam, saveExam, setExamStatus, type ActionResult } from "@/a
 import { BookletUpload } from "@/app/admin/sinavlar/[id]/booklet-upload";
 import { PdfImageImport } from "@/app/admin/sinavlar/[id]/pdf-image-import";
 import { BulkImageButton, ImageCell, useQuestionImages } from "@/app/admin/sinavlar/[id]/question-images";
+import { ExamRulesFields } from "@/app/admin/sinavlar/exam-fields";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
+import type { ExamKind } from "@/lib/exam-kinds";
 import type { QuestionImage } from "@/lib/exam-images";
 
 type Status = "taslak" | "yayinda" | "arsiv";
@@ -19,6 +21,9 @@ type ExamMeta = {
   title: string;
   subtitle: string;
   grade: number;
+  kind: ExamKind;
+  option_count: number;
+  wrong_penalty: number;
   booklet_url: string;
   booklet_path: string | null;
   booklet_label: string;
@@ -50,7 +55,8 @@ export function ExamEditor({
   const imgs = useQuestionImages(exam.id, images);
   const [bookletPath, setBookletPath] = useState(exam.booklet_path);
   const totalQ = sections.reduce((n, s) => n + s.questions.length, 0);
-  const missing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct).length, 0);
+  const valid = meta.option_count === 4 ? "ABCD" : "ABCDE";
+  const missing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct || !valid.includes(q.correct)).length, 0);
 
   function upd<K extends keyof ExamMeta>(k: K, v: ExamMeta[K]) {
     setMeta({ ...meta, [k]: v });
@@ -79,6 +85,9 @@ export function ExamEditor({
             title: meta.title,
             subtitle: meta.subtitle,
             grade: meta.grade,
+            kind: meta.kind,
+            option_count: meta.option_count,
+            wrong_penalty: meta.wrong_penalty,
             booklet_url: meta.booklet_url,
             booklet_label: meta.booklet_label,
             duration_min: meta.duration_min,
@@ -191,16 +200,13 @@ export function ExamEditor({
           <span className="text-[15px] font-medium">Alt başlık</span>
           <input className={field} value={meta.subtitle} onChange={(e) => upd("subtitle", e.target.value)} />
         </label>
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[15px] font-medium">Sınıf</span>
-          <select className={field} value={meta.grade} onChange={(e) => upd("grade", Number(e.target.value))}>
-            {[5, 6, 7, 8].map((g) => (
-              <option key={g} value={g}>
-                {g}. sınıf
-              </option>
-            ))}
-          </select>
-        </label>
+        <ExamRulesFields
+          value={{ kind: meta.kind, grade: meta.grade, option_count: meta.option_count, wrong_penalty: meta.wrong_penalty }}
+          onChange={(r) => {
+            setMeta({ ...meta, ...r });
+            setDirty(true);
+          }}
+        />
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Süre (dakika)</span>
           <input className={field} type="number" min={5} max={300} value={meta.duration_min} onChange={(e) => upd("duration_min", Number(e.target.value))} />
@@ -217,6 +223,7 @@ export function ExamEditor({
 
       {sections.map((s, i) => (
         <QuestionTable
+          optionCount={meta.option_count}
           key={s.code}
           section={s}
           fixedCount

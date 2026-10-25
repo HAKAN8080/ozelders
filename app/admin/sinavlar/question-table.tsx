@@ -18,6 +18,7 @@ export function QuestionTable({
   extraHeader,
   renderExtra,
   headerActions,
+  optionCount = 5,
 }: {
   section: EditableSection;
   onChange: (next: EditableSection) => void;
@@ -27,11 +28,15 @@ export function QuestionTable({
   extraHeader?: string;
   renderExtra?: (q: EditableQuestion) => ReactNode;
   headerActions?: ReactNode;
+  /** 4 şıklı sınavda E seçilemez */
+  optionCount?: number;
 }) {
+  const letters = LETTERS.slice(0, optionCount === 4 ? 4 : 5);
   const listId = useId();
   const [paste, setPaste] = useState("");
   const topics = TOPICS[section.code] ?? [];
-  const missing = section.questions.filter((q) => !q.correct).length;
+  // 4 şıklıya çevrilince E kalan sorular eksik sayılır
+  const missing = section.questions.filter((q) => !q.correct || !letters.includes(q.correct)).length;
   const noTopic = section.questions.filter((q) => !q.topic).length;
   const hasSnippets = section.questions.some((q) => q.snippet);
 
@@ -42,13 +47,13 @@ export function QuestionTable({
   }
 
   function applyPaste() {
-    const letters = paste.toUpperCase().replace(/[^A-E]/g, "").split("");
-    if (!letters.length) return;
+    const pasted = paste.toUpperCase().replace(optionCount === 4 ? /[^A-D]/g : /[^A-E]/g, "").split("");
+    if (!pasted.length) return;
     // Yeni sınavda yapıştırılan harf sayısı soru sayısını belirler; mevcut sınavda sayı sabit.
-    const count = fixedCount ? section.questions.length : letters.length;
+    const count = fixedCount ? section.questions.length : pasted.length;
     const qs = Array.from({ length: count }, (_, i) => ({
       no: i + 1,
-      correct: letters[i] ?? section.questions[i]?.correct ?? "",
+      correct: pasted[i] ?? section.questions[i]?.correct ?? "",
       topic: section.questions[i]?.topic ?? "",
       snippet: section.questions[i]?.snippet,
     }));
@@ -111,10 +116,10 @@ export function QuestionTable({
                     aria-label={`${q.no}. soru cevabı`}
                     value={q.correct}
                     onChange={(e) => setQ(i, { correct: e.target.value })}
-                    className={`${cell} w-20 ${q.correct ? "" : "border-destructive"}`}
+                    className={`${cell} w-20 ${q.correct && letters.includes(q.correct) ? "" : "border-destructive"}`}
                   >
                     <option value="">–</option>
-                    {LETTERS.map((L) => (
+                    {letters.map((L) => (
                       <option key={L} value={L}>
                         {L}
                       </option>
