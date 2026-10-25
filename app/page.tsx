@@ -31,20 +31,42 @@ export default function Home() {
   );
 }
 
+/** Arka planda, kareli defterin üstünde ama içeriğin arkasında kalan soluk tebeşir formüller. */
+function ChalkFormulas() {
+  const items: [string, string][] = [
+    ["net = D − Y/3", "left-[2%] top-[2%] -rotate-3 text-[30px]"],
+    ["a² + b² = c²", "right-[4%] top-[6%] rotate-3 text-[30px]"],
+    ["√144 = 12", "left-[44%] top-[3%] rotate-2 text-[28px] max-lg:hidden"],
+    ["π ≈ 3,14", "right-[30%] bottom-[7%] -rotate-3 text-[32px]"],
+    ["x = (−b ± √Δ) / 2a", "left-[2%] bottom-[5%] rotate-2 text-[28px] max-md:hidden"],
+    ["F = m · a", "right-[2%] bottom-[22%] -rotate-6 text-[30px] max-md:hidden"],
+    ["2⁵ = 32", "left-[38%] bottom-[14%] rotate-6 text-[26px] max-lg:hidden"],
+  ];
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none font-hand text-primary opacity-[0.13]">
+      {items.map(([t, cls]) => (
+        <span key={t} className={`absolute whitespace-nowrap ${cls}`}>
+          {t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function Hero() {
   return (
-    <section className="defter border-b border-border">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center gap-14 px-4 pt-16 pb-20 sm:px-6 lg:pt-22 lg:pb-24">
+    <section className="defter relative overflow-hidden border-b border-border">
+      <ChalkFormulas />
+      <div className="relative mx-auto flex max-w-[1200px] flex-wrap items-center gap-14 px-4 pt-16 pb-20 sm:px-6 lg:pt-22 lg:pb-24">
         <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
           <p className={`${eyebrow} m-0 text-primary`}>Ortaokul ve lise · LGS · YKS · okul dersleri</p>
           <h1 className="m-0 font-serif text-4xl leading-[1.08] font-bold tracking-[-0.01em] sm:text-5xl lg:text-[56px]">
-            Eksiğini ölçelim.
-            <br />
-            Doğru öğretmenle ekonomik çözümler ile eksikleri kapatalım.
+            Hedef okuluna kaç net uzaktasın?
+            <span className="mt-3 block text-[0.62em] leading-[1.2] text-primary">Tek denemede öğren, doğru öğretmenle kapat.</span>
           </h1>
           <p className="m-0 max-w-[34em] text-[19px] leading-relaxed text-[#3d4743]">
-            Ücretsiz denemeyi çöz, hangi kazanımlarda puan kaybettiğini konu konu gör. İstersen o
-            konulara göre seçilmiş bir öğretmenle birebir çalış.
+            Ücretsiz denemeyi çöz; tahmini puanını, Türkiye sıralamanı ve hedef lisene ya da bölümüne kalan
+            neti hemen gör. Eksik konuların için seçilmiş bir öğretmenle birebir çalış.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
