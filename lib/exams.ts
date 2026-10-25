@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { cacheLife, cacheTag } from "next/cache";
 
 import type { Database } from "@/lib/database.types";
+import { imageKey, type QuestionImage } from "@/lib/exam-images";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 export type ExamSection = { code: string; name: string; position: number; question_count: number };
@@ -16,6 +17,8 @@ export type PublicExam = {
   duration_min: number;
   published_at: string | null;
   sections: ExamSection[];
+  /** Kendi denemelerimizde soru resimleri; anahtar "bolum:no". Resmi kitapçıklı sınavda boş. */
+  images: Record<string, QuestionImage>;
 };
 
 export type SectionResult = {
@@ -72,7 +75,7 @@ export async function getPublishedExams(): Promise<PublicExam[]> {
   const { data, error } = await publicClient()
     .from("exams")
     .select(
-      "id, slug, title, subtitle, grade, booklet_url, booklet_label, duration_min, published_at, exam_sections(code, name, position, question_count)",
+      "id, slug, title, subtitle, grade, booklet_url, booklet_label, duration_min, published_at, exam_sections(code, name, position, question_count), exam_question_images(section, no, path, width, height)",
     )
     .eq("status", "yayinda")
     .order("published_at", { ascending: false });
@@ -83,9 +86,12 @@ export async function getPublishedExams(): Promise<PublicExam[]> {
     return [];
   }
 
-  return data.map(({ exam_sections, ...e }) => ({
+  return data.map(({ exam_sections, exam_question_images, ...e }) => ({
     ...e,
     sections: [...(exam_sections ?? [])].sort((a, b) => a.position - b.position),
+    images: Object.fromEntries(
+      (exam_question_images ?? []).map((i) => [imageKey(i.section, i.no), { path: i.path, width: i.width, height: i.height }]),
+    ),
   }));
 }
 

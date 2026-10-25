@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { AdminShell } from "@/app/admin/admin-shell";
 import { ExamEditor } from "@/app/admin/sinavlar/[id]/exam-editor";
 import { requireAdmin } from "@/lib/admin";
+import { imageKey } from "@/lib/exam-images";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
@@ -19,7 +20,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
   if (!UUID.test(id)) notFound();
 
   const supabase = await createClient();
-  const [{ data: exam }, { data: sections }, { data: questions }, { count }] = await Promise.all([
+  const [{ data: exam }, { data: sections }, { data: questions }, { count }, { data: imgRows }] = await Promise.all([
     supabase
       .from("exams")
       .select("id, slug, title, subtitle, grade, booklet_url, booklet_label, duration_min, status, published_at")
@@ -28,6 +29,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
     supabase.from("exam_sections").select("code, name, position").eq("exam_id", id).order("position"),
     supabase.from("exam_questions").select("section, no, correct, topic").eq("exam_id", id).order("no"),
     supabase.from("exam_attempts").select("id", { count: "exact", head: true }).eq("exam_id", id),
+    supabase.from("exam_question_images").select("section, no, path, width, height").eq("exam_id", id),
   ]);
   if (!exam) notFound();
 
@@ -50,7 +52,7 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
     >
       {sp.yeni ? (
         <p className="m-0 rounded-md bg-primary-soft p-4 text-[15px]" role="status">
-          Sınav <strong>taslak</strong> olarak oluşturuldu. Cevapları ve konuları son kez kontrol et, kitapçık bağlantısını gir ve yayınla.
+          Sınav <strong>taslak</strong> olarak oluşturuldu. Cevapları ve konuları son kez kontrol et; kitapçık bağlantısını gir ya da soru resimlerini ekle, sonra yayınla.
         </p>
       ) : null}
       <ExamEditor
@@ -67,6 +69,9 @@ export default async function EditExamPage(props: PageProps<"/admin/sinavlar/[id
         }}
         sections={editable}
         attemptCount={count ?? 0}
+        images={Object.fromEntries(
+          (imgRows ?? []).map((r) => [imageKey(r.section, r.no), { path: r.path, width: r.width, height: r.height }]),
+        )}
       />
     </AdminShell>
   );

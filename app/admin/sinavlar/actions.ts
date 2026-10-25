@@ -122,7 +122,21 @@ export async function setExamStatus(examId: string, status: "taslak" | "yayinda"
       return { ok: false, error: "Yayınlamadan önce her bölümde en az bir soru olmalı." };
     }
     const { data: exam } = await supabase.from("exams").select("booklet_url, published_at").eq("id", examId).single();
-    if (!exam?.booklet_url) return { ok: false, error: "Yayınlamadan önce kitapçık bağlantısını gir." };
+    if (!exam?.booklet_url) {
+      // Kitapçık bağlantısı yoksa her sorunun resmi olmalı (kendi hazırladığımız deneme).
+      const total = secs.reduce((n, s) => n + s.question_count, 0);
+      const { count } = await supabase
+        .from("exam_question_images")
+        .select("no", { count: "exact", head: true })
+        .eq("exam_id", examId);
+      if ((count ?? 0) < total) {
+        return {
+          ok: false,
+          error: `Yayınlamak için ya kitapçık bağlantısı gir ya da tüm sorulara resim ekle (${count ?? 0}/${total} resim var).`,
+        };
+      }
+    }
+    if (!exam) return { ok: false, error: "Sınav bulunamadı." };
     const { error } = await supabase
       .from("exams")
       .update({ status, published_at: exam.published_at ?? new Date().toISOString() })
@@ -143,7 +157,68 @@ export async function deleteDraftExam(examId: string): Promise<ActionResult> {
   const supabase = await createClient();
   const { count } = await supabase.from("exam_attempts").select("id", { count: "exact", head: true }).eq("exam_id", examId);
   if ((count ?? 0) > 0) return { ok: false, error: "Çözülmüş sınav silinemez; arşive al." };
-  const { error } = await supabase.from("exams").delete().eq("id", examId).eq("status", "taslak");
+  const { data: imgs } = await supabase.from("exam_question_images").select("path").eq("exam_id", examId);
+  const { data: deleted, error } = await supabase.from("exams").delete().eq("id", examId).eq("status", "taslak").select("id");
   if (error) return { ok: false, error: error.message };
+  if (!deleted?.length) return { ok: false, error: "Yalnızca taslak sınav silinebilir." };
+  if (imgs?.length) await supabase.storage.from("exam-images").remove(imgs.map((i) => i.path));
   redirect("/admin/sinavlar");
+}
+
+const SECTION = /^[a-z]{2,20}$/;
+
+/** Tarayıcı resmi depoya yükledikten sonra soru ile eşleştirir; eski resmi siler. */
+export async function setQuestionImage(
+  examId: string,
+  section: string,
+  no: number,
+  image: { path: string; width: number; height: number },
+): Promise<ActionResult> {
+  await requireAdmin(`/admin/sinavlar/${examId}`);
+  if (!UUID.test(examId) || !SECTION.test(section) || !Number.isInteger(no)) return { ok: false, error: "Geçersiz soru." };
+  if (!image.path.startsWith(`${examId}/`) || !/^[0-9a-f-]+\/[a-z0-9-]+\.webp$/.test(image.path)) {
+    return { ok: false, error: "Geçersiz dosya yolu." };
+  }
+  const supabase = await createClient();
+  const { data: old } = await supabase
+    .from("exam_question_images")
+    .select("path")
+    .eq("exam_id", examId)
+    .eq("section", section)
+    .eq("no", no)
+    .maybeSingle();
+  const { error } = await supabase.from("exam_question_images").upsert(
+    {
+      exam_id: examId,
+      section,
+      no,
+      path: image.path,
+      width: Math.round(image.width) || null,
+      height: Math.round(image.height) || null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "exam_id,section,no" },
+  );
+  if (error) return { ok: false, error: `Resim kaydedilemedi: ${error.message}` };
+  if (old?.path && old.path !== image.path) {
+    await supabase.storage.from("exam-images").remove([old.path]);
+  }
+  updateTag("exams");
+  return { ok: true };
+}
+
+export async function removeQuestionImage(examId: string, section: string, no: number): Promise<ActionResult> {
+  await requireAdmin(`/admin/sinavlar/${examId}`);
+  if (!UUID.test(examId) || !SECTION.test(section) || !Number.isInteger(no)) return { ok: false, error: "Geçersiz soru." };
+  const supabase = await createClient();
+  const { data: old } = await supabase
+    .from("exam_question_images")
+    .delete()
+    .eq("exam_id", examId)
+    .eq("section", section)
+    .eq("no", no)
+    .select("path");
+  if (old?.length) await supabase.storage.from("exam-images").remove(old.map((o) => o.path));
+  updateTag("exams");
+  return { ok: true };
 }

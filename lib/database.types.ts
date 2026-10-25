@@ -146,6 +146,51 @@ export type Database = {
           },
         ]
       }
+      exam_question_images: {
+        Row: {
+          exam_id: string
+          height: number | null
+          no: number
+          path: string
+          section: string
+          updated_at: string
+          width: number | null
+        }
+        Insert: {
+          exam_id: string
+          height?: number | null
+          no: number
+          path: string
+          section: string
+          updated_at?: string
+          width?: number | null
+        }
+        Update: {
+          exam_id?: string
+          height?: number | null
+          no?: number
+          path?: string
+          section?: string
+          updated_at?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_question_images_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_question_images_exam_id_section_no_fkey"
+            columns: ["exam_id", "section", "no"]
+            isOneToOne: true
+            referencedRelation: "exam_questions"
+            referencedColumns: ["exam_id", "section", "no"]
+          },
+        ]
+      }
       exam_questions: {
         Row: {
           correct: string

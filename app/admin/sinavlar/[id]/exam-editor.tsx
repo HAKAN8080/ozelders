@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { deleteDraftExam, saveExam, setExamStatus, type ActionResult } from "@/app/admin/sinavlar/actions";
+import { BulkImageButton, ImageCell, useQuestionImages } from "@/app/admin/sinavlar/[id]/question-images";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
+import type { QuestionImage } from "@/lib/exam-images";
 
 type Status = "taslak" | "yayinda" | "arsiv";
 type ExamMeta = {
@@ -24,7 +26,17 @@ const field =
   "h-12 w-full rounded-lg border border-border bg-background px-4 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 const statusLabel: Record<Status, string> = { taslak: "Taslak", yayinda: "Yayında", arsiv: "Arşiv" };
 
-export function ExamEditor({ exam, sections: initial, attemptCount }: { exam: ExamMeta; sections: EditableSection[]; attemptCount: number }) {
+export function ExamEditor({
+  exam,
+  sections: initial,
+  attemptCount,
+  images,
+}: {
+  exam: ExamMeta;
+  sections: EditableSection[];
+  attemptCount: number;
+  images: Record<string, QuestionImage>;
+}) {
   const router = useRouter();
   const [meta, setMeta] = useState(exam);
   const [sections, setSections] = useState(initial);
@@ -32,6 +44,8 @@ export function ExamEditor({ exam, sections: initial, attemptCount }: { exam: Ex
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
+  const imgs = useQuestionImages(exam.id, images);
+  const totalQ = sections.reduce((n, s) => n + s.questions.length, 0);
   const missing = sections.reduce((n, s) => n + s.questions.filter((q) => !q.correct).length, 0);
 
   function upd<K extends keyof ExamMeta>(k: K, v: ExamMeta[K]) {
@@ -130,6 +144,25 @@ export function ExamEditor({ exam, sections: initial, attemptCount }: { exam: Ex
         </p>
       ) : null}
 
+      <section className="flex flex-col gap-2 rounded-[10px] border border-border bg-background p-5 text-[15px] leading-relaxed">
+        <h2 className="m-0 text-lg font-semibold">Öğrenci soruları nereden görecek?</h2>
+        <p className="m-0 text-[#3d4743]">
+          <strong>Resmi kitapçık:</strong> aşağıya kitapçığın resmi bağlantısını gir; öğrenci kitapçığı cevap kâğıdının yanında açar, dosya bizde durmaz.
+          <br />
+          <strong>Kendi denememiz:</strong> her soruya resim ekle (tablodaki &ldquo;Resim&rdquo; sütunu ya da &ldquo;Toplu resim yükle&rdquo;). Resimler
+          ada göre sıralanır: soru01, soru02 …
+        </p>
+        <p className="m-0 font-semibold">
+          Soru resmi: {imgs.count} / {totalQ}
+          {meta.booklet_url ? " · kitapçık bağlantısı var" : ""}
+        </p>
+        {imgs.error ? (
+          <p className="m-0 text-destructive" role="alert">
+            {imgs.error}
+          </p>
+        ) : null}
+      </section>
+
       <section className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 rounded-[10px] border border-border bg-background p-6">
         <h2 className="col-span-full m-0 text-xl font-semibold">Sınav bilgileri</h2>
         <label className="flex flex-col gap-1.5">
@@ -169,6 +202,9 @@ export function ExamEditor({ exam, sections: initial, attemptCount }: { exam: Ex
           key={s.code}
           section={s}
           fixedCount
+          extraHeader="Resim"
+          renderExtra={(q) => <ImageCell section={s.code} no={q.no} imgs={imgs} />}
+          headerActions={<BulkImageButton section={s} imgs={imgs} />}
           onChange={(next) => {
             setSections(sections.map((x, j) => (j === i ? next : x)));
             setDirty(true);

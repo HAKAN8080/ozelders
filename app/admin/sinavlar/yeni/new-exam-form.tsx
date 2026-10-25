@@ -143,7 +143,7 @@ export function NewExamForm() {
           </p>
         ))}
         <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4 text-[15px]">
-          <span className="text-muted">PDF’in yoksa ya da bölüm eksikse elle ekle:</span>
+          <span className="text-muted">Kendi denememiz ya da eksik bölüm için elle ekle (cevapları yapıştır, soru sayısı ona göre ayarlanır):</span>
           {SECTION_PRESETS.filter((p) => !sections.some((s) => s.code === p.code)).map((p) => (
             <button key={p.code} type="button" onClick={() => addSection(p.code)} className="rounded-md border border-border px-3 py-1.5 hover:bg-primary-soft">
               + {p.name}
@@ -199,7 +199,7 @@ export function NewExamForm() {
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Kitapçık bağlantısı (resmi kaynak)</span>
           <input className={field} value={bookletUrl} onChange={(e) => setBookletUrl(e.target.value)} placeholder="https://…" inputMode="url" />
-          <span className="text-sm text-muted">Yayınlamak için gerekli. Taslak için boş bırakabilirsin.</span>
+          <span className="text-sm text-muted">Resmi kitapçık için. Kendi denememizse boş bırak; soru resimlerini bir sonraki ekranda eklersin.</span>
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-[15px] font-medium">Kitapçık notu</span>

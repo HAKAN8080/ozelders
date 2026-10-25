@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 
 import { TOPICS } from "@/lib/topic-guess";
 
@@ -15,11 +15,18 @@ export function QuestionTable({
   section,
   onChange,
   fixedCount = false,
+  extraHeader,
+  renderExtra,
+  headerActions,
 }: {
   section: EditableSection;
   onChange: (next: EditableSection) => void;
   /** Yayındaki sınavda soru sayısı değişmez; yapıştırma yalnızca mevcut soruları doldurur. */
   fixedCount?: boolean;
+  /** Ek sütun (ör. soru resmi). */
+  extraHeader?: string;
+  renderExtra?: (q: EditableQuestion) => ReactNode;
+  headerActions?: ReactNode;
 }) {
   const listId = useId();
   const [paste, setPaste] = useState("");
@@ -37,7 +44,8 @@ export function QuestionTable({
   function applyPaste() {
     const letters = paste.toUpperCase().replace(/[^A-E]/g, "").split("");
     if (!letters.length) return;
-    const count = fixedCount ? section.questions.length : Math.max(letters.length, section.questions.length);
+    // Yeni sınavda yapıştırılan harf sayısı soru sayısını belirler; mevcut sınavda sayı sabit.
+    const count = fixedCount ? section.questions.length : letters.length;
     const qs = Array.from({ length: count }, (_, i) => ({
       no: i + 1,
       correct: letters[i] ?? section.questions[i]?.correct ?? "",
@@ -60,6 +68,7 @@ export function QuestionTable({
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {headerActions}
           <label className="sr-only" htmlFor={`${listId}-paste`}>
             Cevap anahtarını yapıştır
           </label>
@@ -83,12 +92,13 @@ export function QuestionTable({
       </datalist>
 
       <div className="overflow-x-auto">
-        <table className={`w-full ${hasSnippets ? "min-w-[640px]" : "max-w-[560px]"} border-collapse text-left`}>
+        <table className={`w-full ${hasSnippets || renderExtra ? "min-w-[640px]" : "max-w-[560px]"} border-collapse text-left`}>
           <thead>
             <tr className="border-b-2 border-[#111111] text-[13px] font-semibold uppercase tracking-[0.06em] text-muted">
               <th className="w-14 py-2 pr-3 font-semibold">No</th>
               <th className="w-28 py-2 pr-3 font-semibold">Cevap</th>
               <th className="w-72 py-2 pr-3 font-semibold">Konu</th>
+              {renderExtra ? <th className="py-2 pr-3 font-semibold">{extraHeader}</th> : null}
               {hasSnippets ? <th className="py-2 font-semibold">Soru metninin başı</th> : null}
             </tr>
           </thead>
@@ -121,6 +131,7 @@ export function QuestionTable({
                     className={`${cell} w-full`}
                   />
                 </td>
+                {renderExtra ? <td className="py-2 pr-3">{renderExtra(q)}</td> : null}
                 {hasSnippets ? (
                   <td className="py-2 pt-3 text-sm leading-snug text-muted">
                     {q.snippet ? <span title={q.snippet}>{q.snippet.slice(0, 140)}{q.snippet.length > 140 ? "…" : ""}</span> : "—"}

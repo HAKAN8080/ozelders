@@ -255,3 +255,5 @@ Bulgularını listele, sonra düzelt.
 - `/admin/sinavlar/yeni`: PDF tarayıcıda okunur (unpdf), sunucuya yüklenmez. Cevap anahtarı + konu önerileri tabloya dolar, admin kontrol eder → `admin_create_exam` ile **taslak** oluşur.
 - `/admin/sinavlar/[id]`: bilgiler, cevap ve konu düzenleme, Yayınla / Yayından kaldır / Arşiv / Sil (yalnız çözülmemiş taslak). Cevap anahtarı değişirse eski sonuçlar yeniden puanlanmaz.
 - Admin girişinde üst menüde "Yönetim" bağlantısı görünür.
+- Soru resimleri (kendi denemelerimiz): `exam_question_images` + herkese açık `exam-images` bucket (yazma yalnız admin, 1,5 MB, webp/png/jpeg). Tarayıcı resmi 1400 px WebP'ye küçültür. Yayın kuralı: kitapçık bağlantısı **ya da** tüm soruların resmi.
+- Öğrenci ekranı: resmi kitapçıkta masaüstünde "Kitapçığı yanda aç" (iframe, dosya bizde durmaz); resimli denemede soru kartları, süre başlayınca açılır.
