@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { deleteDraftExam, saveExam, setExamStatus, type ActionResult } from "@/app/admin/sinavlar/actions";
+import { PdfImageImport } from "@/app/admin/sinavlar/[id]/pdf-image-import";
 import { BulkImageButton, ImageCell, useQuestionImages } from "@/app/admin/sinavlar/[id]/question-images";
 import { QuestionTable, type EditableSection } from "@/app/admin/sinavlar/question-table";
 import type { QuestionImage } from "@/lib/exam-images";
@@ -149,8 +150,8 @@ export function ExamEditor({
         <p className="m-0 text-[#3d4743]">
           <strong>Resmi kitapçık:</strong> aşağıya kitapçığın resmi bağlantısını gir; öğrenci kitapçığı cevap kâğıdının yanında açar, dosya bizde durmaz.
           <br />
-          <strong>Kendi denememiz:</strong> her soruya resim ekle (tablodaki &ldquo;Resim&rdquo; sütunu ya da &ldquo;Toplu resim yükle&rdquo;). Resimler
-          ada göre sıralanır: soru01, soru02 …
+          <strong>Kendi denememiz:</strong> PDF&apos;ini aşağıdan yükle, sorular otomatik kesilsin; ya da tablodaki &ldquo;Resim&rdquo; sütunundan
+          soruları tek tek ekle / değiştir.
         </p>
         <p className="m-0 font-semibold">
           Soru resmi: {imgs.count} / {totalQ}
@@ -162,6 +163,8 @@ export function ExamEditor({
           </p>
         ) : null}
       </section>
+
+      <PdfImageImport sections={sections} imgs={imgs} />
 
       <section className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 rounded-[10px] border border-border bg-background p-6">
         <h2 className="col-span-full m-0 text-xl font-semibold">Sınav bilgileri</h2>

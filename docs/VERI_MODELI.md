@@ -257,3 +257,4 @@ Bulgularını listele, sonra düzelt.
 - Admin girişinde üst menüde "Yönetim" bağlantısı görünür.
 - Soru resimleri (kendi denemelerimiz): `exam_question_images` + herkese açık `exam-images` bucket (yazma yalnız admin, 1,5 MB, webp/png/jpeg). Tarayıcı resmi 1400 px WebP'ye küçültür. Yayın kuralı: kitapçık bağlantısı **ya da** tüm soruların resmi.
 - Öğrenci ekranı: resmi kitapçıkta masaüstünde "Kitapçığı yanda aç" (iframe, dosya bizde durmaz); resimli denemede soru kartları, süre başlayınca açılır.
+- PDF'ten soru resmi (kendi denemelerimiz): düzenleme ekranında "PDF'ten soru resimleri". Tarayıcıda soru numaralarına göre kesilir (2 sütun destekli, kapak/yönerge listeleri atlanır, sütun çizgileri kırpılır) ya da "her sayfa bir soru". Önizlemede seçilenler yüklenir; PDF sunucuya gitmez. Tek tek "Resim ekle / Değiştir" de duruyor.

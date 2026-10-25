@@ -15,11 +15,16 @@ export function useQuestionImages(examId: string, initial: Record<string, Questi
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
-  async function upload(section: string, no: number, file: File): Promise<boolean> {
+  async function upload(
+    section: string,
+    no: number,
+    file: File | { blob: Blob; width: number; height: number },
+  ): Promise<boolean> {
     const key = imageKey(section, no);
     setBusy((b) => ({ ...b, [key]: true }));
     try {
-      const { blob, width, height } = await compressImage(file);
+      // PDF'ten kesilenler zaten küçültülmüş WebP; dosyalar burada küçültülür
+      const { blob, width, height } = file instanceof File ? await compressImage(file) : file;
       const path = `${examId}/${section}-${no}-${crypto.randomUUID().slice(0, 8)}.webp`;
       const supabase = createClient();
       const { error: upErr } = await supabase.storage
@@ -73,11 +78,24 @@ export function useQuestionImages(examId: string, initial: Record<string, Questi
     }
   }
 
+  /** PDF'ten kesilmiş hazır resimleri 3'erli paralel yükler. */
+  async function uploadMany(items: { section: string; no: number; blob: Blob; width: number; height: number }[]) {
+    setError(null);
+    const queue = [...items];
+    let ok = 0;
+    await Promise.all(
+      Array.from({ length: 3 }, async () => {
+        for (let it = queue.shift(); it; it = queue.shift()) if (await upload(it.section, it.no, it)) ok++;
+      }),
+    );
+    return ok;
+  }
+
   const count = Object.keys(images).length;
-  return { images, busy, error, setError, upload, remove, bulk, count };
+  return { images, busy, error, setError, upload, uploadMany, remove, bulk, count };
 }
 
-type Imgs = ReturnType<typeof useQuestionImages>;
+export type Imgs = ReturnType<typeof useQuestionImages>;
 
 export function BulkImageButton({ section, imgs }: { section: EditableSection; imgs: Imgs }) {
   const anyBusy = section.questions.some((q) => imgs.busy[imageKey(section.code, q.no)]);
