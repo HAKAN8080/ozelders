@@ -27,7 +27,7 @@
 4. Veli iptali / iade → onaylanmamış kalemler kalem bazında iade edilir.
 
 ## Mevcut şemaya etkisi (entegrasyonda yapılacak)
-- `teacher_payout_info.payment_model` → `'pazaryeri'` eklenir; `iban`/`tax_id_encrypted` yerine `submerchant_key`, `iban_last4`, `submerchant_status`.
+- `teacher_payout_info.payout_model` (varsayılan `'pazaryeri'`) eklendi; eski `payment_model` sütunu kullanılmıyor. `submerchant_key`, `iban_last4`, `submerchant_status` eklendi (2026-10-25).
 - Yeni `payment_items` (payment_id, sıra, teacher_id, submerchant_key, item_price, teacher_price, provider_item_id, lesson_id, status: beklemede/onaylandi/iade, approved_at).
 - `payout_lines` hakediş defteri olarak kalır; `payouts` iyzico onay kayıtlarına dönüşür.
 

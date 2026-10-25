@@ -12,7 +12,7 @@ alter table teacher_applications
   add column demo_availability text check (char_length(demo_availability) <= 400),
   add column demo_scheduled_at timestamptz,
   add column demo_meeting_url text check (demo_meeting_url ~ '^https://'),
-  add column branch_test_attempt_id uuid references exam_attempts(id) on delete set null,
+  add column branch_test_attempt_id uuid references exam_attempts(id),
   -- Belge doğrulama: e-Devlet barkodları yalnız doğrulanana kadar tutulur, doğrulanınca silinir (KVKK)
   add column diploma_barcode text check (char_length(diploma_barcode) <= 40),
   add column criminal_record_barcode text check (char_length(criminal_record_barcode) <= 40),
@@ -37,10 +37,8 @@ alter table teachers
 alter table teachers alter column grades_min set default 3, alter column grades_max set default 12;
 
 -- 3) Ödeme modeli: pazaryeri (bireysel alt mağaza); TCKN/IBAN bizde tutulmaz
-alter table teacher_payout_info drop constraint if exists teacher_payout_info_payment_model_check;
 alter table teacher_payout_info
-  add constraint teacher_payout_info_payment_model_check check (payment_model in ('pazaryeri', 'smm', 'bordro', 'stopajli')),
-  alter column payment_model set default 'pazaryeri',
+  add column payout_model text not null default 'pazaryeri' check (payout_model in ('pazaryeri', 'smm', 'bordro', 'stopajli')),
   add column submerchant_key text,
   add column submerchant_status text check (submerchant_status in ('bekliyor', 'aktif', 'hata')),
   add column iban_last4 text check (iban_last4 ~ '^[0-9]{4}$');
@@ -178,7 +176,7 @@ begin
   on conflict (profile_id) do update set status = 'golge', subjects = excluded.subjects,
     grades_min = excluded.grades_min, grades_max = excluded.grades_max;
 
-  insert into teacher_payout_info (profile_id, payment_model, submerchant_status)
+  insert into teacher_payout_info (profile_id, payout_model, submerchant_status)
   values (v_app.profile_id, 'pazaryeri', 'bekliyor') on conflict (profile_id) do nothing;
 
   -- Velisi olduğu öğrenci yoksa rolü öğretmen yap (hem veli hem öğretmen olanlar veli kalır)
@@ -199,4 +197,4 @@ grant execute on function teacher_application_branch_test(uuid) to authenticated
 grant execute on function admin_approve_teacher(uuid, text) to authenticated;
 
 -- Başvuran tabloya doğrudan yazamaz (yalnız fonksiyonlar; aşama atlatmayı engeller). Admin RLS ile yazar.
-drop policy if exists app_self_insert on teacher_applications;
+revoke insert on teacher_applications from authenticated, anon;

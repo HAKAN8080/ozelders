@@ -22,6 +22,7 @@ export type PublicExam = {
   kind: string;
   option_count: number;
   wrong_penalty: number;
+  purpose: string;
   published_at: string | null;
   sections: ExamSection[];
   /** Kendi denemelerimizde soru resimleri; anahtar "bolum:no". Resmi kitapçıklı sınavda boş. */
@@ -74,7 +75,7 @@ function publicClient() {
  * Yayındaki sınavlar. Cevap anahtarı burada yok: soru tablosu herkese kapalıdır,
  * sadece bölüm adları ve soru sayıları açıktır. 10 dakika önbellekli.
  */
-export async function getPublishedExams(): Promise<PublicExam[]> {
+async function getAllPublished(): Promise<PublicExam[]> {
   "use cache";
   cacheLife("minutes");
   cacheTag("exams");
@@ -82,7 +83,7 @@ export async function getPublishedExams(): Promise<PublicExam[]> {
   const { data, error } = await publicClient()
     .from("exams")
     .select(
-      "id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, published_at, exam_sections(code, name, position, question_count), exam_question_images(section, no, path, width, height)",
+      "id, slug, title, subtitle, grade, booklet_url, booklet_path, booklet_label, duration_min, kind, option_count, wrong_penalty, purpose, published_at, exam_sections(code, name, position, question_count), exam_question_images(section, no, path, width, height)",
     )
     .eq("status", "yayinda")
     .order("published_at", { ascending: false });
@@ -104,8 +105,14 @@ export async function getPublishedExams(): Promise<PublicExam[]> {
   }));
 }
 
+/** Deneme listesi: branş testleri (öğretmen başvurusu) burada görünmez. */
+export async function getPublishedExams(): Promise<PublicExam[]> {
+  return (await getAllPublished()).filter((e) => e.purpose === "deneme");
+}
+
+/** Bağlantıyla açılan sınav (deneme ya da branş testi). */
 export async function getPublishedExam(slug: string): Promise<PublicExam | null> {
-  const exams = await getPublishedExams();
+  const exams = await getAllPublished();
   return exams.find((e) => e.slug === slug) ?? null;
 }
 

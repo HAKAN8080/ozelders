@@ -266,10 +266,11 @@ export type Database = {
           created_at: string
           duration_min: number
           grade: number
-          option_count: number
           id: string
           kind: string
+          option_count: number
           published_at: string | null
+          purpose: string
           slug: string
           status: Database["public"]["Enums"]["exam_status"]
           subtitle: string | null
@@ -283,14 +284,16 @@ export type Database = {
           created_at?: string
           duration_min: number
           grade?: number
-          option_count?: number
           id?: string
           kind?: string
+          option_count?: number
           published_at?: string | null
+          purpose?: string
           slug: string
           status?: Database["public"]["Enums"]["exam_status"]
           subtitle?: string | null
           title: string
+          wrong_penalty?: number
         }
         Update: {
           booklet_label?: string | null
@@ -299,10 +302,11 @@ export type Database = {
           created_at?: string
           duration_min?: number
           grade?: number
-          option_count?: number
           id?: string
           kind?: string
+          option_count?: number
           published_at?: string | null
+          purpose?: string
           slug?: string
           status?: Database["public"]["Enums"]["exam_status"]
           subtitle?: string | null
@@ -1121,93 +1125,154 @@ export type Database = {
       }
       teacher_applications: {
         Row: {
+          bio: string | null
           branch: string
           branch_test_at: string | null
+          branch_test_attempt_id: string | null
           branch_test_score: number | null
           contract_signed_at: string | null
           contract_version: string | null
           created_at: string
+          criminal_record_barcode: string | null
           criminal_record_consent_at: string | null
           criminal_record_renew_due: string | null
           criminal_record_verified_at: string | null
+          demo_availability: string | null
           demo_evaluator_id: string | null
+          demo_meeting_url: string | null
           demo_rubric: Json | null
+          demo_scheduled_at: string | null
           demo_score: number | null
           demo_transcript_ai: Json | null
+          department: string | null
+          diploma_barcode: string | null
           diploma_verified_at: string | null
           experience_years: number | null
           grades_max: number
           grades_min: number
+          graduation_year: number | null
           id: string
           id_verified_at: string | null
+          independent_contractor_ack_at: string | null
           intro_video_url: string | null
           not_civil_servant_declared: boolean
           not_civil_servant_declared_at: string
           orientation_done_at: string | null
           profile_id: string
+          rejected_at: string | null
           rejection_reason: string | null
           segment: Database["public"]["Enums"]["teacher_segment"]
+          stage: Database["public"]["Enums"]["teacher_status"]
+          subjects: string[]
+          submerchant_consent_at: string | null
+          submitted_at: string | null
+          tax_status: string | null
+          university: string | null
+          updated_at: string
           verified_by: string | null
         }
         Insert: {
+          bio?: string | null
           branch?: string
           branch_test_at?: string | null
+          branch_test_attempt_id?: string | null
           branch_test_score?: number | null
           contract_signed_at?: string | null
           contract_version?: string | null
           created_at?: string
+          criminal_record_barcode?: string | null
           criminal_record_consent_at?: string | null
           criminal_record_renew_due?: string | null
           criminal_record_verified_at?: string | null
+          demo_availability?: string | null
           demo_evaluator_id?: string | null
+          demo_meeting_url?: string | null
           demo_rubric?: Json | null
+          demo_scheduled_at?: string | null
           demo_score?: number | null
           demo_transcript_ai?: Json | null
+          department?: string | null
+          diploma_barcode?: string | null
           diploma_verified_at?: string | null
           experience_years?: number | null
           grades_max?: number
           grades_min?: number
+          graduation_year?: number | null
           id?: string
           id_verified_at?: string | null
+          independent_contractor_ack_at?: string | null
           intro_video_url?: string | null
           not_civil_servant_declared: boolean
           not_civil_servant_declared_at?: string
           orientation_done_at?: string | null
           profile_id: string
+          rejected_at?: string | null
           rejection_reason?: string | null
           segment: Database["public"]["Enums"]["teacher_segment"]
+          stage?: Database["public"]["Enums"]["teacher_status"]
+          subjects?: string[]
+          submerchant_consent_at?: string | null
+          submitted_at?: string | null
+          tax_status?: string | null
+          university?: string | null
+          updated_at?: string
           verified_by?: string | null
         }
         Update: {
+          bio?: string | null
           branch?: string
           branch_test_at?: string | null
+          branch_test_attempt_id?: string | null
           branch_test_score?: number | null
           contract_signed_at?: string | null
           contract_version?: string | null
           created_at?: string
+          criminal_record_barcode?: string | null
           criminal_record_consent_at?: string | null
           criminal_record_renew_due?: string | null
           criminal_record_verified_at?: string | null
+          demo_availability?: string | null
           demo_evaluator_id?: string | null
+          demo_meeting_url?: string | null
           demo_rubric?: Json | null
+          demo_scheduled_at?: string | null
           demo_score?: number | null
           demo_transcript_ai?: Json | null
+          department?: string | null
+          diploma_barcode?: string | null
           diploma_verified_at?: string | null
           experience_years?: number | null
           grades_max?: number
           grades_min?: number
+          graduation_year?: number | null
           id?: string
           id_verified_at?: string | null
+          independent_contractor_ack_at?: string | null
           intro_video_url?: string | null
           not_civil_servant_declared?: boolean
           not_civil_servant_declared_at?: string
           orientation_done_at?: string | null
           profile_id?: string
+          rejected_at?: string | null
           rejection_reason?: string | null
           segment?: Database["public"]["Enums"]["teacher_segment"]
+          stage?: Database["public"]["Enums"]["teacher_status"]
+          subjects?: string[]
+          submerchant_consent_at?: string | null
+          submitted_at?: string | null
+          tax_status?: string | null
+          university?: string | null
+          updated_at?: string
           verified_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "teacher_applications_branch_test_attempt_id_fkey"
+            columns: ["branch_test_attempt_id"]
+            isOneToOne: false
+            referencedRelation: "exam_attempts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "teacher_applications_demo_evaluator_id_fkey"
             columns: ["demo_evaluator_id"]
@@ -1273,22 +1338,34 @@ export type Database = {
       teacher_payout_info: {
         Row: {
           iban: string | null
+          iban_last4: string | null
           payment_model: string | null
+          payout_model: string
           profile_id: string
+          submerchant_key: string | null
+          submerchant_status: string | null
           tax_id_encrypted: string | null
           updated_at: string
         }
         Insert: {
           iban?: string | null
+          iban_last4?: string | null
           payment_model?: string | null
+          payout_model?: string
           profile_id: string
+          submerchant_key?: string | null
+          submerchant_status?: string | null
           tax_id_encrypted?: string | null
           updated_at?: string
         }
         Update: {
           iban?: string | null
+          iban_last4?: string | null
           payment_model?: string | null
+          payout_model?: string
           profile_id?: string
+          submerchant_key?: string | null
+          submerchant_status?: string | null
           tax_id_encrypted?: string | null
           updated_at?: string
         }
@@ -1312,7 +1389,9 @@ export type Database = {
       teachers: {
         Row: {
           activated_at: string | null
+          band_changed_at: string | null
           bio: string | null
+          commission_band: string
           created_at: string
           display_name: string
           grades_max: number
@@ -1321,11 +1400,14 @@ export type Database = {
           late_cancel_count_30d: number
           profile_id: string
           status: Database["public"]["Enums"]["teacher_status"]
+          subjects: string[]
           tier: Database["public"]["Enums"]["teacher_tier"]
         }
         Insert: {
           activated_at?: string | null
+          band_changed_at?: string | null
           bio?: string | null
+          commission_band?: string
           created_at?: string
           display_name: string
           grades_max?: number
@@ -1334,11 +1416,14 @@ export type Database = {
           late_cancel_count_30d?: number
           profile_id: string
           status?: Database["public"]["Enums"]["teacher_status"]
+          subjects?: string[]
           tier?: Database["public"]["Enums"]["teacher_tier"]
         }
         Update: {
           activated_at?: string | null
+          band_changed_at?: string | null
           bio?: string | null
+          commission_band?: string
           created_at?: string
           display_name?: string
           grades_max?: number
@@ -1347,6 +1432,7 @@ export type Database = {
           late_cancel_count_30d?: number
           profile_id?: string
           status?: Database["public"]["Enums"]["teacher_status"]
+          subjects?: string[]
           tier?: Database["public"]["Enums"]["teacher_tier"]
         }
         Relationships: [
@@ -1403,6 +1489,10 @@ export type Database = {
       }
     }
     Functions: {
+      admin_approve_teacher: {
+        Args: { p_app: string; p_display_name: string }
+        Returns: string
+      }
       admin_create_exam: { Args: { p: Json }; Returns: string }
       apply_payment: {
         Args: { p_payload: Json; p_provider: string; p_ref: string }
@@ -1454,6 +1544,11 @@ export type Database = {
         }
         Returns: Json
       }
+      teacher_application_branch_test: {
+        Args: { p_attempt: string }
+        Returns: Json
+      }
+      teacher_application_save: { Args: { p: Json }; Returns: string }
       teaches_student: { Args: { p_student: string }; Returns: boolean }
     }
     Enums: {
