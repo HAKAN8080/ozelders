@@ -882,6 +882,117 @@ export type Database = {
           },
         ]
       }
+      score_distribution: {
+        Row: {
+          basis: string
+          family: string
+          score: number
+          value: number
+          value_kind: string
+          year: number
+        }
+        Insert: {
+          basis: string
+          family: string
+          score: number
+          value: number
+          value_kind: string
+          year: number
+        }
+        Update: {
+          basis?: string
+          family?: string
+          score?: number
+          value?: number
+          value_kind?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      score_models: {
+        Row: {
+          base: number
+          coefs: Json
+          family: string
+          max_score: number
+          means: Json | null
+          min_score: number
+          notes: string | null
+          question_counts: Json
+          source: string | null
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          base: number
+          coefs: Json
+          family: string
+          max_score?: number
+          means?: Json | null
+          min_score?: number
+          notes?: string | null
+          question_counts: Json
+          source?: string | null
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          base?: number
+          coefs?: Json
+          family?: string
+          max_score?: number
+          means?: Json | null
+          min_score?: number
+          notes?: string | null
+          question_counts?: Json
+          source?: string | null
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      score_targets: {
+        Row: {
+          base_score: number
+          city: string | null
+          district: string | null
+          family: string
+          id: string
+          institution: string
+          level: string
+          program: string | null
+          rank_value: number | null
+          source: string | null
+          year: number
+        }
+        Insert: {
+          base_score: number
+          city?: string | null
+          district?: string | null
+          family: string
+          id?: string
+          institution: string
+          level: string
+          program?: string | null
+          rank_value?: number | null
+          source?: string | null
+          year: number
+        }
+        Update: {
+          base_score?: number
+          city?: string | null
+          district?: string | null
+          family?: string
+          id?: string
+          institution?: string
+          level?: string
+          program?: string | null
+          rank_value?: number | null
+          source?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
       student_packages: {
         Row: {
           created_at: string

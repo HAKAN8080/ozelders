@@ -4,7 +4,11 @@ import Link from "next/link";
 import { claimAttempt } from "@/app/deneme/[slug]/sonuc/[id]/actions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { formatNet, type ExamResult, type TopicResult } from "@/lib/exams";
+import { ScoreEstimate } from "@/app/deneme/[slug]/sonuc/[id]/score-estimate";
+import { penaltyLabel } from "@/lib/exam-kinds";
+import { formatNet, getPublishedExam, type ExamResult, type PublicExam, type TopicResult } from "@/lib/exams";
+import { getScoreData } from "@/lib/score-data";
+import { relevantFamilies, type Family } from "@/lib/score-estimate";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
@@ -23,6 +27,7 @@ export default async function ResultPage({ params, searchParams }: PageProps<"/d
   const t = (await searchParams).t;
   const token = typeof t === "string" && UUID.test(t) ? t : null;
 
+  const exam = await getPublishedExam(slug).catch(() => null);
   let result: ExamResult | null = null;
   if (UUID.test(id)) {
     const supabase = await createClient();
@@ -36,7 +41,7 @@ export default async function ResultPage({ params, searchParams }: PageProps<"/d
       <main className="defter flex flex-1 flex-col">
         <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-4 pt-12 pb-16 sm:px-6">
           {result ? (
-            <Result result={result} slug={slug} id={id} token={token} />
+            <Result result={result} exam={exam} slug={slug} id={id} token={token} />
           ) : (
             <NotFoundBlock slug={slug} />
           )}
@@ -66,7 +71,19 @@ function NotFoundBlock({ slug }: { slug: string }) {
   );
 }
 
-function Result({ result, slug, id, token }: { result: ExamResult; slug: string; id: string; token: string | null }) {
+async function Result({
+  result,
+  exam,
+  slug,
+  id,
+  token,
+}: {
+  result: ExamResult;
+  exam: PublicExam | null;
+  slug: string;
+  id: string;
+  token: string | null;
+}) {
   const selfUrl = `/deneme/${slug}/sonuc/${id}${token ? `?t=${token}` : ""}`;
   const best = [...result.results].sort((a, b) => b.net - a.net)[0];
   const total = result.results.reduce((n, s) => n + s.dogru + s.yanlis + s.bos, 0);
@@ -108,8 +125,10 @@ function Result({ result, slug, id, token }: { result: ExamResult; slug: string;
             <span className="text-[15px] text-[#cfe3d6]">{result.participants} öğrenci arasında</span>
           </div>
         </div>
-        <p className="m-0 text-sm text-muted">Net hesabı: doğru sayısından yanlış sayısının üçte biri çıkarılır.</p>
+        <p className="m-0 text-sm text-muted">Net hesabı: {penaltyLabel(exam?.wrong_penalty ?? 3).toLocaleLowerCase("tr")}.</p>
       </section>
+
+      <Estimate result={result} exam={exam} next={selfUrl} />
 
       {result.claimable && token ? (
         <form action={claimAttempt} className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-primary bg-primary-soft p-5">
@@ -320,4 +339,27 @@ function QuestionGrid({
       <p className="m-0 text-sm text-muted">Yeşil: doğru · Siyah: yanlış (ok doğru cevabı gösterir) · Gri: boş</p>
     </section>
   );
+}
+
+/** Tahmini puan + hedef okul. Sınav türüne uygun puan modeli yoksa hiçbir şey göstermez. */
+async function Estimate({ result, exam, next }: { result: ExamResult; exam: PublicExam | null; next: string }) {
+  if (!exam) return null;
+  const counts = new Map(exam.sections.map((s) => [s.code, s.question_count]));
+  const sections = result.results.map((s) => ({
+    code: s.code,
+    name: s.name,
+    net: Number(s.net),
+    questions: counts.get(s.code) ?? s.dogru + s.yanlis + s.bos,
+  }));
+  const wanted: Record<string, Family[]> = { lgs: ["lgs"], tyt: ["tyt"], ayt: ["say", "ea", "soz"], ydt: ["dil"] };
+  const candidates = wanted[exam.kind] ?? [];
+  if (!candidates.length) return null;
+  const data = await getScoreData(candidates);
+  const families = relevantFamilies(
+    exam.kind,
+    sections.map((s) => s.code),
+    data.models,
+  );
+  if (!families.length) return null;
+  return <ScoreEstimate families={families} sections={sections} data={data} next={next} loggedIn={!!result.topics} />;
 }

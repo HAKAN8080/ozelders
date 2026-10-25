@@ -4,7 +4,7 @@
  * Model (her yıl için ayrı): puan = base + Σ katsayı[ders] × net[ders]
  * - LGS: MEB standart puan yöntemi doğrusal olduğu için yıllık katsayılarla birebir ifade edilir.
  * - YKS: ÖSYM standart puanları; katsayılar o yılın sonuçlarına uydurulmuş değerlerdir (yaklaşık).
- * Denemede olmayan dersler o yılın Türkiye ortalamasıyla doldurulur ve sonuçta belirtilir.
+ * Denemede olmayan dersler öğrencinin bu denemedeki başarı oranıyla doldurulur ve sonuçta belirtilir.
  */
 
 export type Family = "lgs" | "tyt" | "say" | "ea" | "soz" | "dil";
@@ -52,7 +52,7 @@ export type Estimate = {
   /** Denemede olmayan derslerde Türkiye ortalaması yerine 0 ve tam net alınırsa */
   low: number;
   high: number;
-  /** Ortalama ile doldurulan dersler */
+  /** Denemede olmayan, öğrencinin başarı oranıyla doldurulan dersler */
   assumed: string[];
   /** Tahmine giren dersler */
   used: string[];
@@ -82,6 +82,17 @@ export function isFullFormat(sections: SectionNet[], model: ScoreModel): boolean
 export function estimate(sections: SectionNet[], model: ScoreModel): Estimate | null {
   if (!isFullFormat(sections, model)) return null;
   const nets = new Map(sections.map((s) => [s.code, s.net]));
+  // Denemede olmayan dersler için öğrencinin bu denemedeki başarı oranı varsayılır
+  // (ör. yalnız sayısal çözdüyse sözelde de aynı oranda net). Aralık: 0 net ile tam net.
+  let gotNet = 0;
+  let gotQ = 0;
+  for (const s of sections) {
+    if (s.code in model.coefs) {
+      gotNet += Math.max(0, s.net);
+      gotQ += model.question_counts[s.code] ?? s.questions;
+    }
+  }
+  const ratio = gotQ ? gotNet / gotQ : 0;
   let score = model.base;
   let low = model.base;
   let high = model.base;
@@ -89,16 +100,16 @@ export function estimate(sections: SectionNet[], model: ScoreModel): Estimate | 
   const used: string[] = [];
   for (const [code, coef] of Object.entries(model.coefs)) {
     const n = nets.get(code);
+    const qc = model.question_counts[code] ?? 0;
     if (n !== undefined) {
-      const v = coef * Math.max(0, n);
+      const v = coef * Math.min(qc || Infinity, Math.max(0, n));
       score += v;
       low += v;
       high += v;
       used.push(code);
     } else {
-      const mean = model.means?.[code] ?? 0;
-      score += coef * mean;
-      high += coef * (model.question_counts[code] ?? 0);
+      score += coef * ratio * qc;
+      high += coef * qc;
       assumed.push(code);
     }
   }
