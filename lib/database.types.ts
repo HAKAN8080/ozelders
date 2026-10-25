@@ -315,6 +315,70 @@ export type Database = {
         }
         Relationships: []
       }
+      intro_offers: {
+        Row: {
+          created_at: string
+          ends_at: string
+          expires_at: string
+          id: string
+          meeting_url: string | null
+          reject_note: string | null
+          request_id: string
+          responded_at: string | null
+          starts_at: string
+          status: string
+          teacher_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at: string
+          expires_at: string
+          id?: string
+          meeting_url?: string | null
+          reject_note?: string | null
+          request_id: string
+          responded_at?: string | null
+          starts_at: string
+          status?: string
+          teacher_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string
+          expires_at?: string
+          id?: string
+          meeting_url?: string | null
+          reject_note?: string | null
+          request_id?: string
+          responded_at?: string | null
+          starts_at?: string
+          status?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intro_offers_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intro_offers_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_kpis"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "intro_offers_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           created_at: string
@@ -357,24 +421,6 @@ export type Database = {
             referencedRelation: "payments"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      lesson_requests: {
-        Row: { attempt_id: string | null; created_at: string; goal: string; id: string; note: string | null; parent_id: string; preferred: Json; status: string; student_id: string; subject: string; teacher_id: string | null }
-        Insert: { attempt_id?: string | null; created_at?: string; goal: string; id?: string; note?: string | null; parent_id: string; preferred?: Json; status?: string; student_id: string; subject: string; teacher_id?: string | null }
-        Update: { attempt_id?: string | null; created_at?: string; goal?: string; id?: string; note?: string | null; parent_id?: string; preferred?: Json; status?: string; student_id?: string; subject?: string; teacher_id?: string | null }
-        Relationships: [
-          { foreignKeyName: "lesson_requests_student_id_fkey"; columns: ["student_id"]; isOneToOne: false; referencedRelation: "students"; referencedColumns: ["id"] },
-          { foreignKeyName: "lesson_requests_teacher_id_fkey"; columns: ["teacher_id"]; isOneToOne: false; referencedRelation: "teachers"; referencedColumns: ["profile_id"] },
-        ]
-      }
-      intro_offers: {
-        Row: { created_at: string; ends_at: string; expires_at: string; id: string; meeting_url: string | null; reject_note: string | null; request_id: string; responded_at: string | null; starts_at: string; status: string; teacher_id: string }
-        Insert: { created_at?: string; ends_at: string; expires_at: string; id?: string; meeting_url?: string | null; reject_note?: string | null; request_id: string; responded_at?: string | null; starts_at: string; status?: string; teacher_id: string }
-        Update: { created_at?: string; ends_at?: string; expires_at?: string; id?: string; meeting_url?: string | null; reject_note?: string | null; request_id?: string; responded_at?: string | null; starts_at?: string; status?: string; teacher_id?: string }
-        Relationships: [
-          { foreignKeyName: "intro_offers_request_id_fkey"; columns: ["request_id"]; isOneToOne: false; referencedRelation: "lesson_requests"; referencedColumns: ["id"] },
-          { foreignKeyName: "intro_offers_teacher_id_fkey"; columns: ["teacher_id"]; isOneToOne: false; referencedRelation: "teachers"; referencedColumns: ["profile_id"] },
         ]
       }
       leads: {
@@ -498,6 +544,84 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "lessons"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      lesson_requests: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          goal: string
+          id: string
+          note: string | null
+          parent_id: string
+          preferred: Json
+          status: string
+          student_id: string
+          subject: string
+          teacher_id: string | null
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          goal: string
+          id?: string
+          note?: string | null
+          parent_id: string
+          preferred?: Json
+          status?: string
+          student_id: string
+          subject: string
+          teacher_id?: string | null
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          goal?: string
+          id?: string
+          note?: string | null
+          parent_id?: string
+          preferred?: Json
+          status?: string
+          student_id?: string
+          subject?: string
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_requests_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "exam_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_requests_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_requests_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_kpis"
+            referencedColumns: ["teacher_id"]
+          },
+          {
+            foreignKeyName: "lesson_requests_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["profile_id"]
           },
         ]
       }
@@ -1523,24 +1647,16 @@ export type Database = {
         Args: { p_payload: Json; p_provider: string; p_ref: string }
         Returns: string
       }
+      availability_overlap: {
+        Args: { p_pref: Json; p_teacher: string }
+        Returns: number
+      }
       book_lesson: {
         Args: { p_minutes?: number; p_package: string; p_starts: string }
         Returns: string
       }
-      cancel_intro: { Args: { p_offer: string }; Returns: undefined }
-      create_lesson_request: { Args: { p: Json }; Returns: string }
-      request_intro: { Args: { p_at: string; p_request: string; p_teacher: string }; Returns: string }
-      request_teacher_options: {
-        Args: { p_request: string }
-        Returns: { bio: string; department: string; display_name: string; experience_years: number; intro_video_url: string; is_new: boolean; overlap_minutes: number; recommended: boolean; score: number; teacher_id: string }[]
-      }
-      teacher_intro_offers: {
-        Args: never
-        Returns: { exam_results: Json; exam_title: string; expires_at: string; goal: string; grade: number; meeting_url: string; note: string; offer_id: string; preferred: Json; starts_at: string; status: string; student_name: string; subject: string }[]
-      }
-      teacher_intro_slots: { Args: { p_request: string; p_teacher: string }; Returns: string[] }
-      teacher_respond_intro: { Args: { p_accept: boolean; p_meeting_url?: string; p_note?: string; p_offer: string }; Returns: undefined }
       calc_refund: { Args: { p_package: string }; Returns: Json }
+      cancel_intro: { Args: { p_offer: string }; Returns: undefined }
       cancel_lesson: {
         Args: { p_lesson: string }
         Returns: Database["public"]["Enums"]["lesson_status"]
@@ -1553,10 +1669,12 @@ export type Database = {
         Args: { p_attempt: string; p_token: string }
         Returns: boolean
       }
+      create_lesson_request: { Args: { p: Json }; Returns: string }
       current_fee: {
         Args: { p_on?: string; p_teacher: string }
         Returns: number
       }
+      expire_intro_offers: { Args: never; Returns: undefined }
       expired_recordings: {
         Args: never
         Returns: {
@@ -1574,6 +1692,25 @@ export type Database = {
       mark_recordings_deleted: { Args: { p_ids: string[] }; Returns: number }
       package_used: { Args: { p_package: string }; Returns: number }
       payout_period: { Args: { p_ts: string }; Returns: string }
+      request_intro: {
+        Args: { p_at: string; p_request: string; p_teacher: string }
+        Returns: string
+      }
+      request_teacher_options: {
+        Args: { p_request: string }
+        Returns: {
+          bio: string
+          department: string
+          display_name: string
+          experience_years: number
+          intro_video_url: string
+          is_new: boolean
+          overlap_minutes: number
+          recommended: boolean
+          score: number
+          teacher_id: string
+        }[]
+      }
       submit_exam_attempt: {
         Args: {
           p_answers: Json
@@ -1588,7 +1725,6 @@ export type Database = {
         Returns: Json
       }
       teacher_application_save: { Args: { p: Json }; Returns: string }
-      teacher_save_availability: { Args: { p_slots: Json }; Returns: number }
       teacher_branch_tests: {
         Args: never
         Returns: {
@@ -1602,6 +1738,38 @@ export type Database = {
           title: string
         }[]
       }
+      teacher_intro_offers: {
+        Args: never
+        Returns: {
+          exam_results: Json
+          exam_title: string
+          expires_at: string
+          goal: string
+          grade: number
+          meeting_url: string
+          note: string
+          offer_id: string
+          preferred: Json
+          starts_at: string
+          status: string
+          student_name: string
+          subject: string
+        }[]
+      }
+      teacher_intro_slots: {
+        Args: { p_request: string; p_teacher: string }
+        Returns: string[]
+      }
+      teacher_respond_intro: {
+        Args: {
+          p_accept: boolean
+          p_meeting_url?: string
+          p_note?: string
+          p_offer: string
+        }
+        Returns: undefined
+      }
+      teacher_save_availability: { Args: { p_slots: Json }; Returns: number }
       teaches_student: { Args: { p_student: string }; Returns: boolean }
     }
     Enums: {
