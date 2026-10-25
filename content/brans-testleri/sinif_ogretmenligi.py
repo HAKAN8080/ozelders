@@ -13,7 +13,7 @@ Q = [
      ["Yarın okula gelecek misin?", "Yarın okula geleceğim.", "Lütfen kapıyı kapat.", "Ne güzel bir gün!"]),
     ("Türkçe · eş anlamlı sözcükler", "temel", "“Okul” sözcüğünün eş anlamlısı hangisidir?", ["mektep", "öğretmen", "sınıf", "ders"]),
     ("Fen · canlı ve cansız", "temel", "Aşağıdakilerden hangisi canlıdır?", ["Mantar", "Taş", "Bulut", "Su"]),
-    ("Fen · mıknatıs", "temel", "Mıknatıs aşağıdakilerden hangisini çekmez?", ["Plastik kaşık", "Demir çivi", "Toplu iğne", "Ataç"]),
+    ("Fen · mıknatıs", "temel", "Mıknatıs aşağıdakilerden hangisini çekmez?", ["Plastik kaşık", "Demir çivi", "Toplu iğne", "Çelik makas"]),
     ("Fen · maddenin hâlleri", "temel", "Deniz seviyesinde saf su kaç °C'de donar?", ["0", "100", "10", "−10"]),
     ("Sosyal bilgiler · tarih", "temel", "Türkiye Büyük Millet Meclisi hangi yıl açılmıştır?", ["1920", "1919", "1923", "1938"]),
     ("Hayat bilgisi · afetler", "temel", "Aşağıdakilerden hangisi bir doğal afettir?", ["Deprem", "Trafik kazası", "Elektrik kesintisi", "Hava kirliliği"]),

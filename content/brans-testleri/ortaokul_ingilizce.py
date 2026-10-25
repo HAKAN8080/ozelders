@@ -24,7 +24,7 @@ Q = [
     ("Passive · present perfect", "ileri", "The book ___ by millions of people since it was published.", ["has been read", "was read", "is reading", "read"]),
     ("Wish clauses", "ileri", "I wish I ___ more free time.", ["had", "have", "will have", "am having"]),
     ("Reported questions", "ileri", "She asked me where I ___.", ["lived", "did I live", "do I live", "am living"]),
-    ("Vocabulary · opposites", "ileri", "The opposite of “generous” is ___.", ["mean", "kind", "brave", "honest"]),
+    ("Vocabulary · opposites", "ileri", "The opposite of “generous” is ___.", ["stingy", "kind", "brave", "honest"]),
 ]
 
 if __name__ == "__main__":

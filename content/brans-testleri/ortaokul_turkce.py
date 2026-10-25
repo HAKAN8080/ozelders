@@ -10,7 +10,7 @@ Q = [
     ("Yazım kuralları", "temel", "Aşağıdaki cümlelerin hangisinde yazım yanlışı vardır?",
      ["Herkez toplantıya zamanında geldi.", "Yarın akşam size uğrayacağız.", "Bu konuyu birçok kez konuştuk.", "Hiçbir şey eskisi gibi değil."]),
     ("Noktalama · kesme işareti", "temel", "Aşağıdaki cümlelerin hangisinde kesme işaretinin kullanımı yanlıştır?",
-     ["Toplantı Salı'ya ertelendi.", "Ankara'ya yarın gidiyoruz.", "Ayşe'nin kitabı masada kaldı.", "1923'te Cumhuriyet ilan edildi."]),
+     ["Toplantı Salı'ya ertelendi.", "Ankara'ya yarın gidiyoruz.", "Ayşe'nin kitabı masada kaldı.", "1923'te Ankara başkent oldu."]),
     ("Eş anlamlı sözcükler", "temel", "“Yüce” sözcüğünün eş anlamlısı aşağıdakilerden hangisidir?", ["Ulu", "Alçak", "Geniş", "Derin"]),
     ("Zıt anlamlı sözcükler", "temel", "Aşağıdakilerin hangisinde zıt anlamlı sözcükler bir arada verilmiştir?",
      ["cimri – cömert", "kırmızı – al", "yanıt – cevap", "okul – mektep"]),
