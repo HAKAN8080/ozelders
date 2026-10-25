@@ -44,3 +44,9 @@
 3. Kayıtsız bireysel öğretmenin alt üye olması bizi sorumlu kılar mı; sözleşmeye hangi maddeler girmeli?
 4. Fiyat ve öğretmen önerisini biz yaparsak hizmet akdi (işçi) sayılma riski.
 5. Deneme dersi ve iadede belge düzeni.
+
+## İade ve güvence (karar: 2026-10-25)
+- Kalem onayı: ders `tamamlandi` + 72 saat itiraz süresi; onaylar haftalık toplu. Öğretmen kaybolursa onaylanmamış kalemler veliye iade / yeni öğretmene.
+- Ters ibraz (onaylanmış ders) asıl risk: ders kaydı (90 gün), giriş-çıkış kaydı ve rapor delil; kaybedilirse öğretmenin sonraki kalemlerinden mahsup (sözleşme maddesi).
+- PayTR'ye sorulacaklar: kalem bazında aktarımı biz mi tetikliyoruz; onaysız kalemin azami bekleme süresi; kalem bazında tam/kısmi iade; ters ibrazda kimden düşülür ve mahsup; bireysel alt mağaza; öğretmen değişikliğinde kalem aktarımı. İlk iki soru olumsuzsa iyzico.
+- Marka sözü: "Prosedürü biz hallederiz, sen derse odaklan." Öğretmene: üyelik/giriş ücreti yok, tahsilat ve iade bizde, "biz de öğretmeniz". Veliye: kolay iade, numara paylaşılmaz, ilk öğretmen değişikliği ücretsiz.
