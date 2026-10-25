@@ -2,8 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
 import { getSessionProfile } from "@/lib/auth";
+import { formatWhen, introMail, sendMail } from "@/lib/email";
+import { emailOf } from "@/lib/notify";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export type PanelResult = { ok: true; message: string } | { ok: false; error: string };
@@ -56,4 +60,40 @@ export async function markLesson(lessonId: string, status: "tamamlandi" | "gelme
   if (error || !data?.length) return { ok: false, error: "Ders güncellenemedi; ders saati gelmemiş ya da daha önce işaretlenmiş olabilir." };
   revalidatePath(PAGE);
   return { ok: true, message: status === "tamamlandi" ? "Ders yapıldı olarak işaretlendi. Ders raporunu 24 saat içinde gir." : "Öğrencinin gelmediği kaydedildi." };
+}
+
+export async function respondIntro(offerId: string, accept: boolean, meetingUrl: string, note: string): Promise<PanelResult> {
+  await user();
+  if (!UUID.test(offerId)) return { ok: false, error: "Geçersiz istek." };
+  const url = meetingUrl.trim();
+  if (accept && url && !/^https:\/\/\S{6,300}$/.test(url)) return { ok: false, error: "Görüşme bağlantısı https:// ile başlamalı." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("teacher_respond_intro", {
+    p_offer: offerId,
+    p_accept: accept,
+    p_meeting_url: accept && url ? url : undefined,
+    p_note: !accept && note.trim() ? note.trim().slice(0, 300) : undefined,
+  });
+  if (error) return { ok: false, error: dbError(error.message, "Yanıt kaydedilemedi. Yeniden dene.") };
+
+  // Veliye bildirim (adres yalnız sunucuda, hizmet anahtarıyla)
+  after(async () => {
+    try {
+      const admin = createAdminClient();
+      const { data: o } = await admin
+        .from("intro_offers")
+        .select("starts_at, meeting_url, request_id, teachers(display_name), lesson_requests(parent_id)")
+        .eq("id", offerId)
+        .maybeSingle();
+      const parent = (o?.lesson_requests as unknown as { parent_id: string } | null)?.parent_id;
+      const teacher = (o?.teachers as unknown as { display_name: string } | null)?.display_name ?? "Öğretmen";
+      const to = parent ? await emailOf(parent) : null;
+      if (!o || !to) return;
+      await sendMail(accept ? introMail.accepted(to, teacher, formatWhen(o.starts_at), o.meeting_url, o.request_id) : introMail.declined(to, teacher, o.request_id));
+    } catch {
+      /* bildirim işlemi bozmaz */
+    }
+  });
+  revalidatePath(PAGE);
+  return { ok: true, message: accept ? "Tanışma dersi onaylandı; veliye bildirildi." : "İstek reddedildi. Bu karneni etkilemez." };
 }

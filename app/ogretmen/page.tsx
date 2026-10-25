@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { AvailabilityEditor, LessonActions, ProfileForm } from "@/app/ogretmen/panels";
+import { AvailabilityEditor, LessonActions, OfferActions, ProfileForm } from "@/app/ogretmen/panels";
 import { signOut } from "@/app/panel/actions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { goalLabel, prefSummary, type Pref } from "@/lib/requests";
 import { bandInfo, BANDS, branchName, TEACHER_FLOOR } from "@/lib/teacher";
 
 export const instant = false;
@@ -45,7 +46,7 @@ export default async function TeacherPanel() {
   const now = new Date();
   const from = new Date(now.getTime() - 7 * 86400000).toISOString();
   const to = new Date(now.getTime() + 21 * 86400000).toISOString();
-  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }] = await Promise.all([
+  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }, { data: offers }] = await Promise.all([
     supabase.from("teacher_availability").select("weekday, start_time, end_time").eq("teacher_id", session.userId).order("weekday").order("start_time"),
     supabase.from("teacher_payout_info").select("submerchant_status, iban_last4").eq("profile_id", session.userId).maybeSingle(),
     supabase
@@ -61,7 +62,10 @@ export default async function TeacherPanel() {
       .eq("teacher_id", session.userId)
       .eq("status", "tamamlandi")
       .gte("starts_at", new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString()),
+    supabase.rpc("teacher_intro_offers"),
   ]);
+  const pendingOffers = (offers ?? []).filter((o) => o.status === "bekliyor");
+  const acceptedOffers = (offers ?? []).filter((o) => o.status === "kabul");
 
   const band = bandInfo(t.commission_band);
   const levels = (Array.isArray(t.branch_levels) ? t.branch_levels : []) as unknown as Level[];
@@ -180,10 +184,52 @@ export default async function TeacherPanel() {
             <div className="flex flex-col gap-1">
               <h2 className="m-0 text-2xl font-semibold">Öğrenci önerileri</h2>
               <p className="m-0 text-[15px] text-muted">
-                Deneme sonucu ve eksik konularıyla birlikte gelir; 24 saat içinde kabul ya da ret yanıtı verirsin. Reddetmek karneni etkilemez.
+                Veliler seni listeden seçip ücretsiz 20 dakikalık tanışma dersi ister. 24 saat içinde yanıt ver; reddetmek karneni etkilemez.
               </p>
             </div>
-            <p className="m-0 rounded-md bg-[#f6f8f7] px-4 py-3 text-[16px]">Şu an bekleyen öneri yok.</p>
+            {pendingOffers.length === 0 && acceptedOffers.length === 0 ? (
+              <p className="m-0 rounded-md bg-[#f6f8f7] px-4 py-3 text-[16px]">Şu an bekleyen istek yok.</p>
+            ) : null}
+            {pendingOffers.map((o) => (
+              <div key={o.offer_id} className="flex flex-col gap-3 rounded-[10px] border border-primary p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-lg font-semibold">
+                      {o.student_name} · {o.grade}. sınıf · {branchName(o.subject)}
+                    </span>
+                    <span className="text-[15px] text-muted">
+                      {goalLabel(o.goal)} · tercih: {prefSummary((o.preferred ?? []) as unknown as Pref[])}
+                    </span>
+                  </div>
+                  <span className="rounded-full bg-primary-soft px-3 py-1 text-[14px] font-semibold text-primary">
+                    Tanışma: {dt.format(new Date(o.starts_at))}
+                  </span>
+                </div>
+                {o.note ? <p className="m-0 rounded-md bg-[#f6f8f7] px-4 py-2.5 text-[15px]">“{o.note}”</p> : null}
+                {o.exam_title && Array.isArray(o.exam_results) ? (
+                  <p className="m-0 text-[15px]">
+                    <strong>{o.exam_title}:</strong>{" "}
+                    {(o.exam_results as unknown as { name: string; net: number }[]).map((r) => `${r.name} ${String(r.net).replace(".", ",")} net`).join(" · ")}
+                  </p>
+                ) : null}
+                <span className="text-sm text-muted">Yanıt için son: {dt.format(new Date(o.expires_at))}</span>
+                <OfferActions id={o.offer_id} />
+              </div>
+            ))}
+            {acceptedOffers.map((o) => (
+              <div key={o.offer_id} className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border px-4 py-3">
+                <span>
+                  <strong>Tanışma ✓</strong> {o.student_name} · {o.grade}. sınıf · {branchName(o.subject)} — {dt.format(new Date(o.starts_at))}
+                </span>
+                {o.meeting_url ? (
+                  <a href={o.meeting_url} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
+                    Görüşmeye gir →
+                  </a>
+                ) : (
+                  <span className="text-sm text-muted">Bağlantı eklenmedi</span>
+                )}
+              </div>
+            ))}
           </section>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">

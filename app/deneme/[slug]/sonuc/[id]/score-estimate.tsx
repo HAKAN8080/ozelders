@@ -25,6 +25,7 @@ export function ScoreEstimate({
   sections,
   data,
   next,
+  findHref,
   loggedIn,
 }: {
   families: Family[];
@@ -32,6 +33,7 @@ export function ScoreEstimate({
   data: ScoreData;
   /** Kayıt/giriş sonrası dönülecek adres */
   next: string;
+  findHref: string;
   loggedIn: boolean;
 }) {
   const results = useMemo(
@@ -236,10 +238,10 @@ export function ScoreEstimate({
           başarısına göre birkaç puan değişebilir.
         </p>
         <Link
-          href={loggedIn ? "/#paketler" : `/kayit?next=${encodeURIComponent(next)}`}
+          href={loggedIn ? findHref : `/kayit?next=${encodeURIComponent(next)}`}
           className="rounded-md bg-white px-5 py-3.5 font-semibold text-primary hover:bg-primary-soft"
         >
-          {loggedIn ? "Açığı kapatmak için ders planı" : "Hangi konulardan puan kazanırım? Ücretsiz gör"}
+          {loggedIn ? "Açığı kapatacak öğretmeni bul" : "Hangi konulardan puan kazanırım? Ücretsiz gör"}
         </Link>
       </div>
     </section>

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import { markLesson, saveAvailability, updateProfile, type PanelResult, type Slot } from "@/app/ogretmen/actions";
+import { markLesson, respondIntro, saveAvailability, updateProfile, type PanelResult, type Slot } from "@/app/ogretmen/actions";
 
 const DAYS = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
 const TIMES = Array.from({ length: 27 }, (_, i) => {
@@ -163,6 +163,39 @@ export function LessonActions({ id }: { id: string }) {
           Öğrenci gelmedi
         </button>
       </div>
+      <Msg msg={msg} />
+    </div>
+  );
+}
+
+export function OfferActions({ id }: { id: string }) {
+  const { msg, pending, run } = useAction();
+  const [url, setUrl] = useState("");
+  const [rejecting, setRejecting] = useState(false);
+  const [note, setNote] = useState("");
+  return (
+    <div className="flex flex-col gap-3">
+      {rejecting ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <input value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} placeholder="Veliye kısa not (isteğe bağlı)" className="h-11 min-w-0 flex-1 rounded-lg border border-border px-3" />
+          <button type="button" disabled={pending} onClick={() => run(() => respondIntro(id, false, "", note))} className="rounded-md border border-destructive px-4 py-2.5 font-semibold text-destructive">
+            Reddet
+          </button>
+          <button type="button" onClick={() => setRejecting(false)} className="px-2 font-semibold text-muted">
+            Vazgeç
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <input value={url} onChange={(e) => setUrl(e.target.value)} inputMode="url" placeholder="Görüşme bağlantısı (isteğe bağlı) https://…" className="h-11 min-w-0 flex-1 rounded-lg border border-border px-3" />
+          <button type="button" disabled={pending} onClick={() => run(() => respondIntro(id, true, url, ""))} className={btn}>
+            Kabul et
+          </button>
+          <button type="button" onClick={() => setRejecting(true)} className="rounded-md border border-border px-4 py-3 font-semibold">
+            Uygun değilim
+          </button>
+        </div>
+      )}
       <Msg msg={msg} />
     </div>
   );

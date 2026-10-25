@@ -142,7 +142,7 @@ async function Result({
           </Link>
         </section>
       ) : (
-        <Estimate result={result} exam={exam} next={selfUrl} />
+        <Estimate result={result} exam={exam} next={selfUrl} findHref={`/panel/ogretmen-bul?deneme=${id}`} />
       )}
 
       {result.claimable && token ? (
@@ -160,7 +160,7 @@ async function Result({
       {exam?.purpose === "brans_testi" ? null : result.topics ? (
         <>
           <TopicReport topics={result.topics} sections={result.results.map((s) => ({ code: s.code, name: s.name }))} />
-          <Recommendation topics={result.topics} />
+          <Recommendation topics={result.topics} findHref={`/panel/ogretmen-bul?deneme=${id}`} />
           {result.detail ? <QuestionGrid detail={result.detail} sections={result.results} /> : null}
         </>
       ) : (
@@ -273,7 +273,7 @@ function TopicReport({ topics, sections }: { topics: TopicResult[]; sections: { 
   );
 }
 
-function Recommendation({ topics }: { topics: TopicResult[] }) {
+function Recommendation({ topics, findHref }: { topics: TopicResult[]; findHref: string }) {
   const weak = topics.filter((t) => t.correct < t.total).sort((a, b) => b.total - b.correct - (a.total - a.correct));
   if (weak.length === 0) {
     return (
@@ -299,10 +299,10 @@ function Recommendation({ topics }: { topics: TopicResult[] }) {
         </p>
       </div>
       <div className="flex min-w-0 flex-[1_1_300px] flex-col gap-3">
-        <Link href="/#paketler" className="rounded-md bg-white px-6 py-4 text-center text-[17px] font-semibold text-primary hover:bg-primary-soft">
-          Paketleri incele
+        <Link href={findHref} className="rounded-md bg-white px-6 py-4 text-center text-[17px] font-semibold text-primary hover:bg-primary-soft">
+          Bu konular için öğretmen bul
         </Link>
-        <p className="m-0 text-center font-hand text-[22px] text-white">ilk dersten memnun kalmazsan tam iade</p>
+        <p className="m-0 text-center font-hand text-[22px] text-white">önce ücretsiz 20 dk tanışma</p>
       </div>
     </section>
   );
@@ -357,7 +357,7 @@ function QuestionGrid({
 }
 
 /** Tahmini puan + hedef okul. Sınav türüne uygun puan modeli yoksa hiçbir şey göstermez. */
-async function Estimate({ result, exam, next }: { result: ExamResult; exam: PublicExam | null; next: string }) {
+async function Estimate({ result, exam, next, findHref }: { result: ExamResult; exam: PublicExam | null; next: string; findHref: string }) {
   if (!exam) return null;
   const counts = new Map(exam.sections.map((s) => [s.code, s.question_count]));
   const sections = result.results.map((s) => ({
@@ -376,5 +376,5 @@ async function Estimate({ result, exam, next }: { result: ExamResult; exam: Publ
     data.models,
   );
   if (!families.length) return null;
-  return <ScoreEstimate families={families} sections={sections} data={data} next={next} loggedIn={!!result.topics} />;
+  return <ScoreEstimate families={families} sections={sections} data={data} next={next} findHref={findHref} loggedIn={!!result.topics} />;
 }

@@ -135,3 +135,40 @@ export const teacherMail = {
 export function adminMail(subject: string, line: string, appId: string): Mail {
   return { to: adminRecipients(), subject: `[Yönetim] ${subject}`, title: subject, body: [line], cta: { label: "Başvuruyu aç", href: `/admin/ogretmenler/${appId}` } };
 }
+
+const tsFmt = new Intl.DateTimeFormat("tr-TR", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Istanbul" });
+export function formatWhen(iso: string): string {
+  return tsFmt.format(new Date(iso));
+}
+
+/** Tanışma dersi e-postaları. */
+export const introMail = {
+  toTeacher: (to: string, student: string, grade: number, subject: string, when: string): Mail => ({
+    to,
+    subject: `Yeni tanışma dersi isteği · ${student}, ${grade}. sınıf`,
+    title: "Bir veli seninle tanışmak istiyor.",
+    body: [
+      `${student} (${grade}. sınıf, ${subject}) için ücretsiz 20 dakikalık tanışma dersi: ${when}.`,
+      "24 saat içinde öğretmen panelinden kabul ya da ret yanıtı ver. Reddetmek karneni etkilemez; yanıt vermemek yanıt hızı puanını düşürür.",
+    ],
+    cta: { label: "İsteği gör", href: "/ogretmen" },
+  }),
+  accepted: (to: string, teacher: string, when: string, url: string | null, requestId: string): Mail => ({
+    to,
+    subject: `Tanışma dersi onaylandı · ${when}`,
+    title: `${teacher} tanışma dersini onayladı.`,
+    body: [
+      `Ücretsiz 20 dakikalık tanışma dersi: ${when}.`,
+      url ? `Görüşme bağlantısı: ${url}` : "Görüşme bağlantısını ders saatinden önce sayfanda paylaşacağız.",
+      "Tanışmadan sonra devam etmek istersen paketini seçersin; istemezsen başka bir öğretmenle tanışabilirsin.",
+    ],
+    cta: { label: "Talebimi aç", href: `/panel/talep/${requestId}` },
+  }),
+  declined: (to: string, teacher: string, requestId: string): Mail => ({
+    to,
+    subject: "Tanışma dersi için başka bir öğretmen seç",
+    title: `${teacher} bu saatte uygun değil.`,
+    body: ["Listeden başka bir öğretmen ya da başka bir saat seçebilirsin; sistem önerileri yıldızla işaretli."],
+    cta: { label: "Öğretmen listesine dön", href: `/panel/talep/${requestId}` },
+  }),
+};
