@@ -14,7 +14,7 @@ export const COMPANY = {
   kep: null as string | null, // KEP adresi (varsa)
   supportEmail: "destek@ozeldersbul.com.tr",
   kvkkEmail: "kvkk@ozeldersbul.com.tr",
-  phone: null as string | null,
+  phone: "+90 543 132 35 03" as string | null,
   supportHours: "Hafta içi 09:00–18:00",
 };
 
