@@ -9,8 +9,8 @@ export const COMPANY = {
   address: "Mecidiye Mah. Sandalcı Mecit Sk. No: 9 İç Kapı No: 1, Beşiktaş / İstanbul" as string | null,
   mersis: "0843090202300001" as string | null,
   tradeRegistry: "İstanbul Ticaret Sicili 1085795",
-  taxOffice: null as string | null,
-  taxNo: null as string | null,
+  taxOffice: "Beşiktaş" as string | null,
+  taxNo: "8430902023" as string | null,
   kep: null as string | null, // KEP adresi (varsa)
   supportEmail: "destek@ozeldersbul.com.tr",
   kvkkEmail: "kvkk@ozeldersbul.com.tr",
