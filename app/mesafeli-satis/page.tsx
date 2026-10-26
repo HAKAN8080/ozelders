@@ -20,7 +20,7 @@ export default function DistanceSalesPage() {
         items={[
           <>
             <strong>Hizmeti sunan ve aracı hizmet sağlayıcı:</strong> {COMPANY.legalName} · {companyValue(COMPANY.address)} · Vergi dairesi/no:{" "}
-            {companyValue(COMPANY.taxOffice)} / {companyValue(COMPANY.taxNo)} · MERSİS: {companyValue(COMPANY.mersis)} · E-posta: {COMPANY.supportEmail}
+            {companyValue(COMPANY.taxOffice)} / {companyValue(COMPANY.taxNo)} · MERSİS: {companyValue(COMPANY.mersis)} · {COMPANY.tradeRegistry} · E-posta: {COMPANY.supportEmail}
             {COMPANY.phone ? ` · Telefon: ${COMPANY.phone}` : ""}
           </>,
           <>

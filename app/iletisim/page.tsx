@@ -42,6 +42,8 @@ export default function ContactPage() {
         Vergi dairesi / no: {companyValue(COMPANY.taxOffice)} / {companyValue(COMPANY.taxNo)}
         <br />
         MERSİS: {companyValue(COMPANY.mersis)}
+        <br />
+        {COMPANY.tradeRegistry}
         {COMPANY.kep ? (
           <>
             <br />

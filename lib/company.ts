@@ -6,8 +6,9 @@ export const COMPANY = {
   legalName: "Thorius Eğitim ve Danışmanlık Limited Şirketi",
   brand: "ÖzelDersBul",
   site: "ozeldersbul.com.tr",
-  address: null as string | null, // Tam adres (mahalle, cadde, no, ilçe/il)
-  mersis: null as string | null,
+  address: "Mecidiye Mah. Sandalcı Mecit Sk. No: 9 İç Kapı No: 1, Beşiktaş / İstanbul" as string | null,
+  mersis: "0843090202300001" as string | null,
+  tradeRegistry: "İstanbul Ticaret Sicili 1085795",
   taxOffice: null as string | null,
   taxNo: null as string | null,
   kep: null as string | null, // KEP adresi (varsa)
