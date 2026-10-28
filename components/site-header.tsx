@@ -5,6 +5,7 @@ import { getSessionProfile } from "@/lib/auth";
 
 const navLinks = [
   { href: "/deneme", label: "Ücretsiz Denemeler" },
+  { href: "/oyunlar", label: "Oyunlar" },
   { href: "/#nasil", label: "Nasıl Çalışır" },
   { href: "/#paketler", label: "Paketler" },
   { href: "/#ogretmenler", label: "Öğretmenlerimiz" },

@@ -10,6 +10,7 @@ export function SiteFooter() {
         </span>
         <nav aria-label="Alt menü" className="flex flex-wrap gap-x-6 gap-y-2">
           <Link href="/deneme" className="hover:text-white">Ücretsiz denemeler</Link>
+          <Link href="/oyunlar" className="hover:text-white">Oyunlar</Link>
           <Link href="/ogretmen-ol" className="hover:text-white">Öğretmen ol</Link>
           <Link href="/iptal-iade" className="hover:text-white">İptal ve iade</Link>
           <Link href="/mesafeli-satis" className="hover:text-white">Mesafeli satış</Link>
