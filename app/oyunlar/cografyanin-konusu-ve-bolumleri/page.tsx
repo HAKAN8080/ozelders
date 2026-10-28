@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi
+    <OyunSayfasi konu="cografyanin-konusu-ve-bolumleri"
       arkaPlan="kureler"
       baslik="Coğrafyanın Konusu ve Bölümleri"
       aciklama="9. sınıf Coğrafya, 1. ünite. Küreleri, coğrafyanın alt dallarını ve temel kavramları oynayarak tekrar et."

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi arkaPlan="harita" baslik="Haritalama Teknikleri ve Yer Şekilleri" aciklama="9. sınıf Coğrafya, 2. ünite. Haritalama teknikleri, izohipsler ve topoğrafya haritalarındaki yer şekilleri.">
+    <OyunSayfasi konu="haritalama-teknikleri-ve-yer-sekilleri" arkaPlan="harita" baslik="Haritalama Teknikleri ve Yer Şekilleri" aciklama="9. sınıf Coğrafya, 2. ünite. Haritalama teknikleri, izohipsler ve topoğrafya haritalarındaki yer şekilleri.">
       <KonuOyunlari sekmeler={SEKMELER} />
     </OyunSayfasi>
   );

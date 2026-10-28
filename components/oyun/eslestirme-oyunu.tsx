@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
 
 export type EslestirmeCifti = { id: string; sol: string; sag: string };
 
@@ -162,6 +163,7 @@ export function EslestirmeOyunu({ ciftler, solBaslik, sagBaslik, yonerge, turSec
             </div>
           ))}
         </dl>
+        <OgretmenCagrisi oran={maks ? Math.round((puan / maks) * 100) : 0} />
         {zorlanilan.length > 0 && (
           <div className="flex flex-col gap-2">
             <h3 className="m-0 text-base font-semibold">Zorlandıkların</h3>

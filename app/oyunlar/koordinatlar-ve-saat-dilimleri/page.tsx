@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi arkaPlan="dunya" baslik="Koordinatlar ve Saat Dilimleri" aciklama="9. sınıf Coğrafya, 2. ünite. Enlem, boylam, yerel ve ulusal saat, saat dilimleri, tarih değiştirme çizgisi.">
+    <OyunSayfasi konu="koordinatlar-ve-saat-dilimleri" arkaPlan="dunya" baslik="Koordinatlar ve Saat Dilimleri" aciklama="9. sınıf Coğrafya, 2. ünite. Enlem, boylam, yerel ve ulusal saat, saat dilimleri, tarih değiştirme çizgisi.">
       <KonuOyunlari sekmeler={SEKMELER} />
     </OyunSayfasi>
   );

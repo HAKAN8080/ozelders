@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi arkaPlan="dunya" baslik="Mekânsal Bilgi Teknolojileri" aciklama="9. sınıf Coğrafya, 2. ünite. CBS, GPS ve uzaktan algılamanın bileşenleri ve kavramları.">
+    <OyunSayfasi konu="mekansal-bilgi-teknolojileri" arkaPlan="dunya" baslik="Mekânsal Bilgi Teknolojileri" aciklama="9. sınıf Coğrafya, 2. ünite. CBS, GPS ve uzaktan algılamanın bileşenleri ve kavramları.">
       <KonuOyunlari sekmeler={SEKMELER} />
     </OyunSayfasi>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, type DragEvent } from "react";
+import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
 
 export type SiralamaOgesi = { id: string; ad: string; anahtar: number; etiket: string };
 
@@ -149,6 +150,7 @@ export function SiralamaOyunu({ ogeler, yonerge, uclar = ["En eski", "En yeni"],
             ))}
           </ol>
         </div>
+        <OgretmenCagrisi oran={maks ? Math.round((puan / maks) * 100) : 0} />
         <div className="flex flex-wrap gap-3">
           <button
             type="button"

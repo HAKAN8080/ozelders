@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useYakinlastirma } from "@/components/oyun/yakinlastirma";
 import type { HaritaAlan, HaritaVerisi } from "@/lib/games/harita-tipleri";
+import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
 
 type Mod = "isim" | "kod" | "kesfet";
 type Asama = "kurulum" | "oyun" | "sonuc";
@@ -320,6 +321,7 @@ export function HaritaOyunu({
             </div>
           ))}
         </dl>
+        <OgretmenCagrisi oran={oran} />
         {kacan.length > 0 && (
           <div className="flex flex-col gap-2">
             <h3 className="m-0 text-base font-semibold">Tekrar bakman gerekenler</h3>

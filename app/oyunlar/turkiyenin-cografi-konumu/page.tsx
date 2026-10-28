@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi arkaPlan="harita" baslik="Türkiye'nin Coğrafi Konumu" aciklama="9. sınıf Coğrafya, 2. ünite. Mutlak ve göreceli konum, komşular, Mavi Vatan ve Gök Vatan.">
+    <OyunSayfasi konu="turkiyenin-cografi-konumu" arkaPlan="harita" baslik="Türkiye'nin Coğrafi Konumu" aciklama="9. sınıf Coğrafya, 2. ünite. Mutlak ve göreceli konum, komşular, Mavi Vatan ve Gök Vatan.">
       <KonuOyunlari sekmeler={SEKMELER} />
     </OyunSayfasi>
   );

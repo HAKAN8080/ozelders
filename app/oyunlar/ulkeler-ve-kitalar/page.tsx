@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <OyunSayfasi arkaPlan="dunya" baslik="Ülkeler ve Kıtaları" aciklama="Hangi ülke hangi kıtada? Kartları doğru kıtaya yerleştir.">
+    <OyunSayfasi konu="ulkeler-ve-kitalar" arkaPlan="dunya" baslik="Ülkeler ve Kıtaları" aciklama="Hangi ülke hangi kıtada? Kartları doğru kıtaya yerleştir.">
       <UlkelerVeKitalarOyunu />
     </OyunSayfasi>
   );

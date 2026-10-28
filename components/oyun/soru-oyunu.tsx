@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
 
 /** Çoktan seçmeli soru. Hesap soruları her turda yeniden üretilir. */
 export type Soru = {
@@ -230,6 +231,7 @@ export function SoruOyunu({ yonerge, sorular = [], uretecler = [], turSecenekler
             </div>
           ))}
         </dl>
+        <OgretmenCagrisi oran={liste.length ? Math.round((dogruSayi / liste.length) * 100) : 0} />
         {yanlislar.length > 0 && (
           <div className="flex flex-col gap-2">
             <h3 className="m-0 text-base font-semibold">Yanlış yaptıkların</h3>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ArkaPlan, type ArkaPlanTuru } from "@/components/oyun/arka-planlar";
+import { OyunBaglami } from "@/components/oyun/oyun-baglami";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -10,12 +11,18 @@ export function OyunSayfasi({
   baslik,
   aciklama,
   arkaPlan,
+  ders = { kod: "cografya", ad: "Coğrafya" },
+  konu,
   children,
 }: {
   baslik: string;
   aciklama: string;
   /** Konuya özel soluk arka plan çizimi. */
   arkaPlan?: ArkaPlanTuru;
+  /** Öğretmen çağrısındaki ders (öğretmen bulma formundaki kod ve ad). */
+  ders?: { kod: string; ad: string };
+  /** Konu sayfasının kimliği; ilerleme kaydında kullanılır. */
+  konu?: string;
   children: ReactNode;
 }) {
   return (
@@ -31,7 +38,7 @@ export function OyunSayfasi({
             <h1 className="m-0 font-serif text-4xl leading-[1.1] font-bold sm:text-5xl">{baslik}</h1>
             <p className="m-0 max-w-[38em] text-[19px] leading-relaxed text-[#3d4743]">{aciklama}</p>
           </div>
-          {children}
+          <OyunBaglami deger={{ dersKodu: ders.kod, dersAdi: ders.ad, konu, konuBasligi: baslik }}>{children}</OyunBaglami>
         </div>
       </main>
       <SiteFooter />
