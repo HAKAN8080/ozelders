@@ -17,6 +17,27 @@ const oyunlar = [
     aciklama: "81 ili ad ya da plaka koduyla haritada bul. Bölge bölge de oynanır.",
     etiket: "Harita oyunu",
   },
+  {
+    href: "/oyunlar/dunya-ulkeleri",
+    ders: "Coğrafya",
+    baslik: "Dünya'da Ülkeler",
+    aciklama: "195 ülkeyi dünya haritasında bul. Kıta seçince harita yakınlaşır.",
+    etiket: "Harita oyunu",
+  },
+  {
+    href: "/oyunlar/iller-ve-bolgeler",
+    ders: "Coğrafya",
+    baslik: "İller ve Bölgeleri",
+    aciklama: "İlleri coğrafi bölgelerine yerleştir.",
+    etiket: "Sürükle-bırak",
+  },
+  {
+    href: "/oyunlar/ulkeler-ve-kitalar",
+    ders: "Coğrafya",
+    baslik: "Ülkeler ve Kıtaları",
+    aciklama: "Ülkeleri bulundukları kıtaya yerleştir.",
+    etiket: "Sürükle-bırak",
+  },
 ];
 
 export default function OyunlarPage() {

@@ -1,5 +1,7 @@
 """Turkiye il sinirlari GeoJSON -> SVG path verisi (lib/games/tr-iller.ts)."""
-import json, math, sys
+import json, math, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from geo_lib import build_shape, feature_rings, js
 
 src, out = sys.argv[1], sys.argv[2]
 
@@ -56,68 +58,38 @@ LON_MIN, LON_MAX, LAT_MIN, LAT_MAX = 25.6, 44.9, 35.75, 42.15
 sx = W / ((LON_MAX - LON_MIN) * K)
 H = round((LAT_MAX - LAT_MIN) * sx)
 
+
 def proj(lon, lat):
     return ((lon - LON_MIN) * K * sx, (LAT_MAX - lat) * sx)
 
-def simplify(pts, tol=0.9):
-    """Douglas-Peucker."""
-    if len(pts) < 4:
-        return pts
-    def rec(a, b):
-        (x1, y1), (x2, y2) = pts[a], pts[b]
-        dx, dy = x2 - x1, y2 - y1
-        L = math.hypot(dx, dy) or 1e-9
-        best, idx = -1, None
-        for i in range(a + 1, b):
-            x0, y0 = pts[i]
-            d = abs(dy * x0 - dx * y0 + x2 * y1 - y2 * x1) / L
-            if d > best:
-                best, idx = d, i
-        if best > tol and idx is not None:
-            return rec(a, idx)[:-1] + rec(idx, b)
-        return [pts[a], pts[b]]
-    return rec(0, len(pts) - 1)
 
-def area(ring):
-    return 0.5 * sum(ring[i][0]*ring[i-1][1] - ring[i-1][0]*ring[i][1] for i in range(len(ring)))
+BOLGELER = ["Marmara", "Ege", "Akdeniz", "İç Anadolu", "Karadeniz", "Doğu Anadolu", "Güneydoğu Anadolu"]
 
 rows = []
 for f in data["features"]:
-    name = f["properties"]["name"]
-    kod, ad, bolge = ILLER[name]
-    g = f["geometry"]
-    polys = g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]
-    parts, big, big_a = [], None, 0
-    for poly in polys:
-        for ring in poly[:1]:  # outer ring only
-            p = [proj(x, y) for x, y in ring]
-            a = abs(area(p))
-            if a < 0.8:  # tiny islets
-                continue
-            # Kapalı halka: uçlar aynı nokta olduğu için ikiye bölüp sadeleştir
-            h = len(p) // 2
-            s = simplify(p[: h + 1])[:-1] + simplify(p[h:])
-            if len(s) < 3:
-                continue
-            if a > big_a:
-                big_a, big = a, p
-            parts.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in s) + "Z")
-    # label point: centroid of largest ring
-    A = -area(big)  # area() işareti ters; centroid formülü standart (x_i-1*y_i - x_i*y_i-1)
-    cx = sum((big[i-1][0]+big[i][0])*(big[i-1][0]*big[i][1]-big[i][0]*big[i-1][1]) for i in range(len(big)))/(6*A)
-    cy = sum((big[i-1][1]+big[i][1])*(big[i-1][0]*big[i][1]-big[i][0]*big[i-1][1]) for i in range(len(big)))/(6*A)
-    rows.append((kod, ad, bolge, "".join(parts), round(cx, 1), round(cy, 1)))
+    kod, ad, bolge = ILLER[f["properties"]["name"]]
+    rings = [[proj(x, y) for x, y in r] for r in feature_rings(f["geometry"])]
+    d, cx, cy, bbox, _ = build_shape(rings, tol=0.6, min_area=0.8)
+    rows.append((kod, {"id": str(kod), "ad": ad, "grup": bolge, "kod": f"{kod:02d}", "cx": cx, "cy": cy, "bbox": bbox, "d": d}))
 
-rows.sort()
+rows.sort(key=lambda r: r[0])
 assert len(rows) == 81
 with open(out, "w", encoding="utf-8") as o:
     o.write("// Otomatik üretildi (scripts/gen_iller.py). Elle düzenlemeyin.\n")
     o.write("// İl sınırları: github.com/cihadturhan/tr-geojson, sadeleştirilmiş.\n\n")
-    o.write('export type Bolge =\n  | "Marmara"\n  | "Ege"\n  | "Akdeniz"\n  | "İç Anadolu"\n  | "Karadeniz"\n  | "Doğu Anadolu"\n  | "Güneydoğu Anadolu";\n\n')
-    o.write("export type Il = { kod: number; ad: string; bolge: Bolge; d: string; cx: number; cy: number };\n\n")
-    o.write(f"export const HARITA_GENISLIK = {int(W)};\nexport const HARITA_YUKSEKLIK = {H};\n\n")
-    o.write("export const ILLER: Il[] = [\n")
-    for kod, ad, bolge, d, cx, cy in rows:
-        o.write(f'  {{ kod: {kod}, ad: "{ad}", bolge: "{bolge}", cx: {cx}, cy: {cy}, d: "{d}" }},\n')
-    o.write("];\n")
+    o.write('import type { HaritaVerisi } from "@/lib/games/harita-tipleri";\n\n')
+    o.write("export const TURKIYE_ILLERI: HaritaVerisi = {\n")
+    o.write(f"  genislik: {int(W)},\n  yukseklik: {H},\n  gruplar: {js(BOLGELER)},\n  alanlar: [\n")
+    for _, r in rows:
+        o.write("    " + js(r) + ",\n")
+    o.write("  ],\n};\n")
 print("ok", H)
+
+# Hafif liste: kategori oyunları için (sınır çizgisi yok)
+liste = out.replace(".ts", "-liste.ts")
+with open(liste, "w", encoding="utf-8") as o:
+    o.write("// Otomatik üretildi (scripts/gen_iller.py). Elle düzenlemeyin.\n\n")
+    o.write("export const TURKIYE_ILLERI_LISTE: { ad: string; bolge: string; plaka: string }[] = [\n")
+    for _, r in rows:
+        o.write("  " + js({"ad": r["ad"], "bolge": r["grup"], "plaka": r["kod"]}) + ",\n")
+    o.write("];\n")
