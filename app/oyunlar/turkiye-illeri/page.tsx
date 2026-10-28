@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 export default function TurkiyeIlleriPage() {
   return (
     <OyunSayfasi
+      arkaPlan="harita"
       baslik="Türkiye'nin İlleri"
       aciklama="81 ili haritada bul. İlk denemede 10, ikincide 5, üçüncüde 2 puan. Takılırsan ipucu ilin bölgesini gösterir."
     >

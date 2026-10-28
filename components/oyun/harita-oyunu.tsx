@@ -223,7 +223,7 @@ export function HaritaOyunu({
         secili ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:border-primary/50"
       }`;
     return (
-      <div className="flex flex-col gap-8 rounded-[10px] border border-border bg-background p-6 sm:p-8">
+      <div className="flex flex-col gap-8 rounded-[10px] border border-border bg-background/80 p-6 backdrop-blur-[2px] sm:p-8">
         <div className="flex flex-col gap-3">
           <h2 className="m-0 font-serif text-2xl font-bold">Nasıl oynamak istersin?</h2>
           <div className={`grid gap-3 ${modlar.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
@@ -300,7 +300,7 @@ export function HaritaOyunu({
             ? "Fena değil, bir tur daha."
             : "Önce Keşfet moduyla bir gez, sonra tekrar dene.";
     return (
-      <div className="flex flex-col gap-6 rounded-[10px] border border-border bg-background p-6 sm:p-8">
+      <div className="flex flex-col gap-6 rounded-[10px] border border-border bg-background/80 p-6 backdrop-blur-[2px] sm:p-8">
         <div className="flex flex-col gap-1">
           <p className="m-0 text-sm font-semibold uppercase tracking-[0.08em] text-primary">Tur bitti</p>
           <h2 className="m-0 font-serif text-3xl font-bold">{yorum}</h2>

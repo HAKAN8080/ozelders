@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 export default function DunyaUlkeleriPage() {
   return (
     <OyunSayfasi
+      arkaPlan="dunya"
       baslik="Dünya'da Ülkeler"
       aciklama="Ülkeleri dünya haritasında bul. Kıta seçersen harita o kıtaya yakınlaşır; çok küçük ülkeler yuvarlak işaretle gösterilir."
     >

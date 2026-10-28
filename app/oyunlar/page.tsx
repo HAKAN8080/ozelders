@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArkaPlan } from "@/components/oyun/arka-planlar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -58,8 +59,9 @@ export default function OyunlarPage() {
   return (
     <>
       <SiteHeader />
-      <main className="defter flex flex-1 flex-col">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-4 py-16 sm:px-6 lg:py-20">
+      <main className="defter relative isolate flex flex-1 flex-col">
+        <ArkaPlan tur="pusula" />
+        <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-4 py-16 sm:px-6 lg:py-20">
           <div className="flex flex-col gap-4">
             <p className="m-0 text-sm font-semibold uppercase tracking-[0.08em] text-primary">Ücretsiz oyunlar</p>
             <h1 className="m-0 max-w-[18em] font-serif text-4xl leading-[1.1] font-bold sm:text-5xl">
@@ -74,7 +76,7 @@ export default function OyunlarPage() {
               <Link
                 key={o.href}
                 href={o.href}
-                className="group flex flex-col gap-3 rounded-[10px] border border-border bg-background p-6 text-foreground no-underline transition-colors hover:border-primary"
+                className="group flex flex-col gap-3 rounded-[10px] border border-border bg-background/85 p-6 backdrop-blur-[2px] text-foreground no-underline transition-colors hover:border-primary"
               >
                 <span className="text-sm font-semibold text-primary">
                   {o.ders} · {o.etiket}

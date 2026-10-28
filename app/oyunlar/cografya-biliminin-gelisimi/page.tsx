@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <OyunSayfasi
+      arkaPlan="tarih"
       baslik="Coğrafya Biliminin Gelişimi"
       aciklama="9. sınıf Coğrafya, 1. ünite. Bilim insanlarını çağlarına yerleştir, zaman şeridinde sırala, katkılarıyla eşleştir."
     >

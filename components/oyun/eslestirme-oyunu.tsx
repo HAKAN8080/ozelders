@@ -100,7 +100,7 @@ export function EslestirmeOyunu({ ciftler, solBaslik, sagBaslik, yonerge, turSec
 
   if (asama === "kurulum") {
     return (
-      <div className="flex flex-col gap-8 rounded-[10px] border border-border bg-background p-6 sm:p-8">
+      <div className="flex flex-col gap-8 rounded-[10px] border border-border bg-background/80 p-6 backdrop-blur-[2px] sm:p-8">
         <div className="flex flex-col gap-2">
           <h2 className="m-0 font-serif text-2xl font-bold">Nasıl oynanır?</h2>
           <p className="m-0 max-w-[40em] leading-relaxed text-[#3d4743]">{yonerge}</p>
@@ -142,7 +142,7 @@ export function EslestirmeOyunu({ ciftler, solBaslik, sagBaslik, yonerge, turSec
     const maks = sol.length * 10;
     const zorlanilan = sol.filter((c) => hata[c.id]);
     return (
-      <div className="flex flex-col gap-6 rounded-[10px] border border-border bg-background p-6 sm:p-8">
+      <div className="flex flex-col gap-6 rounded-[10px] border border-border bg-background/80 p-6 backdrop-blur-[2px] sm:p-8">
         <div className="flex flex-col gap-1">
           <p className="m-0 text-sm font-semibold uppercase tracking-[0.08em] text-primary">Tur bitti</p>
           <h2 className="m-0 font-serif text-3xl font-bold">

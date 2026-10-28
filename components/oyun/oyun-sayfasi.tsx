@@ -1,16 +1,29 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { ArkaPlan, type ArkaPlanTuru } from "@/components/oyun/arka-planlar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 /** Tüm oyun sayfalarının ortak kabuğu: başlık, kısa açıklama, oyun. */
-export function OyunSayfasi({ baslik, aciklama, children }: { baslik: string; aciklama: string; children: ReactNode }) {
+export function OyunSayfasi({
+  baslik,
+  aciklama,
+  arkaPlan,
+  children,
+}: {
+  baslik: string;
+  aciklama: string;
+  /** Konuya özel soluk arka plan çizimi. */
+  arkaPlan?: ArkaPlanTuru;
+  children: ReactNode;
+}) {
   return (
     <>
       <SiteHeader />
-      <main className="defter flex flex-1 flex-col">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-6 lg:py-16">
+      <main className="defter relative isolate flex flex-1 flex-col">
+        {arkaPlan && <ArkaPlan tur={arkaPlan} />}
+        <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-6 lg:py-16">
           <div className="flex flex-col gap-3">
             <Link href="/oyunlar" className="text-sm font-semibold text-primary no-underline hover:underline">
               ← Tüm oyunlar
