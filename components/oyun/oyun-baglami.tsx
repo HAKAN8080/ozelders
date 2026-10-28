@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+
+import { sinifOku } from "@/components/oyun/sinif";
+import { createClient } from "@/lib/supabase/client";
 
 /** Oyun sayfasının kimliği: hangi ders, hangi konu. Sonuç ekranı ve ilerleme kaydı kullanır. */
 export type OyunBaglamiDegeri = {
@@ -11,6 +14,8 @@ export type OyunBaglamiDegeri = {
   /** Konu sayfasının adresteki adı, ör. "harita-ve-olcek" */
   konu?: string;
   konuBasligi?: string;
+  /** Konu sayfasındaki sekme (oyun) kimliği */
+  oyun?: string;
 };
 
 const Baglam = createContext<OyunBaglamiDegeri>({});
@@ -21,6 +26,66 @@ export function OyunBaglami({ deger, children }: { deger: OyunBaglamiDegeri; chi
 
 export function useOyunBaglami() {
   return useContext(Baglam);
+}
+
+/** Üst bağlamı koruyup bazı alanları değiştirir (ör. sekme kimliği). */
+export function AltBaglam({ ek, children }: { ek: Partial<OyunBaglamiDegeri>; children: ReactNode }) {
+  const ust = useContext(Baglam);
+  return <Baglam.Provider value={{ ...ust, ...ek }}>{children}</Baglam.Provider>;
+}
+
+/**
+ * Sonuç ekranı açılınca bir kez çalışır:
+ * - giriş yapmış kullanıcının sonucu ilerlemesine yazılır,
+ * - öğrenci bir sınıfa katıldıysa sonuç öğretmenine gönderilir.
+ * Tablolar henüz yoksa ya da ağ hatası olursa sessizce geçer; oyun etkilenmez.
+ */
+function SonucKaydedici({ oran }: { oran: number }) {
+  const { konu, oyun } = useOyunBaglami();
+  const calisti = useRef(false);
+  const [durum, setDurum] = useState<{ ilerleme: boolean; sinif: string | null }>({ ilerleme: false, sinif: null });
+
+  useEffect(() => {
+    if (calisti.current || !konu) return;
+    calisti.current = true;
+    const sb = createClient();
+    const oyunAdi = oyun ?? "ana";
+    (async () => {
+      try {
+        const { data } = await sb.auth.getSession();
+        if (data.session) {
+          const { error } = await sb.from("oyun_sonuclari").insert({ konu, oyun: oyunAdi, oran });
+          if (!error) setDurum((d) => ({ ...d, ilerleme: true }));
+        }
+      } catch {
+        /* yok say */
+      }
+      const sinif = sinifOku();
+      if (sinif) {
+        try {
+          const { data } = await sb.rpc("sinif_sonucu_kaydet", { p_kod: sinif.kod, p_ogrenci: sinif.ogrenci, p_konu: konu, p_oyun: oyunAdi, p_oran: oran });
+          if (data === true) setDurum((d) => ({ ...d, sinif: sinif.ad }));
+        } catch {
+          /* yok say */
+        }
+      }
+    })();
+  }, [konu, oyun, oran]);
+
+  if (!durum.ilerleme && !durum.sinif) return null;
+  return (
+    <p data-kaydedildi="" className="m-0 text-sm text-primary">
+      {durum.sinif ? `Sonucun ${durum.sinif} sınıfının öğretmenine gönderildi. ` : ""}
+      {durum.ilerleme ? (
+        <>
+          İlerlemene kaydedildi.{" "}
+          <Link href="/panel/ilerleme" className="font-semibold underline">
+            İlerlememi gör
+          </Link>
+        </>
+      ) : null}
+    </p>
+  );
 }
 
 /**
@@ -64,6 +129,7 @@ function SonucPaylas({ oran }: { oran: number }) {
 export function OgretmenCagrisi({ oran }: { oran: number }) {
   return (
     <>
+      <SonucKaydedici oran={oran} />
       <SonucPaylas oran={oran} />
       <OgretmenKutusu oran={oran} />
     </>

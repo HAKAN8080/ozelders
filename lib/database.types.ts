@@ -715,6 +715,26 @@ export type Database = {
           },
         ]
       }
+      oyun_sonuclari: {
+        Row: { created_at: string; id: number; konu: string; oran: number; oyun: string; user_id: string }
+        Insert: { created_at?: string; id?: never; konu: string; oran: number; oyun: string; user_id?: string }
+        Update: { created_at?: string; id?: never; konu?: string; oran?: number; oyun?: string; user_id?: string }
+        Relationships: []
+      }
+      sinif_sonuclari: {
+        Row: { created_at: string; id: number; konu: string; ogrenci: string; oran: number; oyun: string; sinif_id: string }
+        Insert: { created_at?: string; id?: never; konu: string; ogrenci: string; oran: number; oyun: string; sinif_id: string }
+        Update: { created_at?: string; id?: never; konu?: string; ogrenci?: string; oran?: number; oyun?: string; sinif_id?: string }
+        Relationships: [
+          { foreignKeyName: "sinif_sonuclari_sinif_id_fkey"; columns: ["sinif_id"]; isOneToOne: false; referencedRelation: "siniflar"; referencedColumns: ["id"] },
+        ]
+      }
+      siniflar: {
+        Row: { ad: string; created_at: string; id: string; kod: string; sahip_id: string }
+        Insert: { ad: string; created_at?: string; id?: string; kod: string; sahip_id?: string }
+        Update: { ad?: string; created_at?: string; id?: string; kod?: string; sahip_id?: string }
+        Relationships: []
+      }
       package_orders: {
         Row: {
           created_at: string
@@ -1725,6 +1745,15 @@ export type Database = {
       }
     }
     Functions: {
+      sinif_bilgisi: { Args: { p_kod: string }; Returns: string }
+      sinif_olustur: {
+        Args: { p_ad: string }
+        Returns: { ad: string; created_at: string; id: string; kod: string; sahip_id: string }
+      }
+      sinif_sonucu_kaydet: {
+        Args: { p_konu: string; p_kod: string; p_ogrenci: string; p_oran: number; p_oyun: string }
+        Returns: boolean
+      }
       admin_activate_teacher: { Args: { p_app: string }; Returns: undefined }
       admin_approve_teacher: {
         Args: { p_app: string; p_display_name: string }

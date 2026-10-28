@@ -68,6 +68,17 @@ export default async function PanelPage() {
               </Button>
             </form>
           </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/panel/ilerleme" className="rounded-md border border-border bg-background px-4 py-2.5 font-semibold text-foreground no-underline hover:border-primary">
+              Oyun ilerlemem
+            </Link>
+            <Link href="/oyunlar" className="rounded-md border border-border bg-background px-4 py-2.5 font-semibold text-foreground no-underline hover:border-primary">
+              Ücretsiz oyunlar
+            </Link>
+            <Link href="/siniflarim" className="rounded-md border border-border bg-background px-4 py-2.5 font-semibold text-foreground no-underline hover:border-primary">
+              Sınıflarım (öğretmenler için)
+            </Link>
+          </div>
           {children && children.length > 0 ? (
             <ul className="m-0 flex list-none flex-col gap-4 p-0">
               {children.map((child) => {

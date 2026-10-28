@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import { ArkaPlan, type ArkaPlanTuru } from "@/components/oyun/arka-planlar";
 import { OyunBaglami } from "@/components/oyun/oyun-baglami";
+import { SinifSeridi } from "@/components/oyun/sinif-seridi";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -38,6 +39,7 @@ export function OyunSayfasi({
             <h1 className="m-0 font-serif text-4xl leading-[1.1] font-bold sm:text-5xl">{baslik}</h1>
             <p className="m-0 max-w-[38em] text-[19px] leading-relaxed text-[#3d4743]">{aciklama}</p>
           </div>
+          <SinifSeridi />
           <OyunBaglami deger={{ dersKodu: ders.kod, dersAdi: ders.ad, konu, konuBasligi: baslik }}>{children}</OyunBaglami>
         </div>
       </main>

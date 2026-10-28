@@ -8,6 +8,7 @@ import { EslestirmeOyunu, type EslestirmeCifti } from "@/components/oyun/eslesti
 import { KategoriOyunu, type KategoriOgesi } from "@/components/oyun/kategori-oyunu";
 import { SiralamaOyunu, type SiralamaOgesi } from "@/components/oyun/siralama-oyunu";
 import { IzohipsOyunu } from "@/components/oyun/izohips-oyunu";
+import { AltBaglam } from "@/components/oyun/oyun-baglami";
 import { KoordinatOyunu, type KoordinatOyunuAyarlari } from "@/components/oyun/koordinat-oyunu";
 import { SoruOyunu, type Soru, type UretecAdi } from "@/components/oyun/soru-oyunu";
 
@@ -53,6 +54,7 @@ export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
         </div>
       )}
 
+      <AltBaglam ek={{ oyun: s.id }}>
       {s.tur === "kategori" && (
         <KategoriOyunu key={s.id} kategoriler={s.kategoriler} ogeler={s.ogeler} yonerge={s.yonerge} turSecenekleri={s.turSecenekleri} />
       )}
@@ -88,6 +90,7 @@ export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
       {s.tur === "soru" && (
         <SoruOyunu key={s.id} yonerge={s.yonerge} sorular={s.sorular} uretecler={s.uretecler} turSecenekleri={s.turSecenekleri} />
       )}
+      </AltBaglam>
     </div>
   );
 }

@@ -3,7 +3,9 @@ import Link from "next/link";
 
 import { ArkaPlan } from "@/components/oyun/arka-planlar";
 import { GununSorusuKarti } from "@/components/oyun/gunun-sorusu";
+import { SinifSeridi } from "@/components/oyun/sinif-seridi";
 import { gununSorusuHavuzu } from "@/lib/games/gunun-sorusu";
+import { GRUPLAR } from "@/lib/games/konular";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -11,96 +13,6 @@ export const metadata: Metadata = {
   title: "Ücretsiz Eğitim Oyunları — ÖzelDersBul",
   description: "Harita, eşleştirme ve kategori oyunlarıyla konuları oynayarak pekiştir. Ücretsiz, kayıt gerekmez.",
 };
-
-type Oyun = { href: string; baslik: string; aciklama: string; etiket: string };
-
-/** Oyunlar ders ve üniteye göre gruplu. Yeni konu eklenince buraya bir satır eklenir. */
-const GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
-  {
-    baslik: "9. Sınıf Coğrafya · 1. Ünite",
-    alt: "Coğrafyanın Doğası",
-    oyunlar: [
-      {
-        href: "/oyunlar/cografyanin-konusu-ve-bolumleri",
-        baslik: "Coğrafyanın Konusu ve Bölümleri",
-        aciklama: "Küreler, fiziki ve beşerî coğrafyanın alt dalları, temel kavramlar.",
-        etiket: "7 oyun",
-      },
-      {
-        href: "/oyunlar/cografya-biliminin-gelisimi",
-        baslik: "Coğrafya Biliminin Gelişimi",
-        aciklama: "Bilim insanlarını çağına yerleştir, zaman şeridinde sırala, katkılarıyla eşleştir.",
-        etiket: "5 oyun",
-      },
-    ],
-  },
-  {
-    baslik: "9. Sınıf Coğrafya · 2. Ünite",
-    alt: "Mekânsal Bilgi Teknolojileri",
-    oyunlar: [
-      {
-        href: "/oyunlar/harita-ve-olcek",
-        baslik: "Harita ve Ölçek",
-        aciklama: "Harita kavramları, elemanlar, projeksiyonlar, büyük ve küçük ölçek, ölçek hesapları.",
-        etiket: "8 oyun",
-      },
-      {
-        href: "/oyunlar/koordinatlar-ve-saat-dilimleri",
-        baslik: "Koordinatlar ve Saat Dilimleri",
-        aciklama: "Haritada koordinat bul, Irma kasırgasının rotasını çiz, saat dilimi hesapları.",
-        etiket: "6 oyun",
-      },
-      {
-        href: "/oyunlar/haritalama-teknikleri-ve-yer-sekilleri",
-        baslik: "Haritalama Teknikleri ve Yer Şekilleri",
-        aciklama: "Koroplet, korokromatik, akış, kartogram; topoğrafya haritasında izohips okuma; yer şekilleri.",
-        etiket: "10 oyun",
-      },
-      {
-        href: "/oyunlar/turkiyenin-cografi-konumu",
-        baslik: "Türkiye'nin Coğrafi Konumu",
-        aciklama: "Mutlak ve göreceli konum, kara ve deniz komşuları, Mavi Vatan ve Gök Vatan.",
-        etiket: "7 oyun",
-      },
-      {
-        href: "/oyunlar/mekansal-bilgi-teknolojileri",
-        baslik: "Mekânsal Bilgi Teknolojileri",
-        aciklama: "CBS ve GPS bileşenleri, CBS'nin avantajları ve etik kuralları.",
-        etiket: "5 oyun",
-      },
-    ],
-  },
-  {
-    baslik: "Harita oyunları",
-    alt: "Her sınıf için",
-    oyunlar: [
-      {
-        href: "/oyunlar/turkiye-illeri",
-        baslik: "Türkiye'nin İlleri",
-        aciklama: "81 ili ad ya da plaka koduyla haritada bul. Bölge bölge de oynanır.",
-        etiket: "Harita",
-      },
-      {
-        href: "/oyunlar/dunya-ulkeleri",
-        baslik: "Dünya'da Ülkeler",
-        aciklama: "196 ülkeyi dünya haritasında bul. Kıta seçince harita yakınlaşır.",
-        etiket: "Harita",
-      },
-      {
-        href: "/oyunlar/iller-ve-bolgeler",
-        baslik: "İller ve Bölgeleri",
-        aciklama: "İlleri coğrafi bölgelerine yerleştir.",
-        etiket: "Sürükle-bırak",
-      },
-      {
-        href: "/oyunlar/ulkeler-ve-kitalar",
-        baslik: "Ülkeler ve Kıtaları",
-        aciklama: "Ülkeleri bulundukları kıtaya yerleştir.",
-        etiket: "Sürükle-bırak",
-      },
-    ],
-  },
-];
 
 export default function OyunlarPage() {
   return (
@@ -118,6 +30,7 @@ export default function OyunlarPage() {
               Kısa, etkileşimli oyunlarla konuları pekiştir. Kayıt olmadan başlayabilirsin.
             </p>
           </div>
+          <SinifSeridi />
           <GununSorusuKarti havuz={gununSorusuHavuzu()} />
           {GRUPLAR.map((g) => (
             <section key={g.baslik} className="flex flex-col gap-4">
@@ -141,6 +54,17 @@ export default function OyunlarPage() {
               </div>
             </section>
           ))}
+          <section className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-border bg-background/85 p-6 backdrop-blur-[2px]">
+            <div className="flex min-w-0 flex-[1_1_360px] flex-col gap-1">
+              <h2 className="m-0 font-serif text-2xl font-bold">Öğretmen misin?</h2>
+              <p className="m-0 text-[15px] leading-relaxed text-muted">
+                Ücretsiz sınıf oluştur, bağlantıyı öğrencilerine gönder. Öğrenciler giriş yapmadan oynar; kim hangi konuda zorlanıyor, sen görürsün.
+              </p>
+            </div>
+            <Link href="/siniflarim" className="rounded-md bg-primary px-5 py-3 font-semibold text-primary-foreground no-underline hover:bg-primary-hover">
+              Sınıf oluştur
+            </Link>
+          </section>
         </div>
       </main>
       <SiteFooter />
