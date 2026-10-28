@@ -6,7 +6,7 @@ import { DUNYA_ULKELERI_LISTE } from "@/lib/games/dunya-ulkeler-liste";
 const KITALAR = ["Avrupa", "Asya", "Afrika", "Kuzey Amerika", "Güney Amerika", "Okyanusya"];
 
 // Birden çok kıtaya yayılan ya da kaynaklara göre kıtası değişen ülkeler bu oyunda sorulmaz
-const HARIC = new Set(["RUS", "TUR", "KAZ", "AZE", "GEO", "ARM", "EGY", "IDN", "TLS", "PAN"]);
+const HARIC = new Set(["RUS", "TUR", "KAZ", "AZE", "GEO", "ARM", "EGY", "IDN", "TLS", "PAN", "CYN"]);
 
 const OGELER = DUNYA_ULKELERI_LISTE.filter((u) => !HARIC.has(u.id) && !u.ekKitalar).map((u) => ({
   id: u.id,

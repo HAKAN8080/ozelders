@@ -89,6 +89,7 @@ export const DUNYA_ULKELERI_LISTE: { id: string; ad: string; kita: string; ekKit
   {"id": "CRI", "ad": "Kosta Rika", "kita": "Kuzey Amerika"},
   {"id": "KWT", "ad": "Kuveyt", "kita": "Asya"},
   {"id": "PRK", "ad": "Kuzey Kore", "kita": "Asya"},
+  {"id": "CYN", "ad": "Kuzey Kıbrıs Türk Cumhuriyeti", "kita": "Asya"},
   {"id": "MKD", "ad": "Kuzey Makedonya", "kita": "Avrupa"},
   {"id": "CUB", "ad": "Küba", "kita": "Kuzey Amerika"},
   {"id": "KGZ", "ad": "Kırgızistan", "kita": "Asya"},

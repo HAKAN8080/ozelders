@@ -5,7 +5,7 @@ import { UlkelerOyunu } from "@/app/oyunlar/dunya-ulkeleri/ulkeler-oyunu";
 
 export const metadata: Metadata = {
   title: "Dünya'da Ülkeler Harita Oyunu — ÖzelDersBul",
-  description: "195 ülkeyi dünya haritasında bul. Kıta kıta oyna, harita seçtiğin kıtaya yakınlaşır. Ücretsiz coğrafya oyunu.",
+  description: "196 ülkeyi dünya haritasında bul. Kıta kıta oyna, harita seçtiğin kıtaya yakınlaşır. Ücretsiz coğrafya oyunu.",
 };
 
 export default function DunyaUlkeleriPage() {

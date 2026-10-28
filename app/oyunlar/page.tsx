@@ -21,7 +21,7 @@ const oyunlar = [
     href: "/oyunlar/dunya-ulkeleri",
     ders: "Coğrafya",
     baslik: "Dünya'da Ülkeler",
-    aciklama: "195 ülkeyi dünya haritasında bul. Kıta seçince harita yakınlaşır.",
+    aciklama: "196 ülkeyi dünya haritasında bul. Kıta seçince harita yakınlaşır.",
     etiket: "Harita oyunu",
   },
   {

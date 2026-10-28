@@ -21,12 +21,12 @@ KITA = {
 # Natural Earth "Seven seas" altında duran ada ülkeleri
 KITA_ELLE = {"MUS": "Afrika", "SYC": "Afrika", "MDV": "Asya", "IOT": "Asya", "SHN": "Afrika", "ATF": "Afrika", "SGS": "Güney Amerika", "HMD": "Okyanusya"}
 
-# Soru olarak sorulan ülkeler: BM üyeleri + Filistin + Kosova
-EK_OYNANIR = {"AUS", "CHN", "DNK", "FIN", "FRA", "GBR", "NLD", "NZL", "USA", "ISR", "KOS", "PSX"}
+# Soru olarak sorulan ülkeler: BM üyeleri (Güney Kıbrıs hariç) + KKTC + Filistin + Kosova
+EK_OYNANIR = {"CYN", "AUS", "CHN", "DNK", "FIN", "FRA", "GBR", "NLD", "NZL", "USA", "ISR", "KOS", "PSX"}
 # Çizilir, sorulmaz (siyasi statüsü tartışmalı ya da ayrı karar gerektiren)
-OYNANMAZ = {"CYN", "SOL", "TWN", "CYP"}
+OYNANMAZ = {"SOL", "TWN", "CYP"}
 
-AD_DUZELT = {"CHN": "Çin", "CZE": "Çekya", "BLR": "Belarus", "PSX": "Filistin", "ISR": "İsrail", "CYN": "Kuzey Kıbrıs", "CYP": "Kıbrıs", "TWN": "Tayvan"}
+AD_DUZELT = {"CHN": "Çin", "CZE": "Çekya", "BLR": "Belarus", "PSX": "Filistin", "ISR": "İsrail", "CYN": "Kuzey Kıbrıs Türk Cumhuriyeti", "CYP": "Güney Kıbrıs Rum Yönetimi", "TWN": "Tayvan"}
 
 # İki kıtaya yayılan ülkeler her iki kıta filtresinde de sorulur
 EK_GRUP = {"RUS": ["Asya"], "TUR": ["Avrupa"]}
