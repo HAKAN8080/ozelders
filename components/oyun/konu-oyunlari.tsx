@@ -7,6 +7,7 @@ import { BulmacaOyunu, type BulmacaKelimesi } from "@/components/oyun/bulmaca-oy
 import { EslestirmeOyunu, type EslestirmeCifti } from "@/components/oyun/eslestirme-oyunu";
 import { KategoriOyunu, type KategoriOgesi } from "@/components/oyun/kategori-oyunu";
 import { SiralamaOyunu, type SiralamaOgesi } from "@/components/oyun/siralama-oyunu";
+import { IzohipsOyunu } from "@/components/oyun/izohips-oyunu";
 import { KoordinatOyunu, type KoordinatOyunuAyarlari } from "@/components/oyun/koordinat-oyunu";
 import { SoruOyunu, type Soru, type UretecAdi } from "@/components/oyun/soru-oyunu";
 
@@ -22,6 +23,7 @@ export type KonuSekmesi = Ortak &
     | ({ tur: "koordinat" } & Omit<KoordinatOyunuAyarlari, "yonerge" | "turSecenekleri">)
     | { tur: "bosluk"; cumleler: BoslukCumlesi[] }
     | { tur: "bulmaca"; kelimeler: BulmacaKelimesi[] }
+    | { tur: "izohips" }
   );
 
 export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
@@ -82,6 +84,7 @@ export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
       )}
       {s.tur === "bosluk" && <BoslukOyunu key={s.id} cumleler={s.cumleler} yonerge={s.yonerge} turSecenekleri={s.turSecenekleri} />}
       {s.tur === "bulmaca" && <BulmacaOyunu key={s.id} kelimeler={s.kelimeler} yonerge={s.yonerge} turSecenekleri={s.turSecenekleri} />}
+      {s.tur === "izohips" && <IzohipsOyunu key={s.id} yonerge={s.yonerge} turSecenekleri={s.turSecenekleri} />}
       {s.tur === "soru" && (
         <SoruOyunu key={s.id} yonerge={s.yonerge} sorular={s.sorular} uretecler={s.uretecler} turSecenekleri={s.turSecenekleri} />
       )}

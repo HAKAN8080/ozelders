@@ -114,6 +114,15 @@ export const SEKMELER: KonuSekmesi[] = [
     }),
   },
   {
+    id: "izohips-oku",
+    baslik: "İzohips oku",
+    alt: "Topoğrafya haritasında yükselti, eğim, yer şekli",
+    tur: "izohips",
+    yonerge:
+      "Her soruda yeni bir topoğrafya haritası çizilir. Eş yükselti eğrilerini okuyarak noktaların yükseltisini bul, eğimleri karşılaştır, zirve ve boyunu tanı. Renkler kitaptaki renklendirme basamaklarıdır.",
+    turSecenekleri: [5, 10],
+  },
+  {
     id: "yer-sekilleri",
     baslik: "Yer şekilleri",
     alt: "Yer şeklini tanımıyla eşleştir",

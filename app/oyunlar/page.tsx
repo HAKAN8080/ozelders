@@ -51,8 +51,8 @@ const GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
       {
         href: "/oyunlar/haritalama-teknikleri-ve-yer-sekilleri",
         baslik: "Haritalama Teknikleri ve Yer Şekilleri",
-        aciklama: "Koroplet, korokromatik, akış, kartogram; izohipsler; topoğrafyada yer şekilleri.",
-        etiket: "9 oyun",
+        aciklama: "Koroplet, korokromatik, akış, kartogram; topoğrafya haritasında izohips okuma; yer şekilleri.",
+        etiket: "10 oyun",
       },
       {
         href: "/oyunlar/turkiyenin-cografi-konumu",
