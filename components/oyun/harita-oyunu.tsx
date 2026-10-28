@@ -391,7 +391,7 @@ export function HaritaOyunu({
             </span>
           </div>
         )}
-        <div className="flex items-center gap-5 text-sm">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:gap-x-5">
           {mod !== "kesfet" && soru && <SesliOku metin={`Bul: ${soru}`} acik />}
           {mod !== "kesfet" && (
             <>
