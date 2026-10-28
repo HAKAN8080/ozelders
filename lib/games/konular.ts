@@ -1,9 +1,11 @@
 /** Oyun sayfalarının listesi: /oyunlar sayfası ve ilerleme ekranları kullanır. */
 
+import URETILEN from "@/lib/games/icerik/uretilen.json";
+
 export type Oyun = { href: string; baslik: string; aciklama: string; etiket: string };
 
 /** Oyunlar ders ve üniteye göre gruplu. Yeni konu eklenince buraya bir satır eklenir. */
-export const GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
+export const ELLE_GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
   {
     baslik: "9. Sınıf Coğrafya · 1. Ünite",
     alt: "Coğrafyanın Doğası",
@@ -89,6 +91,22 @@ export const GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
     ],
   },
 ];
+
+type Katalog = { slug: string; baslik: string; unite: string; uniteAlt: string; aciklama: string; oyunSayisi: number };
+
+/** Kitaptan üretilen konular (scripts/icerik_jsondan.py) ünitelerine göre gruplanır ve harita oyunlarından önce gelir. */
+function uretilenGruplar() {
+  const gruplar = new Map<string, { baslik: string; alt?: string; oyunlar: Oyun[] }>();
+  for (const k of URETILEN as Katalog[]) {
+    const ad = `9. Sınıf Coğrafya · ${k.unite}`;
+    const g = gruplar.get(ad) ?? { baslik: ad, alt: k.uniteAlt, oyunlar: [] };
+    g.oyunlar.push({ href: `/oyunlar/${k.slug}`, baslik: k.baslik, aciklama: k.aciklama.replace(/^9\. sınıf Coğrafya, \d\. ünite\.\s*/i, ""), etiket: `${k.oyunSayisi} oyun` });
+    gruplar.set(ad, g);
+  }
+  return [...gruplar.values()];
+}
+
+export const GRUPLAR = [...ELLE_GRUPLAR.slice(0, -1), ...uretilenGruplar(), ...ELLE_GRUPLAR.slice(-1)];
 
 /** "/oyunlar/harita-ve-olcek" ya da "harita-ve-olcek" → başlık */
 export function konuBasligi(konu: string): string {

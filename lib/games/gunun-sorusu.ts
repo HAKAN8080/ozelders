@@ -7,6 +7,7 @@ import { SEKMELER as HARITALAMA } from "@/lib/games/icerik/haritalama-ve-yer-sek
 import { SEKMELER as KOORDINAT } from "@/lib/games/icerik/koordinatlar-ve-saat";
 import { SEKMELER as MBT } from "@/lib/games/icerik/mbt-bilesenleri";
 import { SEKMELER as KONUM } from "@/lib/games/icerik/turkiyenin-konumu";
+import { URETILEN_KONULAR } from "@/lib/games/icerik/uretilen";
 
 export type GununSorusu = Soru & { konu: string; konuBasligi: string };
 
@@ -18,6 +19,7 @@ const KONULAR: { href: string; baslik: string; sekmeler: KonuSekmesi[] }[] = [
   { href: "/oyunlar/haritalama-teknikleri-ve-yer-sekilleri", baslik: "Haritalama Teknikleri ve Yer Şekilleri", sekmeler: HARITALAMA },
   { href: "/oyunlar/turkiyenin-cografi-konumu", baslik: "Türkiye'nin Coğrafi Konumu", sekmeler: KONUM },
   { href: "/oyunlar/mekansal-bilgi-teknolojileri", baslik: "Mekânsal Bilgi Teknolojileri", sekmeler: MBT },
+  ...URETILEN_KONULAR,
 ];
 
 /** Tüm konulardan günün sorusu havuzu: sabit çoktan seçmeliler + eşleştirme çiftlerinden türetilen sorular. */
