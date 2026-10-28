@@ -1,0 +1,152 @@
+/**
+ * 9. sınıf Coğrafya — 2.1.1 Haritalama teknikleri, yükselti gösterme, izohipsler, yer şekilleri
+ * Kaynak: MEB Coğrafya 9. Sınıf Ders Kitabı (TYMM), s.45–55. Bilgiler kitaptan;
+ * "İzohips doğru mu?" oyunundaki yanlış ifadeler kitaptaki kuralların tersine çevrilmesiyle yazıldı.
+ */
+
+import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { ciftler, kategoriOgeleri } from "@/lib/games/icerik/yardimci";
+
+export const SEKMELER: KonuSekmesi[] = [
+  {
+    id: "sembol",
+    baslik: "Nokta, çizgi, alan",
+    alt: "Mekânsal veriyi sembol türüne ayır",
+    tur: "kategori",
+    yonerge: "Mekânsal veriler haritada nokta, çizgi veya alan sembolleriyle gösterilir. Her unsuru doğru sembol türüne yerleştir.",
+    turSecenekleri: [10, 14],
+    kategoriler: ["Nokta", "Çizgi", "Alan"],
+    ogeler: kategoriOgeleri({
+      Nokta: ["Zirve", "Su kuyusu", "Sokak lambası", "Şehir", "Konut"],
+      Çizgi: ["Sınır çizgisi", "Yol", "Akarsu", "Fay"],
+      Alan: ["Ülke", "Bölge", "Göl", "Orman", "Tarım alanı"],
+    }),
+  },
+  {
+    id: "teknikler",
+    baslik: "Haritalama teknikleri",
+    alt: "Tekniği tanımıyla eşleştir",
+    tur: "eslestirme",
+    solBaslik: "Teknik",
+    sagBaslik: "Tanım",
+    yonerge: "Haritalama tekniklerini kitaptaki tanımlarıyla eşleştir.",
+    turSecenekleri: [5, 8],
+    ciftler: ciftler([
+      ["Korokromatik", "Bir unsurun yayılış alanının farklı renk veya desenlerle gösterildiği harita"],
+      ["Koroplet", "Belirli sınırların (ülke, il vb.) sayısal değerlere göre renk veya desenlerle gösterildiği harita"],
+      ["İzoplet", "Eşit yoğunluk veya dağılım değerlerinin birleştirilmesiyle oluşan hatların gösterildiği harita"],
+      ["İzometrik", "Bir noktada aletle ölçülen yükselti, sıcaklık, yağış gibi değerlerle hatların çizildiği harita"],
+      ["Noktalama", "Mekânsal bir verinin dağılışını göstermek için nokta türü sembollerin kullanıldığı harita"],
+      ["Oransal sembol", "Verilerin ölçeklendirilmiş sembol ya da şekillerle gösterildiği harita"],
+      ["Akış", "Bir coğrafi unsurun hareket miktarını ve yönünü gösteren harita"],
+      ["Kartogram", "Kıta, ülke veya il alanlarının bir istatistiksel verinin değerine göre boyutlandırıldığı harita"],
+    ]),
+  },
+  {
+    id: "hangi-teknik",
+    baslik: "Hangi teknik?",
+    alt: "Kitaptaki örnek haritaları tekniğine yerleştir",
+    tur: "kategori",
+    yonerge: "Ders kitabındaki örnek haritalar hangi haritalama tekniğiyle çizilmiş? Her örneği doğru tekniğe yerleştir.",
+    turSecenekleri: [8, 12, 17],
+    kategoriler: ["Korokromatik", "Koroplet", "İzoplet", "İzometrik", "Noktalama", "Oransal sembol", "Akış", "Kartogram"],
+    ogeler: kategoriOgeleri({
+      Korokromatik: [
+        "Dünyadaki iklim türlerinin dağılışı",
+        "Türkiye'deki toprak türleri",
+        "Büyükşehir belediyesi olan iller",
+        "Efes Antik Kenti'ndeki yapıların dağılışı",
+      ],
+      Koroplet: ["İllere göre mısır üretimi", "Kişi başına gelir", "Doktor başına düşen hasta sayısı"],
+      İzoplet: ["Dönüm başına düşen ürün miktarı"],
+      İzometrik: ["Eğirdir Gölü'nde ölçülen nitrit azotu değerleri", "Aletle ölçülen sıcaklık ve yağış değerleri"],
+      Noktalama: ["1854 Londra kolera vakaları (1 nokta = 1 kişi)", "Nüfus dağılışı (1 nokta = 1 milyon kişi)"],
+      "Oransal sembol": ["KOP illerinde sulanan tarım alanı"],
+      Akış: ["Balon balığının Akdeniz'e göçü", "Malazgirt Savaşı'nda orduların hareketi", "Göç yolları ve göç miktarı"],
+      Kartogram: ["İl alanlarının nüfusa göre boyutlandırıldığı Türkiye haritası"],
+    }),
+  },
+  {
+    id: "es-egriler",
+    baslik: "Eş değer eğrileri",
+    alt: "İzometrik hattı anlamıyla eşleştir",
+    tur: "eslestirme",
+    solBaslik: "Hat",
+    sagBaslik: "Neyi birleştirir?",
+    yonerge: "İzometrik haritalarda çizilen hatları anlamlarıyla eşleştir.",
+    turSecenekleri: [5],
+    ciftler: ciftler([
+      ["İzohips", "Eş yükselti"],
+      ["İzobat", "Eş derinlik"],
+      ["İzoterm", "Eş sıcaklık"],
+      ["İzobar", "Eş basınç"],
+      ["İzoseist", "Eş sismik"],
+    ]),
+  },
+  {
+    id: "izohips",
+    baslik: "İzohips doğru mu?",
+    alt: "İfadeleri doğru ve yanlış olarak ayır",
+    tur: "kategori",
+    yonerge: "Eş yükselti eğrilerinin (izohips) özellikleriyle ilgili ifadeleri doğru ve yanlış olarak ayır.",
+    turSecenekleri: [8, 14],
+    kategoriler: ["Doğru", "Yanlış"],
+    ogeler: kategoriOgeleri({
+      Doğru: [
+        "İzohipsler iç içe geçmiş kapalı eğrilerdir",
+        "Aynı izohips üzerindeki tüm noktaların yükseltisi aynıdır",
+        "İzohipsler arasındaki yükselti farkı haritanın tamamında aynıdır",
+        "En dar halka en yüksek yeri gösterir",
+        "0 metre eğrisi deniz kıyısından geçer",
+        "İzohipslerin sık olduğu yerde eğim fazladır",
+        "Büyük ölçekli haritalarda izohips aralığı daha küçüktür",
+      ],
+      Yanlış: [
+        "Aynı izohips üzerindeki noktaların yükseltisi farklıdır",
+        "İzohips aralığı haritanın her yerinde farklıdır",
+        "En geniş halka en yüksek yeri gösterir",
+        "0 metre eğrisi en yüksek zirveden geçer",
+        "İzohipslerin seyrek olduğu yerde eğim fazladır",
+        "Büyük ölçekli haritalarda izohips aralığı daha büyüktür",
+        "Birbirini çevrelemeyen komşu iki izohipsin yükseltisi farklıdır",
+      ],
+    }),
+  },
+  {
+    id: "yer-sekilleri",
+    baslik: "Yer şekilleri",
+    alt: "Yer şeklini tanımıyla eşleştir",
+    tur: "eslestirme",
+    solBaslik: "Yer şekli",
+    sagBaslik: "Tanım",
+    yonerge: "Topoğrafya haritalarında görülen yer şekillerini kitaptaki tanımlarıyla eşleştir.",
+    turSecenekleri: [5, 9],
+    ciftler: ciftler([
+      ["Zirve (doruk)", "Dağ ya da tepelerin en yüksek noktası"],
+      ["Dağ", "Çevresine göre belirgin yükseltide, eğimli yamaçlarıyla geniş bir alana yayılan yer şekli"],
+      ["Sırt", "Tepe veya dağlarda farklı yöne bakan yamaçları birleştiren yer"],
+      ["Boyun", "İki tepe arasında kalan ve çevresine göre yükseltisi daha az olan yer"],
+      ["Falez (yalı yar)", "Dalga aşındırması sonucu oluşan dik kıyılar"],
+      ["Delta", "Akarsuların getirdiği alüvyonların kıyıda birikmesiyle oluşan, denize doğru çıkıntı yapan ova"],
+      ["Şelale", "Akarsu boyundaki bir eğim kırığında suların yüksekten döküldüğü yer"],
+      ["Çukur (çanak)", "Yüksek kesimlerle çevrili alçak saha"],
+      ["Vadi", "Akarsu veya buzul aşındırmasıyla oluşan, tabanı ve iki yanında yamaçları olan eğimli oluk"],
+    ]),
+  },
+  {
+    id: "renkler",
+    baslik: "Renk basamakları",
+    alt: "Yükselti renklerini sıraya diz",
+    tur: "siralama",
+    yonerge:
+      "Renklendirme yönteminde aynı yükseltideki yerler aynı renk tonuyla gösterilir. Renkleri alçaktan yükseğe doğru sırala.",
+    uclar: ["En alçak", "En yüksek"],
+    turSecenekleri: [6],
+    ogeler: ["Yeşil", "Açık yeşil", "Sarı", "Turuncu", "Açık kahverengi", "Koyu kahverengi"].map((ad, i) => ({
+      id: `renk-${i}`,
+      ad,
+      anahtar: i,
+      etiket: `${i + 1}. basamak`,
+    })),
+  },
+];

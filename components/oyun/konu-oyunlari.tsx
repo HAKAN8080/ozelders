@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EslestirmeOyunu, type EslestirmeCifti } from "@/components/oyun/eslestirme-oyunu";
 import { KategoriOyunu, type KategoriOgesi } from "@/components/oyun/kategori-oyunu";
 import { SiralamaOyunu, type SiralamaOgesi } from "@/components/oyun/siralama-oyunu";
+import { SoruOyunu, type Soru, type UretecAdi } from "@/components/oyun/soru-oyunu";
 
 type Ortak = { id: string; baslik: string; alt: string; yonerge: string; turSecenekleri?: number[] };
 
@@ -14,6 +15,7 @@ export type KonuSekmesi = Ortak &
     | { tur: "kategori"; kategoriler: string[]; ogeler: KategoriOgesi[] }
     | { tur: "eslestirme"; ciftler: EslestirmeCifti[]; solBaslik: string; sagBaslik: string }
     | { tur: "siralama"; ogeler: SiralamaOgesi[]; uclar?: [string, string] }
+    | { tur: "soru"; sorular?: Soru[]; uretecler?: UretecAdi[] }
   );
 
 export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
@@ -58,6 +60,9 @@ export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
       )}
       {s.tur === "siralama" && (
         <SiralamaOyunu key={s.id} ogeler={s.ogeler} yonerge={s.yonerge} uclar={s.uclar} turSecenekleri={s.turSecenekleri} />
+      )}
+      {s.tur === "soru" && (
+        <SoruOyunu key={s.id} yonerge={s.yonerge} sorular={s.sorular} uretecler={s.uretecler} turSecenekleri={s.turSecenekleri} />
       )}
     </div>
   );
