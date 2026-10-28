@@ -1,1 +1,146 @@
-[]
+[
+  {
+    "slug": "hava-olaylari",
+    "baslik": "Hava Olayları",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.1",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. Hava olayları, ölçüm araçları, aşırı hava olayları, hava tahmini ve halk meteorolojisi.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "iklim-sistemi",
+    "baslik": "İklim Sistemi: Bileşenler",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.2",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. İklim sisteminin beş bileşeni, değişkenleri ve atmosferin katmanları.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "iklim-sistemi-sicaklik",
+    "baslik": "İklim Sistemi: Sıcaklık",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.2",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. Sıcaklığın dağılışını etkileyen faktörler, mevsimler, iklim ve sıcaklık kuşakları, Dünya'da ve Türkiye'de sıcaklık.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "iklim-sistemi-basinc-ruzgar-yagis",
+    "baslik": "İklim Sistemi: Basınç, Rüzgâr ve Yağış",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.2",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. Basınç merkezleri, rüzgâr çeşitleri, nemlilik ve yağış türleri, Türkiye'de basınç, rüzgâr ve yağış.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "iklim-turleri",
+    "baslik": "İklim Türleri",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.3",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. Dünya'daki sıcak, ılıman ve soğuk iklim türleri, Türkiye'nin iklimleri ve sıcaklık-yağış grafiklerinin okunması.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "iklim-degisiklikleri",
+    "baslik": "İklim Sisteminde Yaşanan Değişiklikler",
+    "unite": "3. Ünite",
+    "uniteAlt": "Doğal Sistemler ve Süreçler",
+    "kitapBolum": "3.1.4",
+    "aciklama": "9. sınıf Coğrafya, 3. ünite. Küresel iklim değişikliğinin doğal ve beşerî nedenleri, gözlenen etkileri ve geleceğe yönelik öngörüler.",
+    "oyunSayisi": 8
+  },
+  {
+    "slug": "nufusun-tarihsel-degisimi",
+    "baslik": "Nüfusun Tarihsel Değişimi ve Geleceği",
+    "unite": "4. Ünite",
+    "uniteAlt": "Beşerî Sistemler ve Süreçler",
+    "kitapBolum": "4.1.1",
+    "aciklama": "9. sınıf Coğrafya, 4. ünite. Dünya nüfusunun üç büyük sıçrama dönemi, 1950 sonrası hızlı nüfuslanma ve nüfusun geleceğine dair tahminler.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "nufusun-dagilisi-ve-hareketleri",
+    "baslik": "Nüfusun Dağılışı ve Hareketleri",
+    "unite": "4. Ünite",
+    "uniteAlt": "Beşerî Sistemler ve Süreçler",
+    "kitapBolum": "4.1.2",
+    "aciklama": "9. sınıf Coğrafya, 4. ünite. Nüfusun dağılışını etkileyen doğal ve beşerî faktörler, göç türleri ve tarihten günümüze göç örnekleri.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "demografik-donusum-ve-nufus-piramitleri",
+    "baslik": "Demografik Dönüşüm Süreci ve Nüfus Piramitleri",
+    "unite": "4. Ünite",
+    "uniteAlt": "Beşerî Sistemler ve Süreçler",
+    "kitapBolum": "4.1.3",
+    "aciklama": "9. sınıf Coğrafya, 4. ünite. Nüfus piramitlerinin okunması ve demografik dönüşüm modelinin beş aşaması.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "nufus-politikalari",
+    "baslik": "Nüfus Politikaları",
+    "unite": "4. Ünite",
+    "uniteAlt": "Beşerî Sistemler ve Süreçler",
+    "kitapBolum": "4.1.4",
+    "aciklama": "9. sınıf Coğrafya, 4. ünite. Nüfus politikası kavramı, ülkelerin uyguladığı farklı nüfus politikaları ve Türkiye'nin nüfus politikaları.",
+    "oyunSayisi": 5
+  },
+  {
+    "slug": "ekonomik-faaliyetler",
+    "baslik": "Ekonomik Faaliyetleri Etkileyen Coğrafi Faktörler",
+    "unite": "5. Ünite",
+    "uniteAlt": "Ekonomik Faaliyetler ve Etkileri",
+    "kitapBolum": "5.1",
+    "aciklama": "9. sınıf Coğrafya, 5. ünite. Ekonomik faaliyetleri etkileyen doğal faktörler (konum, iklim, topoğrafya, su, toprak, bitki örtüsü) ve beşerî faktörler (nüfus, iş gücü, sermaye, teknoloji, devlet, ulaşım).",
+    "oyunSayisi": 8
+  },
+  {
+    "slug": "tehlike-risk-ve-afet",
+    "baslik": "Tehlike, Risk ve Afet",
+    "unite": "6. Ünite",
+    "uniteAlt": "Afetler ve Sürdürülebilir Çevre",
+    "kitapBolum": "6.1.1",
+    "aciklama": "9. sınıf Coğrafya, 6. ünite. Tehlike, risk, maruziyet ve afet kavramları ile aralarındaki ilişki.",
+    "oyunSayisi": 5
+  },
+  {
+    "slug": "afet-turleri",
+    "baslik": "Afet Türleri",
+    "unite": "6. Ünite",
+    "uniteAlt": "Afetler ve Sürdürülebilir Çevre",
+    "kitapBolum": "6.1.2",
+    "aciklama": "9. sınıf Coğrafya, 6. ünite. Afetlerin oluşum nedenine göre sınıflandırılması, dünyada ve Türkiye'de afetler.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "butuncul-afet-yonetimi",
+    "baslik": "Bütüncül Afet Yönetimi",
+    "unite": "6. Ünite",
+    "uniteAlt": "Afetler ve Sürdürülebilir Çevre",
+    "kitapBolum": "6.1.3",
+    "aciklama": "9. sınıf Coğrafya, 6. ünite. Bütüncül afet yönetiminin aşamaları, savunmasız gruplar, uluslararası iş birliği ve mekânsal bilgi teknolojileri.",
+    "oyunSayisi": 7
+  },
+  {
+    "slug": "bolge-ve-bolge-sinirlari",
+    "baslik": "Bölge ve Bölge Sınırı",
+    "unite": "7. Ünite",
+    "uniteAlt": "Bölgeler, Ülkeler ve Küresel Bağlantılar",
+    "kitapBolum": "7.1.1-7.1.3",
+    "aciklama": "9. sınıf Coğrafya, 7. ünite. Bölge belirleme kriterleri, şekilsel ve işlevsel bölgeler, kriterlere göre bölge sınırları ve Avrupa Birliği örneğiyle bölge sınırlarındaki değişim.",
+    "oyunSayisi": 8
+  },
+  {
+    "slug": "sozluk",
+    "baslik": "Sözlük",
+    "unite": "Kitap Sözlüğü",
+    "uniteAlt": "Kitabın sonundaki sözlükteki kavramlar",
+    "kitapBolum": "Sözlük",
+    "aciklama": "9. sınıf Coğrafya, kitap sonu sözlüğü. Kitap boyunca geçen kavramların sözlükteki tanımları.",
+    "oyunSayisi": 6
+  }
+]

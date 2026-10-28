@@ -165,7 +165,10 @@ export default function Page() {{
             "oyunSayisi": len(sekmeler),
         })
         print("YAZILDI:", sl)
-    katalog.sort(key=lambda k: [int(x) if x.isdigit() else x for x in re.split(r"[.\s]", k["kitapBolum"] or "9")])
+    def sira(k):
+        sayilar = [int(x) for x in re.findall(r"\d+", k.get("kitapBolum") or "")]
+        return sayilar[:3] if sayilar else [99]
+    katalog.sort(key=sira)
     json.dump(katalog, open(katalog_yolu, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     # Günün sorusu için sekmeleri de içeren dizin
     satirlar = ["// scripts/icerik_jsondan.py ile üretildi. Elle düzenlemeyin.\n", 'import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";']
