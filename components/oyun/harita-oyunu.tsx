@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useYakinlastirma } from "@/components/oyun/yakinlastirma";
 import type { HaritaAlan, HaritaVerisi } from "@/lib/games/harita-tipleri";
 import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
+import { SesliOku } from "@/components/oyun/sesli-oku";
 
 type Mod = "isim" | "kod" | "kesfet";
 type Asama = "kurulum" | "oyun" | "sonuc";
@@ -391,6 +392,7 @@ export function HaritaOyunu({
           </div>
         )}
         <div className="flex items-center gap-5 text-sm">
+          {mod !== "kesfet" && soru && <SesliOku metin={`Bul: ${soru}`} acik />}
           {mod !== "kesfet" && (
             <>
               <div className="flex flex-col items-end">

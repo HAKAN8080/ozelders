@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
+import { SesliOku } from "@/components/oyun/sesli-oku";
 
 /** Çoktan seçmeli soru. Hesap soruları her turda yeniden üretilir. */
 export type Soru = {
@@ -292,9 +293,12 @@ export function SoruOyunu({ yonerge, sorular = [], uretecler = [], turSecenekler
         </div>
       </div>
       <div className={`flex flex-col gap-4 ${kutu}`}>
-        <p className="m-0 font-serif text-xl leading-snug font-bold sm:text-2xl" data-soru="">
-          {s.soru}
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="m-0 font-serif text-xl leading-snug font-bold sm:text-2xl" data-soru="">
+            {s.soru}
+          </p>
+          <SesliOku metin={`${s.soru} ${s.secenekler.map((x, k) => `${"ABCD"[k]}: ${x}`).join(". ")}`} />
+        </div>
         <div className="grid gap-2.5 sm:grid-cols-2">
           {s.secenekler.map((x, k) => {
             const durum = secim === null ? "" : k === s.dogru ? "dogru" : k === secim ? "yanlis" : "soluk";

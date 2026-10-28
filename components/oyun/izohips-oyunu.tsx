@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
+import { SesliOku } from "@/components/oyun/sesli-oku";
 
 /**
  * İzohips (eş yükselti eğrisi) okuma oyunu.
@@ -452,6 +453,7 @@ export function IzohipsOyunu({ yonerge, turSecenekleri = [5, 10] }: IzohipsOyunu
           </span>
         </div>
         <div className="flex items-center gap-5 text-sm">
+          <SesliOku metin={s.soru} acik />
           <div className="flex flex-col items-end">
             <span className="opacity-75">Doğru</span>
             <span className="font-serif text-xl font-bold">{dogruSayi}</span>

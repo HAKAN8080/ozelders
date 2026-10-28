@@ -27,7 +27,50 @@ export function useOyunBaglami() {
  * Sonuç ekranındaki öğretmen çağrısı: oyunu ücretsiz tanışma dersine bağlar.
  * oran: 0–100 başarı yüzdesi; düşükse "zorlandın mı" der.
  */
+/** Sonucu paylaş: telefonda paylaşım menüsü, olmazsa WhatsApp. */
+function SonucPaylas({ oran }: { oran: number }) {
+  const { konuBasligi, dersAdi } = useOyunBaglami();
+  const paylas = async () => {
+    const url = window.location.href.split("#")[0];
+    const metin = `${dersAdi ? `${dersAdi} · ` : ""}${konuBasligi ?? "ÖzelDersBul oyunu"} oyununda %${oran} başarı yaptım. Sen de dene:`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: konuBasligi ?? "ÖzelDersBul", text: metin, url });
+        return;
+      }
+    } catch {
+      return; // kullanıcı paylaşımı kapattı
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(`${metin} ${url}`)}`, "_blank", "noopener");
+  };
+  return (
+    <button
+      type="button"
+      onClick={paylas}
+      data-paylas=""
+      className="inline-flex items-center gap-2 self-start rounded-md border border-border bg-background px-4 py-2.5 font-semibold hover:border-primary"
+    >
+      <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3" />
+        <circle cx="6" cy="12" r="3" />
+        <circle cx="18" cy="19" r="3" />
+        <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+      </svg>
+      Sonucumu paylaş
+    </button>
+  );
+}
+
 export function OgretmenCagrisi({ oran }: { oran: number }) {
+  return (
+    <>
+      <SonucPaylas oran={oran} />
+      <OgretmenKutusu oran={oran} />
+    </>
+  );
+}
+
+function OgretmenKutusu({ oran }: { oran: number }) {
   const { dersKodu, dersAdi, konuBasligi } = useOyunBaglami();
   const href = `/panel/ogretmen-bul${dersKodu ? `?ders=${encodeURIComponent(dersKodu)}` : ""}`;
   const zorlandi = oran < 70;

@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { OgretmenCagrisi } from "@/components/oyun/oyun-baglami";
+import { SesliOku } from "@/components/oyun/sesli-oku";
 
 /**
  * Boşluk doldurma. Cümlede boşluklar süslü parantezle yazılır:
@@ -227,6 +228,9 @@ export function BoslukOyunu({ cumleler, yonerge, turSecenekleri = [5, 8] }: Bosl
         </div>
       </div>
       <div className={`flex flex-col gap-5 ${kutu}`}>
+        <div className="flex justify-end">
+          <SesliOku metin={(sira[i]?.metin ?? "").replace(/\{([^}]+)\}/g, bitti ? "$1" : " boşluk ").replace(/\s+/g, " ")} />
+        </div>
         <p className="m-0 font-serif text-[20px] leading-[2.1] sm:text-[22px]" data-bosluk-cumle="">
           {parcalar.map((p, j) =>
             p.tur === "metin" ? (

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArkaPlan } from "@/components/oyun/arka-planlar";
+import { GununSorusuKarti } from "@/components/oyun/gunun-sorusu";
+import { gununSorusuHavuzu } from "@/lib/games/gunun-sorusu";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -116,6 +118,7 @@ export default function OyunlarPage() {
               Kısa, etkileşimli oyunlarla konuları pekiştir. Kayıt olmadan başlayabilirsin.
             </p>
           </div>
+          <GununSorusuKarti havuz={gununSorusuHavuzu()} />
           {GRUPLAR.map((g) => (
             <section key={g.baslik} className="flex flex-col gap-4">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-2">
