@@ -9,6 +9,7 @@
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { GELISIMI_EK } from "@/lib/games/icerik/ek-bosluk-bulmaca";
 
 export type Kaynak = { tur: "kitap"; sayfa: number } | { tur: "kitap-disi" };
 
@@ -264,4 +265,5 @@ export const SEKMELER: KonuSekmesi[] = [
     yonerge: "Coğrafya biliminin gelişimine katkı veren bilim insanlarını yaptıkları çalışmalarla eşleştir.",
     turSecenekleri: [5, 8, 100],
   },
+  ...GELISIMI_EK,
 ];

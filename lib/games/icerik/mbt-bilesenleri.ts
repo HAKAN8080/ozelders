@@ -4,6 +4,7 @@
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { MBT_EK } from "@/lib/games/icerik/ek-bosluk-bulmaca";
 import { ciftler, kategoriOgeleri } from "@/lib/games/icerik/yardimci";
 
 export const SEKMELER: KonuSekmesi[] = [
@@ -71,4 +72,5 @@ export const SEKMELER: KonuSekmesi[] = [
       ["Uzaktan algılama", "Dünya'dan yansıyan elektromanyetik dalgaları algılayan uydularla görüntü elde edip haritalama"],
     ]),
   },
+  ...MBT_EK,
 ];

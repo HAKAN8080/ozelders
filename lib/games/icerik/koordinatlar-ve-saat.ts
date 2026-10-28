@@ -5,6 +5,7 @@
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { KOORDINAT_EK } from "@/lib/games/icerik/ek-bosluk-bulmaca";
 import type { Soru } from "@/components/oyun/soru-oyunu";
 import { ciftler } from "@/lib/games/icerik/yardimci";
 
@@ -117,4 +118,5 @@ export const SEKMELER: KonuSekmesi[] = [
     turSecenekleri: [10, 20],
     uretecler: ["saat-dilimi"],
   },
+  ...KOORDINAT_EK,
 ];

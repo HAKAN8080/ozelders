@@ -4,6 +4,7 @@
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { KONUSU_EK } from "@/lib/games/icerik/ek-bosluk-bulmaca";
 
 const KURELER = ["Taş küre", "Hava küre", "Su küre", "Buz küre", "Yaşam küre"];
 
@@ -179,4 +180,5 @@ export const SEKMELER: KonuSekmesi[] = [
     yonerge: "Ortam ve küre kavramlarını kitaptaki tanımlarıyla eşleştir.",
     turSecenekleri: [5, 9],
   },
+  ...KONUSU_EK,
 ];

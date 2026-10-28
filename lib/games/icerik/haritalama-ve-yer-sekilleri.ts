@@ -5,6 +5,7 @@
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+import { HARITALAMA_EK } from "@/lib/games/icerik/ek-bosluk-bulmaca";
 import { ciftler, kategoriOgeleri } from "@/lib/games/icerik/yardimci";
 
 export const SEKMELER: KonuSekmesi[] = [
@@ -149,4 +150,5 @@ export const SEKMELER: KonuSekmesi[] = [
       etiket: `${i + 1}. basamak`,
     })),
   },
+  ...HARITALAMA_EK,
 ];
