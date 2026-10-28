@@ -145,7 +145,7 @@ export function KategoriOyunu({
           <h2 className="m-0 font-serif text-2xl font-bold">Nasıl oynanır?</h2>
           <p className="m-0 max-w-[40em] leading-relaxed text-[#3d4743]">{yonerge}</p>
           <p className="m-0 text-sm text-muted">
-            Bilgisayarda kartı sürükleyip kutuya bırak. Telefonda önce karta, sonra kutuya dokun. İlk denemede 10, ikincide 5
+            Bilgisayarda kartı sürükleyip kutuya bırak. Telefonda ekrandaki kartın ait olduğu kutuya dokun. İlk denemede 10, ikincide 5
             puan.
           </p>
         </div>
@@ -244,7 +244,7 @@ export function KategoriOyunu({
             Yerleştirilen {kartlar.length - kalan.length}/{kartlar.length}
           </span>
           <span className="min-h-6 font-serif text-xl font-bold">
-            {secili ? `Seçili: ${kartlar.find((k) => k.id === secili)?.ad}. Şimdi kutusuna dokun.` : mesaj || "Bir kart seç ya da sürükle."}
+            {secili ? `Seçili: ${kartlar.find((k) => k.id === secili)?.ad}. Şimdi kutusuna dokun.` : mesaj || "Kartı doğru kutuya yerleştir."}
           </span>
         </div>
         <div className="flex items-center gap-5 text-sm">
@@ -266,8 +266,48 @@ export function KategoriOyunu({
         </div>
       </div>
 
-      {/* Kart havuzu */}
-      <div className="sticky top-2 z-10 flex min-h-16 flex-wrap gap-2 rounded-[10px] border border-dashed border-[#b9c7bf] bg-[#fbfbf8]/95 p-3 backdrop-blur">
+      {/* Telefon: ortada tek kart, altında kutu düğmeleri */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {kalan.length > 0 ? (
+          <div
+            data-kart-mobil={kalan[0].ad}
+            className={`flex min-h-24 items-center justify-center rounded-[10px] border-2 px-4 py-5 text-center text-lg leading-snug font-semibold shadow-sm ${
+              sallanan === kalan[0].id ? "animate-[sallan_0.4s] border-[#c0392b] bg-[#fde8e5]" : "border-primary bg-background"
+            }`}
+          >
+            {kalan[0].ad}
+          </div>
+        ) : (
+          <div className="rounded-[10px] border border-dashed border-border p-5 text-center text-muted">Hepsi yerleşti.</div>
+        )}
+        <span className="text-center text-sm text-muted">
+          {kalan.length > 1 ? `Bu karttan sonra ${kalan.length - 1} kart daha var` : kalan.length === 1 ? "Son kart" : ""}
+          {kalan[0] && hata[kalan[0].id] ? ` · ${MAKS_HATA - hata[kalan[0].id]} hakkın kaldı` : ""}
+        </span>
+        <div className="grid grid-cols-2 gap-2">
+          {kategoriler.map((kat) => {
+            const adet = kartlar.filter((k) => k.kategori === kat && durum[k.id]).length;
+            return (
+              <button
+                key={kat}
+                type="button"
+                data-kutu-mobil={kat}
+                disabled={kalan.length === 0}
+                onClick={() => kalan[0] && yerlestir(kalan[0].id, kat)}
+                className={`flex min-h-14 flex-col items-start justify-center rounded-md border-2 border-border bg-background px-3 py-2 text-left font-semibold leading-tight active:border-primary active:bg-primary-soft ${
+                  kategoriler.length % 2 === 1 && kat === kategoriler[kategoriler.length - 1] ? "col-span-2" : ""
+                }`}
+              >
+                <span className="text-[15px]">{kategoriYaz(kat)}</span>
+                {adet > 0 && <span className="text-xs font-normal text-muted">{adet} kart</span>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Kart havuzu (tablet ve bilgisayar) */}
+      <div className="sticky top-2 z-10 hidden min-h-16 sm:flex flex-wrap gap-2 rounded-[10px] border border-dashed border-[#b9c7bf] bg-[#fbfbf8]/95 p-3 backdrop-blur">
         {kalan.length === 0 ? (
           <span className="self-center text-sm text-muted">Hepsi yerleşti.</span>
         ) : (
@@ -295,8 +335,8 @@ export function KategoriOyunu({
         )}
       </div>
 
-      {/* Kutular */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Kutular (tablet ve bilgisayar) */}
+      <div className="hidden gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3">
         {kategoriler.map((kat) => {
           const icindekiler = kartlar.filter((k) => k.kategori === kat && durum[k.id]);
           return (

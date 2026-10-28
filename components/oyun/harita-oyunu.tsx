@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useYakinlastirma } from "@/components/oyun/yakinlastirma";
 import type { HaritaAlan, HaritaVerisi } from "@/lib/games/harita-tipleri";
 
 type Mod = "isim" | "kod" | "kesfet";
@@ -28,7 +29,7 @@ export type HaritaOyunuAyarlari = {
   kesfetEtiketi?: (alan: HaritaAlan) => string;
   /** Tur uzunluğu seçenekleri; 0 = tümü. */
   turSecenekleri?: number[];
-  /** Haritada kalan isimlerin yazı boyutu (tam harita ölçeğinde, px). */
+  /** Haritada kalan isimlerin yazı boyutu (ekran pikseli, yaklaşık). */
   etiketBoyutu?: number;
 };
 
@@ -131,7 +132,8 @@ export function HaritaOyunu({
     }
     return { x: x0, y: y0, w, h };
   }, [veri, kapsam]);
-  const olcek = kutu.w / veri.genislik; // 1 = tam harita
+  const { gorus, svgRef, piksel: px, yakinlik, yakinlas, uzaklas, sifirla, tiklamaGecerli, svgOlaylari } = useYakinlastirma(kutu);
+  // px: 1 ekran pikselinin harita birimindeki karşılığı; etiket ve noktalar her ekranda aynı boyda görünür
 
   useEffect(() => {
     if (asama !== "oyun" || mod === "kesfet") return;
@@ -354,8 +356,8 @@ export function HaritaOyunu({
   /* ---------- Oyun / Keşfet ---------- */
   const soru = hedef ? (mod === "kod" && kodModu && hedef.kod ? kodModu.soru(hedef.kod) : hedef.ad) : "";
   // Ekranda çok küçük kalan alanlar için tıklanabilir nokta (yaklaşık 7 px altı)
-  const noktaEsigi = 7 * olcek;
-  const noktaR = 4.5 * olcek;
+  const noktaEsigi = 9 * px;
+  const noktaR = 6 * px;
 
   return (
     <div className="flex flex-col gap-4">
@@ -426,13 +428,16 @@ export function HaritaOyunu({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-[10px] border border-border bg-[#eef4f8] p-2 sm:p-4">
+      <div className="relative overflow-hidden rounded-[10px] border border-border bg-[#eef4f8]">
         <svg
-          viewBox={`${kutu.x} ${kutu.y} ${kutu.w} ${kutu.h}`}
+          ref={svgRef}
+          viewBox={`${gorus.x} ${gorus.y} ${gorus.w} ${gorus.h}`}
           role="img"
           aria-label={`${tumEtiketi} haritası`}
           data-harita=""
-          className="block h-auto w-full min-w-[640px] select-none"
+          className={`block h-auto w-full touch-none select-none ${yakinlik > 1.01 ? "cursor-grab active:cursor-grabbing" : ""}`}
+          style={{ aspectRatio: `${kutu.w} / ${kutu.h}` }}
+          {...svgOlaylari}
           onMouseLeave={() => mod === "kesfet" && setUzerinde(null)}
         >
           {veri.alanlar.map((a) => {
@@ -446,7 +451,7 @@ export function HaritaOyunu({
                 vectorEffect="non-scaling-stroke"
                 strokeLinejoin="round"
                 className={`${renk(a)} transition-colors duration-150 ${t ? "cursor-pointer" : ""}`}
-                onClick={() => t && tikla(a)}
+                onClick={() => t && tiklamaGecerli() && tikla(a)}
                 onMouseEnter={() => mod === "kesfet" && t && setUzerinde(a)}
               />
             );
@@ -465,7 +470,7 @@ export function HaritaOyunu({
                 strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
                 className={`${renk(a)} cursor-pointer transition-colors duration-150`}
-                onClick={() => tikla(a)}
+                onClick={() => tiklamaGecerli() && tikla(a)}
                 onMouseEnter={() => mod === "kesfet" && setUzerinde(a)}
               />
             );
@@ -484,10 +489,10 @@ export function HaritaOyunu({
                 dominantBaseline="central"
                 className={`pointer-events-none font-sans font-semibold ${koyu ? "fill-white" : "fill-[#1d2a24]"}`}
                 style={{
-                  fontSize: (mod === "kesfet" ? etiketBoyutu + 1.5 : etiketBoyutu) * olcek,
+                  fontSize: (mod === "kesfet" ? etiketBoyutu + 2.5 : etiketBoyutu + 1.5) * px,
                   paintOrder: "stroke",
                   stroke: koyu ? "rgb(11 79 46 / 0.6)" : "rgb(255 255 255 / 0.7)",
-                  strokeWidth: 2 * olcek,
+                  strokeWidth: 2.5 * px,
                 }}
               >
                 {yazi}
@@ -495,9 +500,28 @@ export function HaritaOyunu({
             );
           })}
         </svg>
+        <div className="flex border-t border-border bg-background/95 sm:absolute sm:right-2 sm:bottom-2 sm:flex-col sm:overflow-hidden sm:rounded-md sm:border sm:shadow-sm">
+          <button type="button" aria-label="Yakınlaştır" onClick={yakinlas} className="flex h-11 flex-1 items-center justify-center text-xl font-bold hover:bg-primary-soft sm:size-10 sm:flex-none">
+            +
+          </button>
+          <button
+            type="button"
+            aria-label="Uzaklaştır"
+            onClick={uzaklas}
+            disabled={yakinlik <= 1.01}
+            className="flex h-11 flex-1 items-center justify-center border-l border-border text-xl font-bold hover:bg-primary-soft disabled:opacity-30 sm:size-10 sm:flex-none sm:border-t sm:border-l-0"
+          >
+            −
+          </button>
+          {yakinlik > 1.01 && (
+            <button type="button" aria-label="Tüm haritayı göster" onClick={sifirla} className="flex h-11 flex-1 items-center justify-center border-l border-border text-sm hover:bg-primary-soft sm:size-10 sm:flex-none sm:border-t sm:border-l-0">
+              ⤢
+            </button>
+          )}
+        </div>
       </div>
       <p className="m-0 text-sm text-muted">
-        Çok küçük yerleri yuvarlak işaretinden seçebilirsin. Bir bölge seçersen harita oraya yakınlaşır.
+        Yakınlaştırmak için + düğmesini ya da telefonda iki parmağını kullan; haritayı sürükleyerek kaydır. Çok küçük yerleri yuvarlak işaretinden seçebilirsin.
       </p>
     </div>
   );

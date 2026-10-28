@@ -206,7 +206,7 @@ export function EslestirmeOyunu({ ciftler, solBaslik, sagBaslik, yonerge, turSec
         data-eslestir={`${taraf}:${id}`}
         disabled={tamam}
         onClick={() => (taraf === "sol" ? solaTikla(id) : sagaTikla(id))}
-        className={`w-full rounded-md border-2 px-4 py-3 text-left text-[15px] leading-snug transition-all ${
+        className={`rounded-md border-2 px-4 py-3 text-left text-[15px] leading-snug transition-all ${taraf === "sol" ? "w-auto px-3 py-2 sm:w-full sm:px-4 sm:py-3" : "w-full"} ${
           tamam
             ? "border-primary bg-primary text-primary-foreground opacity-90"
             : hatali
@@ -257,10 +257,11 @@ export function EslestirmeOyunu({ ciftler, solBaslik, sagBaslik, yonerge, turSec
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3 sm:gap-5">
-        <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] sm:gap-5">
+        {/* Telefonda sol sütun üstte, kaydırırken görünür kalan şerit olur */}
+        <div className="sticky top-2 z-10 flex flex-col gap-2 rounded-[10px] bg-[#fbfbf8]/95 p-2 backdrop-blur sm:static sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
           <span className="text-sm font-semibold uppercase tracking-[0.06em] text-muted">{solBaslik}</span>
-          {sol.map((c) => kart("sol", c))}
+          <div className="flex flex-wrap gap-2 sm:flex-col">{sol.map((c) => kart("sol", c))}</div>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-sm font-semibold uppercase tracking-[0.06em] text-muted">{sagBaslik}</span>
