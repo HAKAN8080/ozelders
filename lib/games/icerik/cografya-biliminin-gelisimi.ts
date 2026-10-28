@@ -8,6 +8,8 @@
  *                   ÖĞRETMEN ONAYI GEREKİR
  */
 
+import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
+
 export type Kaynak = { tur: "kitap"; sayfa: number } | { tur: "kitap-disi" };
 
 export const CAGLAR = ["Eski Çağ", "Orta Çağ", "Yeni Çağ", "Yakın Çağ", "Cumhuriyet Dönemi"] as const;
@@ -219,4 +221,47 @@ export const GELISMELER: { id: string; ad: string; cag: Cag }[] = [
   { id: "g10", ad: "Fransız İhtilali ve Sanayi Devrimi", cag: "Yakın Çağ" },
   { id: "g11", ad: "Bilimsel amaçlı keşif gezileri", cag: "Yakın Çağ" },
   { id: "g12", ad: "Coğrafyanın yöntemlerinin oluşturulması", cag: "Yakın Çağ" },
+];
+
+export const SEKMELER: KonuSekmesi[] = [
+  {
+    id: "cag",
+    baslik: "Hangi çağ?",
+    alt: "Kişi ve gelişmeleri çağına yerleştir",
+    tur: "kategori",
+    kategoriler: [...CAGLAR],
+    ogeler: [
+      ...BILGINLER.map((b) => ({ id: b.id, ad: b.ad, kategori: b.cag })),
+      ...GELISMELER.map((g) => ({ id: g.id, ad: g.ad, kategori: g.cag })),
+    ],
+    yonerge:
+      "Coğrafya biliminin gelişimine katkı veren bilim insanlarını ve coğrafyanın gelişmesinde rol oynayan etkenleri ait oldukları çağa yerleştir.",
+    turSecenekleri: [10, 15, 25],
+  },
+  {
+    id: "sira",
+    baslik: "Zaman şeridi",
+    alt: "Bilim insanlarını kronolojik sıraya diz",
+    tur: "siralama",
+    ogeler: BILGINLER.filter((b) => b.dogum !== undefined && b.yillar).map((b) => ({
+      id: b.id,
+      ad: b.ad,
+      anahtar: b.dogum as number,
+      etiket: b.yillar as string,
+    })),
+    yonerge: "Ders kitabındaki tarih şeridinde yer alan bilim insanlarını yaşadıkları döneme göre en eskiden en yeniye sırala.",
+    uclar: ["En eski", "En yeni"],
+    turSecenekleri: [5, 8, 0],
+  },
+  {
+    id: "eslestir",
+    baslik: "Kim ne yaptı?",
+    alt: "Bilim insanını katkısıyla eşleştir",
+    tur: "eslestirme",
+    ciftler: BILGINLER.filter((b) => b.katki).map((b) => ({ id: b.id, sol: b.ad, sag: b.katki as string })),
+    solBaslik: "Bilim insanı",
+    sagBaslik: "Katkısı",
+    yonerge: "Coğrafya biliminin gelişimine katkı veren bilim insanlarını yaptıkları çalışmalarla eşleştir.",
+    turSecenekleri: [5, 8, 100],
+  },
 ];

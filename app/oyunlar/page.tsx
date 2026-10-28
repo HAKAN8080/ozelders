@@ -18,6 +18,13 @@ const oyunlar = [
     etiket: "Harita oyunu",
   },
   {
+    href: "/oyunlar/cografyanin-konusu-ve-bolumleri",
+    ders: "9. Sınıf Coğrafya",
+    baslik: "Coğrafyanın Konusu ve Bölümleri",
+    aciklama: "Küreler, fiziki ve beşerî coğrafyanın alt dalları, temel kavramlar. 5 oyun.",
+    etiket: "1. Ünite",
+  },
+  {
     href: "/oyunlar/dunya-ulkeleri",
     ders: "Coğrafya",
     baslik: "Dünya'da Ülkeler",

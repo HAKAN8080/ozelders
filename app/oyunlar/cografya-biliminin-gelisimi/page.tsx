@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
-import { CografyaGelisimOyunlari } from "@/app/oyunlar/cografya-biliminin-gelisimi/oyunlar";
+import { KonuOyunlari } from "@/components/oyun/konu-oyunlari";
+import { SEKMELER } from "@/lib/games/icerik/cografya-biliminin-gelisimi";
 
 export const metadata: Metadata = {
   title: "Coğrafya Biliminin Gelişimi Oyunları — ÖzelDersBul",
@@ -19,7 +20,7 @@ export default function Page() {
       <div className="rounded-md border border-[#e8a317] bg-[#fdf6e6] px-4 py-3 text-[15px] text-[#5a4210]">
         <strong>Taslak.</strong> Bu sayfa öğretmen onayı bekliyor; oyunlar listesinde görünmüyor.
       </div>
-      <CografyaGelisimOyunlari />
+      <KonuOyunlari sekmeler={SEKMELER} />
     </OyunSayfasi>
   );
 }
