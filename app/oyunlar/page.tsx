@@ -25,6 +25,13 @@ const oyunlar = [
     etiket: "1. Ünite",
   },
   {
+    href: "/oyunlar/cografya-biliminin-gelisimi",
+    ders: "9. Sınıf Coğrafya",
+    baslik: "Coğrafya Biliminin Gelişimi",
+    aciklama: "Bilim insanlarını çağına yerleştir, zaman şeridinde sırala, katkılarıyla eşleştir. 3 oyun.",
+    etiket: "1. Ünite",
+  },
+  {
     href: "/oyunlar/dunya-ulkeleri",
     ders: "Coğrafya",
     baslik: "Dünya'da Ülkeler",

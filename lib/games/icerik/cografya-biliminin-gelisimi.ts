@@ -5,7 +5,7 @@
  * kaynak alanı:
  *   "kitap"       → bilgi ders kitabında birebir geçiyor (sayfa belirtilir)
  *   "kitap-disi"  → kitap öğrenciden araştırmasını istiyor; genel kabul gören bilgi,
- *                   ÖĞRETMEN ONAYI GEREKİR
+ *                   (Hakan Uğur onayladı, 28.10.2026)
  */
 
 import type { KonuSekmesi } from "@/components/oyun/konu-oyunlari";
