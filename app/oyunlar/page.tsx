@@ -45,8 +45,8 @@ const GRUPLAR: { baslik: string; alt?: string; oyunlar: Oyun[] }[] = [
       {
         href: "/oyunlar/koordinatlar-ve-saat-dilimleri",
         baslik: "Koordinatlar ve Saat Dilimleri",
-        aciklama: "Enlem, boylam, yerel ve ulusal saat, tarih değiştirme çizgisi, saat dilimi hesapları.",
-        etiket: "3 oyun",
+        aciklama: "Haritada koordinat bul, Irma kasırgasının rotasını çiz, saat dilimi hesapları.",
+        etiket: "5 oyun",
       },
       {
         href: "/oyunlar/haritalama-teknikleri-ve-yer-sekilleri",

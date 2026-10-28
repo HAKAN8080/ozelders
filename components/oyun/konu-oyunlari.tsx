@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EslestirmeOyunu, type EslestirmeCifti } from "@/components/oyun/eslestirme-oyunu";
 import { KategoriOyunu, type KategoriOgesi } from "@/components/oyun/kategori-oyunu";
 import { SiralamaOyunu, type SiralamaOgesi } from "@/components/oyun/siralama-oyunu";
+import { KoordinatOyunu, type KoordinatOyunuAyarlari } from "@/components/oyun/koordinat-oyunu";
 import { SoruOyunu, type Soru, type UretecAdi } from "@/components/oyun/soru-oyunu";
 
 type Ortak = { id: string; baslik: string; alt: string; yonerge: string; turSecenekleri?: number[] };
@@ -16,6 +17,7 @@ export type KonuSekmesi = Ortak &
     | { tur: "eslestirme"; ciftler: EslestirmeCifti[]; solBaslik: string; sagBaslik: string }
     | { tur: "siralama"; ogeler: SiralamaOgesi[]; uclar?: [string, string] }
     | { tur: "soru"; sorular?: Soru[]; uretecler?: UretecAdi[] }
+    | ({ tur: "koordinat" } & Omit<KoordinatOyunuAyarlari, "yonerge" | "turSecenekleri">)
   );
 
 export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
@@ -60,6 +62,19 @@ export function KonuOyunlari({ sekmeler }: { sekmeler: KonuSekmesi[] }) {
       )}
       {s.tur === "siralama" && (
         <SiralamaOyunu key={s.id} ogeler={s.ogeler} yonerge={s.yonerge} uclar={s.uclar} turSecenekleri={s.turSecenekleri} />
+      )}
+      {s.tur === "koordinat" && (
+        <KoordinatOyunu
+          key={s.id}
+          mod={s.mod}
+          bolge={s.bolge}
+          izgara={s.izgara}
+          yonerge={s.yonerge}
+          turSecenekleri={s.turSecenekleri}
+          rota={s.rota}
+          gruplar={s.gruplar}
+          sonNot={s.sonNot}
+        />
       )}
       {s.tur === "soru" && (
         <SoruOyunu key={s.id} yonerge={s.yonerge} sorular={s.sorular} uretecler={s.uretecler} turSecenekleri={s.turSecenekleri} />

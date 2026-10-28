@@ -1,6 +1,6 @@
 /**
  * 9. sınıf Coğrafya — 2.1.1 Coğrafi koordinatlar, yerel/ulusal saat, saat dilimleri
- * Kaynak: MEB Coğrafya 9. Sınıf Ders Kitabı (TYMM), s.37–40. Bilgiler kitaptan;
+ * Kaynak: MEB Coğrafya 9. Sınıf Ders Kitabı (TYMM), s.34 (Irma kasırgası tablosu), s.37–40. Bilgiler kitaptan;
  * çoktan seçmeli sorulardaki yanlış şıklar soruyu kurmak için eklendi.
  */
 
@@ -27,6 +27,24 @@ const SAAT_SORULARI: Soru[] = [
   s("Enlem ve boylam hangi birimlerle ifade edilir?", "Derece, dakika, saniye", ["Kilometre, metre, santimetre", "Saat, dakika, saniye", "Derece, metre, saniye"], "Enlem ve boylam derece (°), dakika (') ve saniye ('') ile ifade edilir (s.37)."),
 ];
 
+/** Kitap s.34: Irma kasırgasının etkili olduğu gün, konum ve kategoriler (Eylül 2017) */
+const IRMA: [string, number, number, string][] = [
+  ["31 Ağustos", 16, -31, "Kategori yok"],
+  ["1 Eylül", 17, -34, "3. kategori"],
+  ["2 Eylül", 18, -38, "3. kategori"],
+  ["3 Eylül", 18, -44, "2. kategori"],
+  ["4 Eylül", 17, -49, "3. kategori"],
+  ["5 Eylül", 16, -54, "4. kategori"],
+  ["6 Eylül", 17, -59, "5. kategori"],
+  ["7 Eylül", 18, -65, "5. kategori"],
+  ["8 Eylül", 20, -71, "5. kategori"],
+  ["9 Eylül", 22, -76, "4. kategori"],
+  ["10 Eylül", 23, -80, "3. kategori"],
+  ["11 Eylül", 26, -81, "2. kategori"],
+  ["12 Eylül", 31, -84, "Kategori yok"],
+  ["13 Eylül", 35, -88, "Kategori yok"],
+];
+
 export const SEKMELER: KonuSekmesi[] = [
   {
     id: "kavramlar",
@@ -46,6 +64,39 @@ export const SEKMELER: KonuSekmesi[] = [
       ["Ulusal (ortak) saat", "Ülke sınırları içindeki bir veya birden fazla meridyenin yerel saatinin ortak saat olarak kullanılması"],
       ["Tarih değiştirme çizgisi", "Başlangıç meridyeninin tam karşısında yer alan 180° meridyeni"],
     ]),
+  },
+  {
+    id: "koordinat-bul",
+    baslik: "Koordinat bul",
+    alt: "Verilen enlem ve boylamı haritada işaretle",
+    tur: "koordinat",
+    mod: "bul",
+    bolge: [-165, -55, 180, 75],
+    izgara: 15,
+    yonerge:
+      "Verilen enlem ve boylamın kesiştiği noktayı haritada işaretle. Paraleller ve meridyenler 15 derecede bir çizildi; aradaki değerleri sen tahmin edeceksin. Hedefe ne kadar yakınsan o kadar puan.",
+    turSecenekleri: [5, 10],
+  },
+  {
+    id: "irma",
+    baslik: "Irma kasırgası",
+    alt: "Kasırganın rotasını gün gün çiz",
+    tur: "koordinat",
+    mod: "rota",
+    bolge: [-105, 0, -25, 42],
+    izgara: 5,
+    yonerge:
+      "Ders kitabının 34. sayfasındaki tabloda Irma kasırgasının (Eylül 2017) her gün bulunduğu paralel ve meridyen verildi. Günleri sırayla haritada işaretle; işaretlerin birleşince kasırganın hareket yönünü oluşturacak.",
+    rota: IRMA.map(([etiket, lat, lon, grup]) => ({ etiket, lat, lon, grup })),
+    gruplar: [
+      { ad: "Kategori yok", renk: "#8a948f" },
+      { ad: "2. kategori", renk: "#e6d04a" },
+      { ad: "3. kategori", renk: "#f0932b" },
+      { ad: "4. kategori", renk: "#d1451b" },
+      { ad: "5. kategori", renk: "#7f1515" },
+    ],
+    sonNot:
+      "Kasırgalar etkilerine göre kategorilere ayrılır. 4 ve 5. kategorideki kasırgalar etkili olduğu yerlerde doğal ve beşerî çevreye ciddi zararlar verebilir (kitap s.34). Haritada koyu kırmızı ve turuncu noktalar kasırganın en güçlü olduğu 5–9 Eylül günlerini gösteriyor. Bu günlerde hangi ülkelerin etkilendiğini atlasından bulmayı dene.",
   },
   {
     id: "bilgi",
