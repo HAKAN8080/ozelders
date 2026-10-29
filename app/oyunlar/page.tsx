@@ -6,7 +6,8 @@ import { ArkaPlan } from "@/components/oyun/arka-planlar";
 import { GununSorusuKarti } from "@/components/oyun/gunun-sorusu";
 import { SinifSeridi } from "@/components/oyun/sinif-seridi";
 import { gununSorusuHavuzu } from "@/lib/games/gunun-sorusu";
-import { GRUPLAR } from "@/lib/games/konular";
+import { derslereGore, YAKINDA_DERSLER, type Oyun } from "@/lib/games/konular";
+import { GORSELLER, gorselSrc } from "@/lib/games/gorseller";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -15,6 +16,66 @@ export const metadata: Metadata = {
   description:
     "Harita, eşleştirme ve kategori oyunlarıyla konuları oynayarak pekiştir. Ücretsiz, kayıt gerekmez.",
 };
+
+const DERSLER = derslereGore();
+const KREDILER = [
+  ...new Map(Object.values(GORSELLER).map((g) => [g.byUrl, g])).values(),
+];
+
+function dersSlug(d: string) {
+  return d
+    .toLocaleLowerCase("tr")
+    .replace(/ğ/g, "g")
+    .replace(/ü/g, "u")
+    .replace(/ş/g, "s")
+    .replace(/ı/g, "i")
+    .replace(/ö/g, "o")
+    .replace(/ç/g, "c")
+    .replace(/[^a-z0-9]+/g, "-");
+}
+
+function OyunKarti({ oyun: o }: { oyun: Oyun }) {
+  const g = GORSELLER[o.href.replace("/oyunlar/", "")];
+  return (
+    <Link
+      href={o.href}
+      className="group flex flex-col overflow-hidden rounded-[10px] border border-border bg-background text-foreground no-underline shadow-[0_1px_0_rgb(0_0_0/0.03)] transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary"
+    >
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-primary-soft">
+        {g ? (
+          <Image
+            src={gorselSrc(g.url, 640)}
+            alt={g.alt}
+            fill
+            sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div
+            aria-hidden="true"
+            className="tahta flex h-full items-center justify-center font-serif text-4xl font-bold text-white/85"
+          >
+            {o.baslik.slice(0, 1)}
+          </div>
+        )}
+        <span className="absolute top-3 left-3 rounded-full bg-background/90 px-3 py-1 text-[13px] font-semibold text-primary">
+          {o.etiket}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <span className="font-serif text-[22px] leading-tight font-bold">
+          {o.baslik}
+        </span>
+        <span className="text-[15px] leading-relaxed text-muted">
+          {o.aciklama}
+        </span>
+        <span className="mt-auto pt-2 font-semibold text-primary group-hover:underline">
+          Oyna →
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 export default function OyunlarPage() {
   return (
@@ -70,38 +131,54 @@ export default function OyunlarPage() {
           </div>
           <SinifSeridi />
           <GununSorusuKarti havuz={gununSorusuHavuzu()} />
-          {GRUPLAR.map((g) => (
-            <section key={g.baslik} className="flex flex-col gap-4">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-2">
-                <h2 className="m-0 font-serif text-2xl font-bold">
-                  {g.baslik}
-                </h2>
-                {g.alt && (
-                  <span className="text-[15px] text-muted">{g.alt}</span>
-                )}
-              </div>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {g.oyunlar.map((o) => (
-                  <Link
-                    key={o.href}
-                    href={o.href}
-                    className="group flex flex-col gap-3 rounded-[10px] border border-border bg-background/85 p-6 text-foreground no-underline backdrop-blur-[2px] transition-colors hover:border-primary"
-                  >
-                    <span className="text-sm font-semibold text-primary">
-                      {o.etiket}
-                    </span>
-                    <span className="font-serif text-2xl font-bold">
-                      {o.baslik}
-                    </span>
-                    <span className="text-[15px] leading-relaxed text-muted">
-                      {o.aciklama}
-                    </span>
-                    <span className="mt-auto pt-2 font-semibold text-primary group-hover:underline">
-                      Oyna →
-                    </span>
-                  </Link>
-                ))}
-              </div>
+          <nav aria-label="Dersler" className="flex flex-wrap gap-2">
+            {DERSLER.map(({ ders, gruplar }) => (
+              <a
+                key={ders}
+                href={`#ders-${dersSlug(ders)}`}
+                className="rounded-full bg-primary px-4 py-2 text-[15px] font-semibold text-primary-foreground no-underline hover:bg-primary-hover"
+              >
+                {ders}{" "}
+                <span className="font-normal opacity-80">
+                  · {gruplar.reduce((n, g) => n + g.oyunlar.length, 0)} konu
+                </span>
+              </a>
+            ))}
+            {YAKINDA_DERSLER.map((d) => (
+              <span
+                key={d}
+                className="rounded-full border border-border bg-background/85 px-4 py-2 text-[15px] text-muted"
+              >
+                {d} <span className="text-sm">· yakında</span>
+              </span>
+            ))}
+          </nav>
+          {DERSLER.map(({ ders, gruplar }) => (
+            <section
+              key={ders}
+              id={`ders-${dersSlug(ders)}`}
+              className="flex scroll-mt-6 flex-col gap-10"
+            >
+              <h2 className="m-0 border-b-2 border-primary pb-2 font-serif text-[34px] font-bold">
+                {ders}
+              </h2>
+              {gruplar.map((g) => (
+                <section key={g.baslik} className="flex flex-col gap-4">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border pb-2">
+                    <h3 className="m-0 font-serif text-2xl font-bold">
+                      {g.baslik}
+                    </h3>
+                    {g.alt && (
+                      <span className="text-[15px] text-muted">{g.alt}</span>
+                    )}
+                  </div>
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {g.oyunlar.map((o) => (
+                      <OyunKarti key={o.href} oyun={o} />
+                    ))}
+                  </div>
+                </section>
+              ))}
             </section>
           ))}
           <section className="flex flex-wrap items-center justify-between gap-4 rounded-[10px] border border-border bg-background/85 p-6 backdrop-blur-[2px]">
@@ -122,6 +199,35 @@ export default function OyunlarPage() {
               Sınıf oluştur
             </Link>
           </section>
+          <details className="text-sm text-muted">
+            <summary className="cursor-pointer">Görseller</summary>
+            <p className="m-0 mt-2 leading-relaxed">
+              Fotoğraflar Unsplash lisansıyla kullanılmıştır:{" "}
+              {KREDILER.map((k, i) => (
+                <span key={k.byUrl}>
+                  {i ? ", " : ""}
+                  <a
+                    href={`${k.byUrl}?utm_source=ozelders&utm_medium=referral`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline-offset-2 hover:underline"
+                  >
+                    {k.by}
+                  </a>
+                </span>
+              ))}{" "}
+              /{" "}
+              <a
+                href="https://unsplash.com/?utm_source=ozelders&utm_medium=referral"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-2 hover:underline"
+              >
+                Unsplash
+              </a>
+              .
+            </p>
+          </details>
         </div>
       </main>
       <SiteFooter />
