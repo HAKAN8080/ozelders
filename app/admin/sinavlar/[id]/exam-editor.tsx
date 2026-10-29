@@ -137,12 +137,12 @@ export function ExamEditor({
               Arşive al
             </button>
           ) : null}
-          {meta.status === "taslak" && attemptCount === 0 ? (
+          {attemptCount === 0 ? (
             <button
               type="button"
               disabled={pending}
               onClick={() => {
-                if (confirm("Bu taslak sınav kalıcı olarak silinsin mi?")) run(() => deleteDraftExam(exam.id));
+                if (confirm(meta.status === "yayinda" ? "Bu sınav yayından kalkacak ve kalıcı olarak silinecek. Emin misin?" : "Bu sınav kalıcı olarak silinsin mi?")) run(() => deleteDraftExam(exam.id));
               }}
               className="rounded-md border border-destructive px-4 py-2.5 font-semibold text-destructive hover:bg-[#fdeeee] disabled:opacity-50"
             >

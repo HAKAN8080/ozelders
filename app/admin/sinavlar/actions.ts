@@ -188,9 +188,11 @@ export async function deleteDraftExam(examId: string): Promise<ActionResult> {
   if ((count ?? 0) > 0) return { ok: false, error: "Çözülmüş sınav silinemez; arşive al." };
   const { data: imgs } = await supabase.from("exam_question_images").select("path").eq("exam_id", examId);
   const { data: bk } = await supabase.from("exams").select("booklet_path").eq("id", examId).maybeSingle();
-  const { data: deleted, error } = await supabase.from("exams").delete().eq("id", examId).eq("status", "taslak").select("id");
+  // Hiç çözülmemiş sınav, durumu ne olursa olsun silinebilir (yayındaysa sayfası da kalkar)
+  const { data: deleted, error } = await supabase.from("exams").delete().eq("id", examId).select("id");
   if (error) return { ok: false, error: error.message };
-  if (!deleted?.length) return { ok: false, error: "Yalnızca taslak sınav silinebilir." };
+  if (!deleted?.length) return { ok: false, error: "Sınav silinemedi." };
+  updateTag("exams");
   if (imgs?.length) await supabase.storage.from("exam-images").remove(imgs.map((i) => i.path));
   if (bk?.booklet_path) await supabase.storage.from("exam-booklets").remove([bk.booklet_path]);
   redirect("/admin/sinavlar");
