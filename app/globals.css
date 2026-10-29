@@ -117,6 +117,10 @@
     background-size: 3px 3px, 7px 7px;
     background-position: 0 0, 2px 3px;
   }
+  /* Karuselin ikinci zemini: lacivert tahta */
+  .tahta.lacivert {
+    background-color: #1c2d4f;
+  }
 }
 
 /* Oyunlar: yanlış bırakılan kart sallanır */

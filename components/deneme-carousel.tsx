@@ -19,41 +19,30 @@ const INTERVAL = 6000;
 export function DenemeCarousel({ exams }: { exams: CarouselExam[] }) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
   const touchX = useRef<number | null>(null);
   const n = exams.length;
 
   const go = useCallback((d: number) => setI((x) => (x + d + n) % n), [n]);
 
+  // Otomatik geçiş; elle değiştirince sayaç baştan başlar (i bağımlılığı)
   useEffect(() => {
-    const m = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const set = () => setReduced(m.matches);
-    set();
-    m.addEventListener("change", set);
-    return () => m.removeEventListener("change", set);
-  }, []);
-
-  useEffect(() => {
-    if (n < 2 || paused || reduced) return;
-    const t = setInterval(() => go(1), INTERVAL);
-    return () => clearInterval(t);
-  }, [n, paused, reduced, go]);
+    if (n < 2 || paused) return;
+    const t = setTimeout(() => go(1), INTERVAL);
+    return () => clearTimeout(t);
+  }, [n, paused, go, i]);
 
   const e = exams.at(i) ?? exams.at(0)!;
 
   return (
     <div
-      className="tahta flex min-w-0 flex-[1_1_400px] flex-col gap-5 rounded-[10px] p-7 text-[#f2f5f1] shadow-[0_1px_0_#083b22,0_18px_40px_rgb(11_79_46/0.18)] sm:p-9"
+      className={`tahta ${i % 2 ? "lacivert" : ""} flex min-w-0 flex-[1_1_400px] flex-col gap-5 rounded-[10px] p-7 text-[#f2f5f1] shadow-[0_1px_0_#083b22,0_18px_40px_rgb(11_79_46/0.18)] sm:p-9 transition-colors duration-500`}
       role="region"
       aria-roledescription="carousel"
       aria-label="Ücretsiz denemeler"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
       onTouchStart={(ev) => {
         touchX.current = ev.touches[0]?.clientX ?? null;
-        setPaused(true);
       }}
       onTouchEnd={(ev) => {
         const x0 = touchX.current;
