@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 import type { Database } from "@/lib/database.types";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
@@ -17,6 +17,7 @@ export type Product = Pick<
 export async function getActiveProducts(): Promise<Product[]> {
   "use cache";
   cacheLife("hours");
+  cacheTag("products");
 
   const supabase = createClient<Database>(
     getSupabaseUrl(),

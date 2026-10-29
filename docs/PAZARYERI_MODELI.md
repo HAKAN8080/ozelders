@@ -34,7 +34,7 @@
 ## Açık konular (modeli etkiler)
 1. **Bonuslar** (yenileme, net artışı, referans) ve **geç iptal %50**: pazaryerinde öğretmene yalnız kalem payı gider. Bonusu kendi cebimizden ödersek yine "biz öğretmene ödüyoruz" durumuna düşeriz. Öneri: bonuslar yerine kademe yükseltme (sonraki paketlerde daha yüksek `subMerchantPrice`); geç iptalde kalemin %50'si iade + kalan onay — iyzico kısmi kalem iadesini destekliyor mu, sorulacak.
 2. **Öğretmen değişikliği:** kalemin alt üyesi ödeme anında sabitlenir. Değişiklikte eski öğretmenin onaylanmamış kalemleri iade edilip yeni öğretmenle yeniden tahsil mi edilecek (kayıtlı kart gerekir), yoksa iyzico kalem alt üyesini güncellemeye izin veriyor mu? → iyzico'ya sorulacak.
-3. **Bekletme süresi:** 32 derslik SEZON paketi ~4 ay sürer. iyzico koruma havuzunda onaysız kalem en fazla ne kadar bekleyebilir? → sorulacak. Gerekirse uzun paketler aylık taksit yerine "aylık tahsilat" (kayıtlı kart) ile bölünür. (Taksit yok kararı korunur.)
+3. **Bekletme süresi:** (29 Ekim 2026: SEZON paketi kaldırıldı; en uzun paket 12 ders / 8 hafta.) Eski not: 32 derslik SEZON paketi ~4 ay sürerdi. iyzico koruma havuzunda onaysız kalem en fazla ne kadar bekleyebilir? → sorulacak. Gerekirse uzun paketler aylık taksit yerine "aylık tahsilat" (kayıtlı kart) ile bölünür. (Taksit yok kararı korunur.)
 4. Veliye fatura: yalnız hizmet bedeli mi, tüm tutar mı (öğretmen adına)? KDV oranı? → YMM.
 5. İşçi sayılma riski: öğretmen müsaitliğini kendisi girer, dersi kabul/ret hakkı vardır, "atama" yerine "öneri + öğretmen onayı".
 
@@ -50,3 +50,7 @@
 - Ters ibraz (onaylanmış ders) asıl risk: ders kaydı (90 gün), giriş-çıkış kaydı ve rapor delil; kaybedilirse öğretmenin sonraki kalemlerinden mahsup (sözleşme maddesi).
 - PayTR'ye sorulacaklar: kalem bazında aktarımı biz mi tetikliyoruz; onaysız kalemin azami bekleme süresi; kalem bazında tam/kısmi iade; ters ibrazda kimden düşülür ve mahsup; bireysel alt mağaza; öğretmen değişikliğinde kalem aktarımı. İlk iki soru olumsuzsa iyzico.
 - Marka sözü: "Prosedürü biz hallederiz, sen derse odaklan." Öğretmene: üyelik/giriş ücreti yok, tahsilat ve iade bizde, "biz de öğretmeniz". Veliye: kolay iade, numara paylaşılmaz, ilk öğretmen değişikliği ücretsiz.
+
+
+## Fiyatlar (29 Ekim 2026)
+Başlangıç 4 ders 4.000 TL (1.000/ders) · Standart 8 ders 7.200 TL (900/ders) · Yoğun 12 ders 10.200 TL (850/ders). Ek ay 4 ders 4.000 / 8 ders 7.200 TL. SEZON pasif. Öğretmen tabanı 650 TL korunuyor; en düşük katkı Yoğun'da ders başı ~100 TL.
