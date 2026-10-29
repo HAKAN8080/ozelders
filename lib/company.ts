@@ -12,8 +12,8 @@ export const COMPANY = {
   taxOffice: "Beşiktaş" as string | null,
   taxNo: "8430902023" as string | null,
   kep: null as string | null, // KEP adresi (varsa)
-  supportEmail: "destek@thorius.com.tr",
-  kvkkEmail: "kvkk@thorius.com.tr",
+  supportEmail: "info@thorius.com.tr",
+  kvkkEmail: "hukuk@thorius.com.tr",
   phone: "+90 543 132 35 03" as string | null,
   supportHours: "Hafta içi 09:00–18:00",
 };
