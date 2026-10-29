@@ -9,7 +9,7 @@ import { GRUPLAR, konuBasligi } from "@/lib/games/konular";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Oyun ilerlemem — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Oyun ilerlemem — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const tarih = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", timeZone: "Europe/Istanbul" });
 

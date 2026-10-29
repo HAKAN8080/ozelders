@@ -14,7 +14,7 @@ import { createClient } from "@/lib/supabase/server";
 export const instant = false;
 
 export const metadata: Metadata = {
-  title: "Deneme sonucu — ÖzelDersBul",
+  title: "Deneme sonucu — Özel Ders · Thorius",
   robots: { index: false, follow: false }, // sonuç sayfaları kişiseldir, arama motorlarına kapalı
 };
 

@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/server";
 import { branchName } from "@/lib/teacher";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Öğretmen seç — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Öğretmen seç — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

@@ -5,7 +5,7 @@ import { H2, LegalPage, P, Table, UL } from "@/components/legal-page";
 import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
-  title: "İptal ve iade — ÖzelDersBul",
+  title: "İptal ve iade — Özel Ders · Thorius",
   description: "Ders iptali, yapılmayan dersin iadesi, ilk ders güvencesi, öğretmen değişikliği ve cayma hakkı.",
 };
 

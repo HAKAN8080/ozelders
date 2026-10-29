@@ -4,7 +4,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { UlkelerOyunu } from "@/app/oyunlar/dunya-ulkeleri/ulkeler-oyunu";
 
 export const metadata: Metadata = {
-  title: "Dünya'da Ülkeler Harita Oyunu — ÖzelDersBul",
+  title: "Dünya'da Ülkeler Harita Oyunu — Özel Ders · Thorius",
   description: "196 ülkeyi dünya haritasında bul. Kıta kıta oyna, harita seçtiğin kıtaya yakınlaşır. Ücretsiz coğrafya oyunu.",
 };
 

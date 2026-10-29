@@ -4,12 +4,12 @@ import "server-only";
  * İşlem e-postaları (Resend HTTP API). Anahtar yoksa gönderim atlanır ve kayda düşer;
  * e-posta hiçbir zaman asıl işlemi bozmaz.
  *
- * Ortam değişkenleri: RESEND_API_KEY, EMAIL_FROM (ör. "ÖzelDersBul <bildirim@ozelders.thorius.com.tr>"),
+ * Ortam değişkenleri: RESEND_API_KEY, EMAIL_FROM (ör. "Özel Ders · Thorius <bildirim@ozelders.thorius.com.tr>"),
  * ADMIN_NOTIFY_EMAIL (yeni başvuru vb. için, virgülle birden fazla), NEXT_PUBLIC_SITE_URL.
  */
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ozelders.thorius.com.tr";
-const FROM = process.env.EMAIL_FROM ?? "ÖzelDersBul <bildirim@ozelders.thorius.com.tr>";
+const FROM = process.env.EMAIL_FROM ?? "Özel Ders · Thorius <bildirim@ozelders.thorius.com.tr>";
 
 export type Mail = { to: string | string[]; subject: string; title: string; body: string[]; cta?: { label: string; href: string } };
 
@@ -22,14 +22,14 @@ export function renderMail(m: Mail): { html: string; text: string } {
   const html = `<!doctype html><html lang="tr"><body style="margin:0;background:#f6f8f7;font-family:Arial,Helvetica,sans-serif;color:#111">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f8f7;padding:24px 0"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;border:1px solid #dfe6e2;border-radius:10px">
-<tr><td style="padding:22px 28px;border-bottom:3px solid #0b4f2e;font-family:Georgia,serif;font-size:20px;font-weight:bold">ÖzelDersBul <span style="font-family:Arial,sans-serif;font-size:12px;font-weight:normal;color:#6b7570">bir Thorius girişimi</span></td></tr>
+<tr><td style="padding:22px 28px;border-bottom:3px solid #0b4f2e;font-family:Georgia,serif;font-size:20px;font-weight:bold">Özel Ders <span style="font-family:Arial,sans-serif;font-size:13px;font-weight:normal;color:#6b7570">· Thorius</span></td></tr>
 <tr><td style="padding:26px 28px 8px"><h1 style="margin:0 0 14px;font-family:Georgia,serif;font-size:22px;line-height:1.3">${esc(m.title)}</h1>
 ${m.body.map((p) => `<p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#2c3531">${esc(p)}</p>`).join("")}
 ${href ? `<p style="margin:20px 0 8px"><a href="${esc(href)}" style="display:inline-block;background:#0b4f2e;color:#fff;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:6px">${esc(m.cta!.label)}</a></p>` : ""}
 </td></tr>
-<tr><td style="padding:18px 28px 24px;font-size:12px;line-height:1.5;color:#6b7570">Bu e-postayı ÖzelDersBul hesabındaki bir işlem nedeniyle aldın. Prosedürü biz hallederiz, sen derse odaklan.<br>${esc(SITE.replace(/^https?:\/\//, ""))}</td></tr>
+<tr><td style="padding:18px 28px 24px;font-size:12px;line-height:1.5;color:#6b7570">Bu e-postayı Özel Ders · Thorius hesabındaki bir işlem nedeniyle aldın. Prosedürü biz hallederiz, sen derse odaklan.<br>${esc(SITE.replace(/^https?:\/\//, ""))}</td></tr>
 </table></td></tr></table></body></html>`;
-  const text = [m.title, "", ...m.body, ...(href ? ["", `${m.cta!.label}: ${href}`] : []), "", "ÖzelDersBul · bir Thorius girişimi"].join("\n");
+  const text = [m.title, "", ...m.body, ...(href ? ["", `${m.cta!.label}: ${href}`] : []), "", "Özel Ders · Thorius · Thorius Eğitim ve Danışmanlık Ltd. Şti."].join("\n");
   return { html, text };
 }
 
@@ -115,7 +115,7 @@ export const teacherMail = {
   }),
   approved: (to: string): Mail => ({
     to,
-    subject: "ÖzelDersBul öğretmenisin",
+    subject: "Artık Özel Ders · Thorius öğretmenisin",
     title: "Aramıza hoş geldin.",
     body: [
       "Başvurun onaylandı. İlk 3 dersin kıdemli bir öğretmenle birlikte incelenecek; amaç not vermek değil, ilk haftalarını kolaylaştırmak.",

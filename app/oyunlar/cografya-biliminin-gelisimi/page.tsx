@@ -5,7 +5,7 @@ import { KonuOyunlari } from "@/components/oyun/konu-oyunlari";
 import { SEKMELER } from "@/lib/games/icerik/cografya-biliminin-gelisimi";
 
 export const metadata: Metadata = {
-  title: "Coğrafya Biliminin Gelişimi Oyunları — ÖzelDersBul",
+  title: "Coğrafya Biliminin Gelişimi Oyunları — Özel Ders · Thorius",
   description: "9. sınıf coğrafya: çağlar, zaman şeridi ve bilim insanları eşleştirme oyunları.",
 };
 

@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BRANCH_TEST_PASS, branchName, FUNNEL, stageIndex } from "@/lib/teacher";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Öğretmen başvurum — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Öğretmen başvurum — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const PAGE = "/ogretmen-ol/basvuru";
 const eyebrow = "text-sm font-semibold uppercase tracking-[0.08em]";
@@ -205,7 +205,7 @@ async function Body({ userId, role, justSent }: { userId: string; role: string |
       {app.stage === "golge" || app.stage === "aktif" ? (
         <section className="tahta flex flex-col gap-3 rounded-[10px] p-7 text-[#f2f5f1] sm:p-9">
           <span className="font-hand text-[30px] text-white">aramıza hoş geldin ✓</span>
-          <h2 className="m-0 font-serif text-3xl font-bold">ÖzelDersBul öğretmenisin.</h2>
+          <h2 className="m-0 font-serif text-3xl font-bold">Artık bizim öğretmenimizsin.</h2>
           <p className="m-0 max-w-[40em] text-[17px] leading-relaxed text-[#dce9e0]">
             {app.stage === "golge"
               ? "İlk 3 dersin kıdemli bir öğretmenle birlikte incelenecek; amaç not vermek değil, ilk haftalarını kolaylaştırmak. Takvimini ve öğrenci önerilerini öğretmen panelinden yöneteceksin."

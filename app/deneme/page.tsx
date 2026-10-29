@@ -7,7 +7,7 @@ import { ExamFilter } from "@/app/deneme/exam-filter";
 import { getPublishedExams } from "@/lib/exams";
 
 export const metadata: Metadata = {
-  title: "Ücretsiz Denemeler — ÖzelDersBul",
+  title: "Ücretsiz Denemeler — Özel Ders · Thorius",
   description: "Ücretsiz LGS, YKS (TYT-AYT) ve okul denemeleri: dijital optik form, anında net hesabı ve konu raporu.",
 };
 

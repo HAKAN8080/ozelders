@@ -5,7 +5,7 @@ import { H2, LegalPage, P, UL } from "@/components/legal-page";
 import { COMPANY, companyValue } from "@/lib/company";
 
 export const metadata: Metadata = {
-  title: "Mesafeli satış sözleşmesi ve ön bilgilendirme — ÖzelDersBul",
+  title: "Mesafeli satış sözleşmesi ve ön bilgilendirme — Özel Ders · Thorius",
   description: "Çevrim içi birebir ders paketlerinin satışına ilişkin ön bilgilendirme formu ve mesafeli hizmet sözleşmesi.",
 };
 
@@ -24,7 +24,7 @@ export default function DistanceSalesPage() {
             {COMPANY.phone ? ` · Telefon: ${COMPANY.phone}` : ""}
           </>,
           <>
-            <strong>Hizmet:</strong> ÖzelDersBul platformunda, platformun seçip doğruladığı bağımsız öğretmenlerce verilen çevrim içi, canlı ve
+            <strong>Hizmet:</strong> Özel Ders · Thorius platformunda, platformun seçip doğruladığı bağımsız öğretmenlerce verilen çevrim içi, canlı ve
             birebir ders paketi. Bir ders 50 dakikadır; dersler kayıt altına alınır.
           </>,
           <>
@@ -32,7 +32,7 @@ export default function DistanceSalesPage() {
             yenileme yoktur. Ek ücret alınmaz.
           </>,
           <>
-            <strong>Ödeme:</strong> lisanslı ödeme kuruluşu aracılığıyla kredi ya da banka kartıyla. Kart bilgileri ÖzelDersBul tarafından
+            <strong>Ödeme:</strong> lisanslı ödeme kuruluşu aracılığıyla kredi ya da banka kartıyla. Kart bilgileri Platform tarafından
             görülmez ve saklanmaz. Ödeme ders ders güvenli hesapta bekler; dersin payı öğretmene ders yapıldıktan ve 72 saatlik itiraz süresinden
             sonra aktarılır.
           </>,
@@ -56,16 +56,16 @@ export default function DistanceSalesPage() {
 
       <H2>B. Mesafeli hizmet sözleşmesi</H2>
       <P>
-        <strong>Madde 1 · Taraflar.</strong> Bu sözleşme, {COMPANY.legalName} (“ÖzelDersBul”) ile platformda ders paketi satın alan veli ya da
+        <strong>Madde 1 · Taraflar.</strong> Bu sözleşme, {COMPANY.legalName} (“Platform”) ile platformda ders paketi satın alan veli ya da
         reşit öğrenci (“Alıcı”) arasında, satın alma anında elektronik ortamda kurulur.
       </P>
       <P>
         <strong>Madde 2 · Konu.</strong> Alıcının seçtiği ders paketinin, platform aracılığıyla bağımsız bir öğretmen tarafından çevrim içi olarak
-        verilmesi ve ÖzelDersBul’un ölçme, eşleştirme, planlama, tahsilat ve iade hizmetlerini yürütmesidir. Paket bir ders ve bir öğretmen
+        verilmesi ve Platform’un ölçme, eşleştirme, planlama, tahsilat ve iade hizmetlerini yürütmesidir. Paket bir ders ve bir öğretmen
         içindir; öğretmen değişikliği iptal ve iade metnindeki kurallarla yapılır.
       </P>
       <P>
-        <strong>Madde 3 · Tarafların yükümlülükleri.</strong> ÖzelDersBul, derslerin planlanmasını, öğretmenin uygunluğunu (branş testi, demo ders,
+        <strong>Madde 3 · Tarafların yükümlülükleri.</strong> Platform, derslerin planlanmasını, öğretmenin uygunluğunu (branş testi, demo ders,
         belge doğrulama) ve ödeme güvenliğini sağlar. Alıcı, derslere zamanında katılmayı, iptalleri iptal kurallarına uygun yapmayı ve öğretmenle
         platform dışında ücretli ders anlaşması yapmamayı kabul eder.
       </P>

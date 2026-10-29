@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/cografyanin-konusu-ve-bolumleri";
 
 export const metadata: Metadata = {
-  title: "Coğrafyanın Konusu ve Bölümleri Oyunları — ÖzelDersBul",
+  title: "Coğrafyanın Konusu ve Bölümleri Oyunları — Özel Ders · Thorius",
   description:
     "9. sınıf coğrafya: küreler, fiziki ve beşerî coğrafyanın alt dalları, kavramlar. Kategorilendirme ve eşleştirme oyunları, ücretsiz.",
 };

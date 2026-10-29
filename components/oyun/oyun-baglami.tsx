@@ -97,10 +97,10 @@ function SonucPaylas({ oran }: { oran: number }) {
   const { konuBasligi, dersAdi } = useOyunBaglami();
   const paylas = async () => {
     const url = window.location.href.split("#")[0];
-    const metin = `${dersAdi ? `${dersAdi} · ` : ""}${konuBasligi ?? "ÖzelDersBul oyunu"} oyununda %${oran} başarı yaptım. Sen de dene:`;
+    const metin = `${dersAdi ? `${dersAdi} · ` : ""}${konuBasligi ?? "Özel Ders · Thorius oyunu"} oyununda %${oran} başarı yaptım. Sen de dene:`;
     try {
       if (navigator.share) {
-        await navigator.share({ title: konuBasligi ?? "ÖzelDersBul", text: metin, url });
+        await navigator.share({ title: konuBasligi ?? "Özel Ders · Thorius", text: metin, url });
         return;
       }
     } catch {

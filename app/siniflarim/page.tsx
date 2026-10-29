@@ -11,7 +11,7 @@ import { konuBasligi } from "@/lib/games/konular";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Sınıflarım — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Sınıflarım — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const tarih = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" });
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

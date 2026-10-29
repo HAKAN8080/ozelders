@@ -12,7 +12,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "Ücretsiz Eğitim Oyunları — ÖzelDersBul",
+  title: "Ücretsiz Eğitim Oyunları — Özel Ders · Thorius",
   description:
     "Harita, eşleştirme ve kategori oyunlarıyla konuları oynayarak pekiştir. Ücretsiz, kayıt gerekmez.",
 };

@@ -4,7 +4,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { UlkelerVeKitalarOyunu } from "@/app/oyunlar/ulkeler-ve-kitalar/oyun";
 
 export const metadata: Metadata = {
-  title: "Ülkeler ve Kıtaları Oyunu — ÖzelDersBul",
+  title: "Ülkeler ve Kıtaları Oyunu — Özel Ders · Thorius",
   description: "Ülkeleri kıtalarına yerleştir. Sürükle-bırak coğrafya oyunu, ücretsiz.",
 };
 

@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/demografik-donusum-ve-nufus-piramitleri";
 
 export const metadata: Metadata = {
-  title: "Demografik Dönüşüm Süreci ve Nüfus Piramitleri Oyunları — ÖzelDersBul",
+  title: "Demografik Dönüşüm Süreci ve Nüfus Piramitleri Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 4. ünite. Nüfus piramitlerinin okunması ve demografik dönüşüm modelinin beş aşaması. Ücretsiz oyunlar.",
 };
 

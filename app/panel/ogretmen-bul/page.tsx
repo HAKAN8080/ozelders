@@ -9,7 +9,7 @@ import { getSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Öğretmen bul — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Öğretmen bul — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

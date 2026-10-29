@@ -5,7 +5,7 @@ export function SiteFooter() {
     <footer className="bg-[#111111] text-[#d6dbd8]">
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-6 px-4 py-12 text-[15px] sm:px-6">
         <span className="font-serif text-xl font-bold text-white">
-          ÖzelDersBul{" "}
+          Özel Ders · Thorius{" "}
           <span className="font-sans text-sm font-normal text-[#a9b2ae]">· ozelders.thorius.com.tr</span>
         </span>
         <nav aria-label="Alt menü" className="flex flex-wrap gap-x-6 gap-y-2">
@@ -18,7 +18,9 @@ export function SiteFooter() {
           <Link href="/kvkk" className="hover:text-white">KVKK</Link>
           <Link href="/iletisim" className="hover:text-white">İletişim</Link>
         </nav>
-        <span>© Thorius Eğitim ve Danışmanlık</span>
+        <span className="w-full border-t border-white/10 pt-5 text-sm text-[#a9b2ae]">
+          <strong className="font-semibold text-[#d6dbd8]">Thorius Eğitim ve Danışmanlık Ltd. Şti.</strong> güvencesiyle
+        </span>
       </div>
     </footer>
   );

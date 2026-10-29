@@ -4,7 +4,7 @@ import { H2, LegalPage, P, Table, UL } from "@/components/legal-page";
 import { COMPANY, companyValue } from "@/lib/company";
 
 export const metadata: Metadata = {
-  title: "KVKK aydınlatma metni — ÖzelDersBul",
+  title: "KVKK aydınlatma metni — Özel Ders · Thorius",
   description: "Kişisel verilerin hangi amaçla, hangi hukuki sebeple işlendiği, kimlere aktarıldığı ve hakların.",
 };
 
@@ -16,7 +16,7 @@ export default function KvkkPage() {
     >
       <H2>1. Veri sorumlusu</H2>
       <P>
-        {COMPANY.legalName} (“ÖzelDersBul”, “biz”) · Adres: {companyValue(COMPANY.address)} · MERSİS: {companyValue(COMPANY.mersis)} ·
+        {COMPANY.legalName} (“Özel Ders · Thorius”, “biz”) · Adres: {companyValue(COMPANY.address)} · MERSİS: {companyValue(COMPANY.mersis)} ·
         E-posta: {COMPANY.kvkkEmail}
         {COMPANY.kep ? ` · KEP: ${COMPANY.kep}` : ""}
       </P>

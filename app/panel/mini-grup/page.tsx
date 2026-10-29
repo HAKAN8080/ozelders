@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/server";
 import { branchName } from "@/lib/teacher";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Mini grup — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Mini grup — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const tl = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
 

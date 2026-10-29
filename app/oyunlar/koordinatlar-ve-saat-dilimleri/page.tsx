@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/koordinatlar-ve-saat";
 
 export const metadata: Metadata = {
-  title: "Koordinatlar ve Saat Dilimleri Oyunları — ÖzelDersBul",
+  title: "Koordinatlar ve Saat Dilimleri Oyunları — Özel Ders · Thorius",
   description: "9. sınıf coğrafya: enlem, boylam, yerel saat, ulusal saat, saat dilimi hesapları, tarih değiştirme çizgisi. Ücretsiz oyunlar.",
 };
 

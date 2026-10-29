@@ -236,7 +236,7 @@ export function AgreementForm() {
           <input type="checkbox" name="submerchant_consent" required className={check} />
           <span>
             Ödemelerimin lisanslı ödeme kuruluşu üzerinden alınması için adıma <strong>bireysel alt hesap</strong> açılmasını
-            kabul ediyorum. Kimlik numaram ve IBAN&apos;ım doğrudan ödeme kuruluşuna iletilir, ÖzelDersBul&apos;da saklanmaz.
+            kabul ediyorum. Kimlik numaram ve IBAN&apos;ım doğrudan ödeme kuruluşuna iletilir, bizde saklanmaz.
           </span>
         </label>
         <label className="flex items-start gap-3">

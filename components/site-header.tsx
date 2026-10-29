@@ -22,10 +22,10 @@ function Logo() {
         ∑
       </span>
       <span className="flex flex-col leading-tight">
-        <span className="font-serif text-[22px] font-bold">ÖzelDersBul</span>
-        <span className="text-xs font-medium tracking-wide text-muted">
-          bir Thorius girişimi
+        <span className="font-serif text-[22px] font-bold">
+          Özel Ders <span className="text-primary">· Thorius</span>
         </span>
+        <span className="text-xs font-medium tracking-wide text-muted">3.–12. sınıf · tüm dersler</span>
       </span>
     </Link>
   );

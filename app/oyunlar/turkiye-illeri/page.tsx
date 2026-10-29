@@ -4,7 +4,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { IllerOyunu } from "@/app/oyunlar/turkiye-illeri/iller-oyunu";
 
 export const metadata: Metadata = {
-  title: "Türkiye'nin İlleri Harita Oyunu — ÖzelDersBul",
+  title: "Türkiye'nin İlleri Harita Oyunu — Özel Ders · Thorius",
   description: "81 ili haritada bul: ad ya da plaka koduyla, tüm Türkiye ya da bölge bölge. Ücretsiz coğrafya oyunu.",
 };
 

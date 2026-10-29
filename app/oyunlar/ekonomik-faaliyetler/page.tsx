@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/ekonomik-faaliyetler";
 
 export const metadata: Metadata = {
-  title: "Ekonomik Faaliyetleri Etkileyen Coğrafi Faktörler Oyunları — ÖzelDersBul",
+  title: "Ekonomik Faaliyetleri Etkileyen Coğrafi Faktörler Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 5. ünite. Ekonomik faaliyetleri etkileyen doğal faktörler (konum, iklim, topoğrafya, su, toprak, bitki örtüsü) ve beşerî faktörler (nüfus, iş gücü, sermaye, teknoloji, devlet, ulaşım). Ücretsiz oyunlar.",
 };
 

@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/nufusun-tarihsel-degisimi";
 
 export const metadata: Metadata = {
-  title: "Nüfusun Tarihsel Değişimi ve Geleceği Oyunları — ÖzelDersBul",
+  title: "Nüfusun Tarihsel Değişimi ve Geleceği Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 4. ünite. Dünya nüfusunun üç büyük sıçrama dönemi, 1950 sonrası hızlı nüfuslanma ve nüfusun geleceğine dair tahminler. Ücretsiz oyunlar.",
 };
 

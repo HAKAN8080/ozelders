@@ -4,7 +4,7 @@
  */
 export const COMPANY = {
   legalName: "Thorius Eğitim ve Danışmanlık Limited Şirketi",
-  brand: "ÖzelDersBul",
+  brand: "Özel Ders · Thorius",
   site: "ozelders.thorius.com.tr",
   address: "Mecidiye Mah. Sandalcı Mecit Sk. No: 9 İç Kapı No: 1, Beşiktaş / İstanbul" as string | null,
   mersis: "0843090202300001" as string | null,

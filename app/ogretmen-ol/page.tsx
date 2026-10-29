@@ -8,7 +8,7 @@ import { formatTL, getActiveProducts, type Product } from "@/lib/products";
 import { BANDS, FUNNEL, TEACHER_BRANCHES, TEACHER_FLOOR, teacherShare } from "@/lib/teacher";
 
 export const metadata: Metadata = {
-  title: "Öğretmen ol — ÖzelDersBul",
+  title: "Öğretmen ol — Özel Ders · Thorius",
   description:
     "3.–12. sınıf, tüm okul dersleri. Üyelik ve giriş ücreti yok; öğrenciyi, tahsilatı ve iadeyi biz üstleniriz. Sen derse odaklan.",
 };
@@ -97,7 +97,7 @@ function Promises() {
     <section className="bg-background">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4 py-20 sm:px-6">
         <div className="flex max-w-[44em] flex-col gap-3">
-          <p className={`${eyebrow} m-0 text-primary`}>Neden ÖzelDersBul</p>
+          <p className={`${eyebrow} m-0 text-primary`}>Neden Özel Ders · Thorius</p>
           <h2 className="m-0 font-serif text-[34px] leading-[1.15] font-bold sm:text-[42px]">
             Bu platformu, öğretmen emeğinin karşılığını alsın diye kurduk.
           </h2>

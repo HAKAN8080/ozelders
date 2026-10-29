@@ -304,33 +304,14 @@ function Teachers() {
           </Link>
           <figure className="m-0 mt-4 flex flex-col gap-2">
             <Image
-              src="https://images.unsplash.com/photo-1758685848061-3080d0780285?fm=jpg&q=70&w=1200&auto=format&fit=crop"
-              alt="Tahtadaki denklemlere bakan bir öğretmen"
-              width={1200}
-              height={800}
+              src="/img/ogretmen-tahta.jpg"
+              alt="Beyaz tahtada denklem çözen bir öğrenci ve yanında ona eşlik eden öğretmen, arkadan görünüm"
+              width={1536}
+              height={1024}
               sizes="(min-width: 1024px) 480px, 100vw"
-              className="aspect-[4/3] w-full rounded-[10px] border border-border object-cover shadow-[0_18px_40px_rgb(11_79_46/0.14)]"
+              className="aspect-[3/2] w-full rounded-[10px] border border-border object-cover shadow-[0_18px_40px_rgb(11_79_46/0.14)]"
             />
-            <figcaption className="text-xs text-muted">
-              Temsili görsel · Fotoğraf:{" "}
-              <a
-                href="https://unsplash.com/@silverkblack?utm_source=ozelders&utm_medium=referral"
-                className="underline-offset-2 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Vitaly Gariev
-              </a>{" "}
-              /{" "}
-              <a
-                href="https://unsplash.com/photos/woman-looking-at-a-blackboard-with-complex-math-equations-2N518py2mrQ?utm_source=ozelders&utm_medium=referral"
-                className="underline-offset-2 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Unsplash
-              </a>
-            </figcaption>
+            <figcaption className="text-xs text-muted">Temsili görsel</figcaption>
           </figure>
         </div>
         <ol className="m-0 grid min-w-0 flex-[1_1_560px] list-none grid-cols-[repeat(auto-fit,minmax(240px,1fr))] border-t border-border p-0">

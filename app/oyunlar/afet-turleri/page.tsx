@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/afet-turleri";
 
 export const metadata: Metadata = {
-  title: "Afet Türleri Oyunları — ÖzelDersBul",
+  title: "Afet Türleri Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 6. ünite. Afetlerin oluşum nedenine göre sınıflandırılması, dünyada ve Türkiye'de afetler. Ücretsiz oyunlar.",
 };
 

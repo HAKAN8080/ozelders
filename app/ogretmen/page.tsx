@@ -13,7 +13,7 @@ import { goalLabel, prefSummary, type Pref } from "@/lib/requests";
 import { bandInfo, BANDS, branchName, TEACHER_FLOOR } from "@/lib/teacher";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Öğretmen paneli — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Öğretmen paneli — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 const eyebrow = "text-sm font-semibold uppercase tracking-[0.08em]";
 const card = "flex flex-col gap-5 rounded-[10px] border border-border bg-background p-6 sm:p-7";

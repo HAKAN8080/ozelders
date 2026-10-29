@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/sozluk";
 
 export const metadata: Metadata = {
-  title: "Sözlük Oyunları — ÖzelDersBul",
+  title: "Sözlük Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, kitap sonu sözlüğü. Kitap boyunca geçen kavramların sözlükteki tanımları. Ücretsiz oyunlar.",
 };
 

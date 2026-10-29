@@ -6,8 +6,8 @@ import { COMPANY, companyValue, LEGAL_VERSION } from "@/lib/company";
 import { BANDS, TEACHER_FLOOR } from "@/lib/teacher";
 
 export const metadata: Metadata = {
-  title: "Öğretmen hizmet sözleşmesi — ÖzelDersBul",
-  description: "ÖzelDersBul ile bağımsız öğretmen arasındaki hizmet sözleşmesi: komisyon, ödeme, iptal, çocuk güvenliği.",
+  title: "Öğretmen hizmet sözleşmesi — Özel Ders · Thorius",
+  description: "Özel Ders · Thorius ile bağımsız öğretmen arasındaki hizmet sözleşmesi: komisyon, ödeme, iptal, çocuk güvenliği.",
 };
 
 export default function TeacherAgreementPage() {
@@ -18,7 +18,7 @@ export default function TeacherAgreementPage() {
     >
       <H2>1. Taraflar</H2>
       <P>
-        {COMPANY.legalName} (“ÖzelDersBul”), {companyValue(COMPANY.address)} ile başvurusu onaylanan öğretmen (“Öğretmen”) arasında, sözleşme
+        {COMPANY.legalName} (“Platform”), {companyValue(COMPANY.address)} ile başvurusu onaylanan öğretmen (“Öğretmen”) arasında, sözleşme
         adımındaki elektronik onayla kurulur.
       </P>
 
@@ -28,11 +28,11 @@ export default function TeacherAgreementPage() {
           "Öğretmen, platformda bağımsız hizmet sağlayıcı olarak ders verir; taraflar arasında işçi–işveren, ortaklık ya da temsil ilişkisi yoktur.",
           "Öğretmen ders saatlerini kendisi belirler ve önerilen öğrenciyi kabul ya da reddetme hakkına sahiptir. Önerinin reddedilmesi karnesini etkilemez.",
           "Öğretmen ders yöntemini ve materyalini kendisi seçer; platformun ölçme raporlarını dersin hazırlığında kullanır.",
-          "Gelirinin vergisel yükümlülükleri Öğretmen’e aittir. Mevzuat gereği yapılması zorunlu kesintiler ödeme kuruluşu ya da ÖzelDersBul tarafından yapılır.",
+          "Gelirinin vergisel yükümlülükleri Öğretmen’e aittir. Mevzuat gereği yapılması zorunlu kesintiler ödeme kuruluşu ya da Platform tarafından yapılır.",
         ]}
       />
 
-      <H2>3. ÖzelDersBul’un yükümlülükleri</H2>
+      <H2>3. Platform’un yükümlülükleri</H2>
       <UL
         items={[
           "Öğrenciyi ölçmek (deneme ve konu raporu) ve Öğretmen’in branş ve kademesine uygun öğrenci önermek.",
@@ -86,7 +86,7 @@ export default function TeacherAgreementPage() {
       <UL
         items={[
           "Sözleşme belirsiz sürelidir. Taraflar 15 gün önceden bildirimle feshedebilir; planlanmış derslerin akıbeti birlikte belirlenir.",
-          "Doğrulanmış şikayet, adli sicilin yenilenmemesi, platform dışına öğrenci çekme ya da çocuk güvenliği ihlalinde ÖzelDersBul sözleşmeyi bildirimsiz feshedebilir.",
+          "Doğrulanmış şikayet, adli sicilin yenilenmemesi, platform dışına öğrenci çekme ya da çocuk güvenliği ihlalinde Platform sözleşmeyi bildirimsiz feshedebilir.",
           "Fesihte, yapılmış ve itiraz süresi dolmuş derslerin payı ödenir.",
         ]}
       />

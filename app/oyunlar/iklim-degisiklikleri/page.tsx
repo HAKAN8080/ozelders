@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/iklim-degisiklikleri";
 
 export const metadata: Metadata = {
-  title: "İklim Sisteminde Yaşanan Değişiklikler Oyunları — ÖzelDersBul",
+  title: "İklim Sisteminde Yaşanan Değişiklikler Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 3. ünite. Küresel iklim değişikliğinin doğal ve beşerî nedenleri, gözlenen etkileri ve geleceğe yönelik öngörüler. Ücretsiz oyunlar.",
 };
 

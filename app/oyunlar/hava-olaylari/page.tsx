@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/hava-olaylari";
 
 export const metadata: Metadata = {
-  title: "Hava Olayları Oyunları — ÖzelDersBul",
+  title: "Hava Olayları Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 3. ünite. Hava olayları, ölçüm araçları, aşırı hava olayları, hava tahmini ve halk meteorolojisi. Ücretsiz oyunlar.",
 };
 

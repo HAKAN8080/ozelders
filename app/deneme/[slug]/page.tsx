@@ -10,8 +10,8 @@ export const instant = false;
 export async function generateMetadata({ params }: PageProps<"/deneme/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const exam = await getPublishedExam(slug).catch(() => null);
-  if (exam?.purpose === "brans_testi") return { title: `${exam.title} — ÖzelDersBul`, robots: { index: false, follow: false } };
-  return { title: exam ? `${exam.title} — Ücretsiz deneme · ÖzelDersBul` : "Deneme — ÖzelDersBul" };
+  if (exam?.purpose === "brans_testi") return { title: `${exam.title} — Özel Ders · Thorius`, robots: { index: false, follow: false } };
+  return { title: exam ? `${exam.title} — Ücretsiz deneme · Özel Ders · Thorius` : "Deneme — Özel Ders · Thorius" };
 }
 
 export default async function ExamPage({ params }: PageProps<"/deneme/[slug]">) {

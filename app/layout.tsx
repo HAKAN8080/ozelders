@@ -18,7 +18,7 @@ import "@fontsource/caveat/latin-ext-700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ÖzelDersBul — 3.–12. sınıf özel ders: okul dersleri, LGS ve YKS",
+  title: "Özel Ders · Thorius — 3.–12. sınıf özel ders: okul dersleri, LGS ve YKS",
   description:
     "3.–12. sınıf: konuları ücretsiz oyunlarla pekiştir, ücretsiz denemelerle kendini test et, eksiklerin için seçilmiş bir öğretmenle birebir çalış. Okul dersleri, LGS ve YKS.",
 };

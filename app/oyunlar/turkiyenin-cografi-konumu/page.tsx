@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/turkiyenin-konumu";
 
 export const metadata: Metadata = {
-  title: "Türkiye'nin Coğrafi Konumu Oyunları — ÖzelDersBul",
+  title: "Türkiye'nin Coğrafi Konumu Oyunları — Özel Ders · Thorius",
   description: "9. sınıf coğrafya: Türkiye'nin mutlak ve göreceli konumu, kara ve deniz komşuları, Mavi Vatan, Gök Vatan. Ücretsiz oyunlar.",
 };
 

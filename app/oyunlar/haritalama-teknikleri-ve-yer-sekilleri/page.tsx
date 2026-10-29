@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/haritalama-ve-yer-sekilleri";
 
 export const metadata: Metadata = {
-  title: "Haritalama Teknikleri ve Yer Şekilleri Oyunları — ÖzelDersBul",
+  title: "Haritalama Teknikleri ve Yer Şekilleri Oyunları — Özel Ders · Thorius",
   description: "9. sınıf coğrafya: korokromatik, koroplet, izoplet, noktalama, akış, kartogram haritalar; izohips; yer şekilleri. Ücretsiz oyunlar.",
 };
 

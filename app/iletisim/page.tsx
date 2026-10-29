@@ -5,8 +5,8 @@ import { H2, LegalPage, P, UL } from "@/components/legal-page";
 import { COMPANY, companyValue } from "@/lib/company";
 
 export const metadata: Metadata = {
-  title: "İletişim — ÖzelDersBul",
-  description: "ÖzelDersBul destek, KVKK başvurusu ve şirket bilgileri.",
+  title: "İletişim — Özel Ders · Thorius",
+  description: "Özel Ders · Thorius destek, KVKK başvurusu ve şirket bilgileri.",
 };
 
 export default function ContactPage() {

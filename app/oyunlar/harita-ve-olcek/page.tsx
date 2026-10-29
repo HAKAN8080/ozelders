@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/harita-ve-olcek";
 
 export const metadata: Metadata = {
-  title: "Harita ve Ölçek Oyunları — ÖzelDersBul",
+  title: "Harita ve Ölçek Oyunları — Özel Ders · Thorius",
   description: "9. sınıf coğrafya: harita, kroki, harita elemanları, projeksiyon türleri, büyük ve küçük ölçek, ölçek hesapları. Ücretsiz oyunlar.",
 };
 

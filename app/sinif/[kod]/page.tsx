@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
-export const metadata: Metadata = { title: "Sınıfa katıl — ÖzelDersBul", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Sınıfa katıl — Özel Ders · Thorius", robots: { index: false, follow: false } };
 
 export default async function SinifKatilPage(props: PageProps<"/sinif/[kod]">) {
   const { kod: ham } = await props.params;

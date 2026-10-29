@@ -5,7 +5,7 @@ import { OyunSayfasi } from "@/components/oyun/oyun-sayfasi";
 import { SEKMELER } from "@/lib/games/icerik/bolge-ve-bolge-sinirlari";
 
 export const metadata: Metadata = {
-  title: "Bölge ve Bölge Sınırı Oyunları — ÖzelDersBul",
+  title: "Bölge ve Bölge Sınırı Oyunları — Özel Ders · Thorius",
   description: "9. sınıf Coğrafya, 7. ünite. Bölge belirleme kriterleri, şekilsel ve işlevsel bölgeler, kriterlere göre bölge sınırları ve Avrupa Birliği örneğiyle bölge sınırlarındaki değişim. Ücretsiz oyunlar.",
 };
 
