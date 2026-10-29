@@ -5,15 +5,15 @@
 export const COMPANY = {
   legalName: "Thorius Eğitim ve Danışmanlık Limited Şirketi",
   brand: "ÖzelDersBul",
-  site: "ozeldersbul.com.tr",
+  site: "ozelders.thorius.com.tr",
   address: "Mecidiye Mah. Sandalcı Mecit Sk. No: 9 İç Kapı No: 1, Beşiktaş / İstanbul" as string | null,
   mersis: "0843090202300001" as string | null,
   tradeRegistry: "İstanbul Ticaret Sicili 1085795",
   taxOffice: "Beşiktaş" as string | null,
   taxNo: "8430902023" as string | null,
   kep: null as string | null, // KEP adresi (varsa)
-  supportEmail: "destek@ozeldersbul.com.tr",
-  kvkkEmail: "kvkk@ozeldersbul.com.tr",
+  supportEmail: "destek@thorius.com.tr",
+  kvkkEmail: "kvkk@thorius.com.tr",
   phone: "+90 543 132 35 03" as string | null,
   supportHours: "Hafta içi 09:00–18:00",
 };

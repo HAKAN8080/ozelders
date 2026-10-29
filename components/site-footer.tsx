@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-6 px-4 py-12 text-[15px] sm:px-6">
         <span className="font-serif text-xl font-bold text-white">
           ÖzelDersBul{" "}
-          <span className="font-sans text-sm font-normal text-[#a9b2ae]">· ozeldersbul.com.tr</span>
+          <span className="font-sans text-sm font-normal text-[#a9b2ae]">· ozelders.thorius.com.tr</span>
         </span>
         <nav aria-label="Alt menü" className="flex flex-wrap gap-x-6 gap-y-2">
           <Link href="/deneme" className="hover:text-white">Ücretsiz denemeler</Link>

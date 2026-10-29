@@ -4,12 +4,12 @@ import "server-only";
  * İşlem e-postaları (Resend HTTP API). Anahtar yoksa gönderim atlanır ve kayda düşer;
  * e-posta hiçbir zaman asıl işlemi bozmaz.
  *
- * Ortam değişkenleri: RESEND_API_KEY, EMAIL_FROM (ör. "ÖzelDersBul <bildirim@ozeldersbul.com.tr>"),
+ * Ortam değişkenleri: RESEND_API_KEY, EMAIL_FROM (ör. "ÖzelDersBul <bildirim@ozelders.thorius.com.tr>"),
  * ADMIN_NOTIFY_EMAIL (yeni başvuru vb. için, virgülle birden fazla), NEXT_PUBLIC_SITE_URL.
  */
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ozeldersbul.com.tr";
-const FROM = process.env.EMAIL_FROM ?? "ÖzelDersBul <bildirim@ozeldersbul.com.tr>";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ozelders.thorius.com.tr";
+const FROM = process.env.EMAIL_FROM ?? "ÖzelDersBul <bildirim@ozelders.thorius.com.tr>";
 
 export type Mail = { to: string | string[]; subject: string; title: string; body: string[]; cta?: { label: string; href: string } };
 
