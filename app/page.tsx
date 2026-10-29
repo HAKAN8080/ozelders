@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { DenemeCarousel, type CarouselExam } from "@/components/deneme-carousel";
 import { gradeLabel, kindInfo } from "@/lib/exam-kinds";
 import { getPublishedExams, totalQuestions } from "@/lib/exams";
+import { MG } from "@/lib/mini-grup";
 import { formatTL, getActiveProducts, type Product } from "@/lib/products";
 
 const eyebrow = "text-sm font-semibold uppercase tracking-[0.08em]";
@@ -206,6 +207,21 @@ async function PackageGrid() {
         {main.map((p) => (
           <PackageCard key={p.code} product={p} highlighted={p.code === featured} />
         ))}
+      </div>
+      <div className="tahta flex flex-wrap items-center justify-between gap-5 rounded-[10px] p-6 text-[#f2f5f1] sm:p-7">
+        <div className="flex min-w-0 flex-[1_1_420px] flex-col gap-1.5">
+          <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#cfe3d6]">Yeni · Mini grup</span>
+          <span className="font-serif text-[26px] leading-tight font-bold">
+            3–4 kişilik grupla birebirin yarı fiyatına: aylık {formatTL(MG.monthly)}
+          </span>
+          <span className="text-[15px] text-[#e3eee7]">
+            Aynı sınıf ve dersten {MG.minSize}–{MG.maxSize} öğrenci · haftada 2 ders · ders başı {formatTL(MG.pricePerLesson)}. Bekleme listesine yaz, uygun
+            grubu biz kuralım.
+          </span>
+        </div>
+        <Link href="/panel/mini-grup" className="rounded-md bg-white px-5 py-3.5 font-semibold text-primary hover:bg-primary-soft">
+          Bekleme listesine yaz →
+        </Link>
       </div>
       {extra.length > 0 && (
         <p className="m-0 text-[15px] text-muted">

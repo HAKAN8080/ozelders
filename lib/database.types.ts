@@ -547,6 +547,60 @@ export type Database = {
           },
         ]
       }
+      group_waitlist: {
+        Row: {
+          created_at: string
+          grade: number
+          group_id: string | null
+          id: string
+          note: string | null
+          parent_id: string
+          preferred: Json
+          status: string
+          student_id: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          grade?: number
+          group_id?: string | null
+          id?: string
+          note?: string | null
+          parent_id?: string
+          preferred?: Json
+          status?: string
+          student_id?: string
+          subject?: string
+        }
+        Update: {
+          created_at?: string
+          grade?: number
+          group_id?: string | null
+          id?: string
+          note?: string | null
+          parent_id?: string
+          preferred?: Json
+          status?: string
+          student_id?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_waitlist_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "mini_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_waitlist_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_requests: {
         Row: {
           attempt_id: string | null
@@ -734,6 +788,129 @@ export type Database = {
         Insert: { ad: string; created_at?: string; id?: string; kod: string; sahip_id?: string }
         Update: { ad?: string; created_at?: string; id?: string; kod?: string; sahip_id?: string }
         Relationships: []
+      }
+      mini_groups: {
+        Row: {
+          created_at: string
+          grade: number
+          id: string
+          invite_deadline: string
+          lessons_per_month: number
+          max_size: number
+          min_size: number
+          price_per_lesson: number
+          schedule: Json
+          starts_on: string
+          status: string
+          subject: string
+          teacher_id: string
+          teacher_share: number
+        }
+        Insert: {
+          created_at?: string
+          grade?: number
+          id?: string
+          invite_deadline?: string
+          lessons_per_month?: number
+          max_size?: number
+          min_size?: number
+          price_per_lesson?: number
+          schedule?: Json
+          starts_on?: string
+          status?: string
+          subject?: string
+          teacher_id?: string
+          teacher_share?: number
+        }
+        Update: {
+          created_at?: string
+          grade?: number
+          id?: string
+          invite_deadline?: string
+          lessons_per_month?: number
+          max_size?: number
+          min_size?: number
+          price_per_lesson?: number
+          schedule?: Json
+          starts_on?: string
+          status?: string
+          subject?: string
+          teacher_id?: string
+          teacher_share?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mini_groups_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "teachers"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
+      mini_group_members: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          lesson_count: number
+          parent_id: string
+          price: number
+          responded_at: string | null
+          status: string
+          student_id: string
+          student_name: string
+          waitlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          lesson_count?: number
+          parent_id?: string
+          price?: number
+          responded_at?: string | null
+          status?: string
+          student_id?: string
+          student_name?: string
+          waitlist_id?: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          lesson_count?: number
+          parent_id?: string
+          price?: number
+          responded_at?: string | null
+          status?: string
+          student_id?: string
+          student_name?: string
+          waitlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mini_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "mini_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mini_group_members_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mini_group_members_waitlist_id_fkey"
+            columns: ["waitlist_id"]
+            isOneToOne: false
+            referencedRelation: "group_waitlist"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       package_orders: {
         Row: {
@@ -1745,6 +1922,15 @@ export type Database = {
       }
     }
     Functions: {
+      admin_cancel_group: { Args: { p_group: string }; Returns: undefined }
+      admin_create_group: { Args: { p: Json }; Returns: string }
+      admin_group_teacher_options: {
+        Args: { p_grade: number; p_schedule: Json; p_subject: string }
+        Returns: { busy: boolean; display_name: string; status: string; teacher_id: string }[]
+      }
+      join_group_waitlist: { Args: { p: Json }; Returns: string }
+      leave_group_waitlist: { Args: { p_id: string }; Returns: undefined }
+      respond_group_invite: { Args: { p_accept: boolean; p_member: string }; Returns: string }
       sinif_bilgisi: { Args: { p_kod: string }; Returns: string }
       sinif_olustur: {
         Args: { p_ad: string }

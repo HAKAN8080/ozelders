@@ -63,7 +63,17 @@ export default function RefundPage() {
         uygulanır; bu kurallar yasal cayma hakkından daha geniştir.
       </P>
 
-      <H2>6. İade nasıl yapılır?</H2>
+      <H2>6. Mini grup</H2>
+      <UL
+        items={[
+          "Mini grup aylık 8 derstir (haftada 2, 60 dakika); grup en az 3 öğrenci katılınca başlar. Başlamayan grup için ödeme alınmaz, alındıysa tamamı iade edilir.",
+          "İlk grup dersinden memnun kalmazsan kalan 7 dersin ücreti iade edilir.",
+          "Gruptan ayrılırsan yapılmamış derslerin ücreti iade edilir. Grubun ders saati ve öğretmeni grubun tamamı için geçerlidir; kişisel saat değişikliği yapılamaz.",
+          "Bir öğrencinin katılmadığı grup dersi yapılmış sayılır; dersi öğretmen ya da platform kaynaklı bir nedenle yapılamazsa tüm grup için iade ya da telafi edilir.",
+        ]}
+      />
+
+      <H2>7. İade nasıl yapılır?</H2>
       <UL
         items={[
           <>

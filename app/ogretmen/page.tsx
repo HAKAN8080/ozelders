@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSessionProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { dateTR, MG, scheduleText } from "@/lib/mini-grup";
 import { goalLabel, prefSummary, type Pref } from "@/lib/requests";
 import { bandInfo, BANDS, branchName, TEACHER_FLOOR } from "@/lib/teacher";
 
@@ -46,7 +47,7 @@ export default async function TeacherPanel() {
   const now = new Date();
   const from = new Date(now.getTime() - 7 * 86400000).toISOString();
   const to = new Date(now.getTime() + 21 * 86400000).toISOString();
-  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }, { data: offers }, { data: orders }] = await Promise.all([
+  const [{ data: avail }, { data: payout }, { data: lessons }, { count: doneMonth }, { data: offers }, { data: orders }, { data: groups }] = await Promise.all([
     supabase.from("teacher_availability").select("weekday, start_time, end_time").eq("teacher_id", session.userId).order("weekday").order("start_time"),
     supabase.from("teacher_payout_info").select("submerchant_status, iban_last4").eq("profile_id", session.userId).maybeSingle(),
     supabase
@@ -64,6 +65,12 @@ export default async function TeacherPanel() {
       .gte("starts_at", new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString()),
     supabase.rpc("teacher_intro_offers"),
     supabase.from("package_orders").select("id, student_name, grade, product_code, lesson_count, created_at").eq("teacher_id", session.userId).eq("status", "odeme_bekliyor").order("created_at"),
+    supabase
+      .from("mini_groups")
+      .select("id, subject, grade, schedule, starts_on, status, mini_group_members(id, student_name, status)")
+      .eq("teacher_id", session.userId)
+      .neq("status", "iptal")
+      .order("starts_on"),
   ]);
   const pendingOffers = (offers ?? []).filter((o) => o.status === "bekliyor");
   const acceptedOffers = (offers ?? []).filter((o) => o.status === "kabul");
@@ -180,6 +187,32 @@ export default async function TeacherPanel() {
               </p>
             ) : null}
           </section>
+
+          {groups && groups.length ? (
+            <section className={card}>
+              <h2 className="m-0 text-2xl font-semibold">Mini grupların</h2>
+              <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                {groups.map((g) => {
+                  const ms = ((g.mini_group_members ?? []) as { id: string; student_name: string; status: string }[]).filter((m) => m.status === "davet" || m.status === "onayladi");
+                  return (
+                    <li key={g.id} className="flex flex-col gap-1 rounded-md border border-border p-4">
+                      <span className="font-semibold">
+                        {branchName(g.subject)} · {g.grade}. sınıf · {scheduleText(g.schedule)}
+                      </span>
+                      <span className="text-[15px] text-muted">
+                        Başlangıç {dateTR(g.starts_on)} · {g.status === "aktif" ? "grup tamamlandı" : "veliler davet aşamasında"} ·{" "}
+                        {ms.map((m) => `${m.student_name}${m.status === "davet" ? " (bekleniyor)" : ""}`).join(", ")}
+                      </span>
+                      <span className="text-[15px] text-muted">
+                        Ders başı payın: öğrenci başına {Math.round(MG.pricePerLesson * MG.teacherShare)} ₺ · {MG.maxSize} kişide{" "}
+                        {Math.round(MG.pricePerLesson * MG.teacherShare * MG.maxSize).toLocaleString("tr-TR")} ₺
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
 
           <section className={card}>
             <div className="flex flex-col gap-1">
