@@ -274,10 +274,10 @@ function Teachers() {
         <div className="flex min-w-0 flex-[1_1_360px] flex-col gap-4">
           <p className={`${eyebrow} m-0 text-primary`}>Öğretmenlerimiz</p>
           <h2 className="m-0 font-serif text-[34px] leading-[1.15] font-bold sm:text-[42px]">
-            Her başvuran öğretmen olamaz.
+            Öğretmenlerimiz, belli süreçlerden ve onaylardan geçerek sizinle buluşur.
           </h2>
           <p className="m-0 text-[17px] leading-relaxed text-[#3d4743]">
-            Çocuğunuzun karşısına çıkan her öğretmen dört aşamadan geçer. Aşamaları atlamak mümkün değildir.
+            Her öğretmen dört aşamadan geçer. Böylece çocuğunuzun karşısına bilgisini ve anlatımını göstermiş, belgeleri doğrulanmış biri çıkar.
           </p>
           <p className="m-0 mt-1 -rotate-1 font-hand text-[26px] text-primary">ve dersler hep kayıtlı ✓</p>
           <Link href="/ogretmen-ol" className="mt-2 self-start font-semibold text-primary hover:underline">
