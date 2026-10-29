@@ -48,6 +48,9 @@ export function GirisForm() {
       <Button type="submit" disabled={pending}>
         {pending ? "Giriş yapılıyor" : "Giriş yap"}
       </Button>
+      <Link href="/sifremi-unuttum" className="self-start text-[15px] text-muted underline-offset-4 hover:text-primary hover:underline">
+        Şifremi unuttum
+      </Link>
       <Link href={next ? `/kayit?next=${encodeURIComponent(next)}` : "/kayit"} className="text-primary underline-offset-4 hover:underline">
         Hesabınız yoksa kayıt olun
       </Link>

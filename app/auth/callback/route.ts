@@ -17,8 +17,13 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/giris`);
   }
 
-  const profile = await ensureVeliProfile();
   const wanted = safeNext(searchParams.get("next"));
+  // Şifre yenileme: rolden bağımsız, doğrudan yeni şifre sayfası
+  if (wanted === "/sifre-yenile") {
+    return NextResponse.redirect(`${origin}/sifre-yenile`);
+  }
+
+  const profile = await ensureVeliProfile();
   // "blocked": veli dışı hesap (öğretmen, admin) → istenen sayfa; "missing": profil tamamlanmalı
   const next =
     profile === "ok"
