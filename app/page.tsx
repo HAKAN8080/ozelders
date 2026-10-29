@@ -3,6 +3,9 @@ import { Suspense } from "react";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { DenemeCarousel, type CarouselExam } from "@/components/deneme-carousel";
+import { gradeLabel, kindInfo } from "@/lib/exam-kinds";
+import { getPublishedExams, totalQuestions } from "@/lib/exams";
 import { formatTL, getActiveProducts, type Product } from "@/lib/products";
 
 const eyebrow = "text-sm font-semibold uppercase tracking-[0.08em]";
@@ -85,44 +88,40 @@ function Hero() {
           </div>
         </div>
 
-        <div className="tahta flex min-w-0 flex-[1_1_400px] flex-col gap-5 rounded-[10px] p-7 text-[#f2f5f1] shadow-[0_1px_0_#083b22,0_18px_40px_rgb(11_79_46/0.18)] sm:p-9">
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <span className={`${eyebrow} text-[13px] text-[#cfe3d6]`}>Bu haftanın denemesi</span>
-            <span className="font-hand text-2xl text-white">ücretsiz!</span>
-          </div>
-          <h2 className="m-0 font-serif text-[34px] leading-[1.15] font-bold">
-            2026 LGS
-            <br />
-            Sayısal Bölüm
-          </h2>
-          <dl className="m-0 grid grid-cols-3 gap-3 border-y border-dashed border-[rgb(242_245_241/0.35)] py-4">
-            {[
-              ["40", "soru"],
-              ["80", "dakika"],
-              ["2", "ders"],
-            ].map(([n, label]) => (
-              <div key={label} className="flex flex-col-reverse">
-                <dt className="text-sm text-[#cfe3d6]">{label}</dt>
-                <dd className="m-0 text-3xl font-semibold tabular-nums">{n}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="m-0 text-base leading-relaxed text-[#e3eee7]">
-            Matematik 20 + Fen Bilimleri 20 soru. Gerçek sınav kitapçığıyla, dijital optik formda çöz.
-          </p>
-          <Link
-            href="/deneme"
-            className="self-start rounded-md bg-white px-6 py-3.5 text-[17px] font-semibold text-primary hover:bg-primary-soft"
-          >
-            Başla →
-          </Link>
-          <p className="m-0 -rotate-[1.5deg] font-hand text-[22px] text-white">
-            kayıt olmadan başlayabilirsin ↗
-          </p>
-        </div>
+        <Suspense fallback={<div className="tahta min-h-[460px] min-w-0 flex-[1_1_400px] rounded-[10px]" />}>
+          <WeeklyExams />
+        </Suspense>
       </div>
     </section>
   );
+}
+
+/** Yayındaki ücretsiz denemeler sırayla döner (en yenisi önce, en çok 8). */
+async function WeeklyExams() {
+  const exams = (await getPublishedExams()).slice(0, 8);
+  const slides: CarouselExam[] = exams.map((e) => ({
+    slug: e.slug,
+    title: e.title,
+    meta: [kindInfo(e.kind).short, gradeLabel(e.grade), e.subtitle].filter(Boolean).join(" · "),
+    questions: totalQuestions(e),
+    duration: e.duration_min,
+    sections: e.sections.length,
+    detail: `${e.sections.map((s) => `${s.name} ${s.question_count}`).join(" + ")} soru. ${
+      e.booklet_hosted ? "Soruları ekranda aç, cevapları dijital optik formda işaretle." : "Gerçek sınav kitapçığıyla, dijital optik formda çöz."
+    }`,
+  }));
+  if (!slides.length) {
+    slides.push({
+      slug: "",
+      title: "Ücretsiz denemeler",
+      meta: "3.–12. sınıf",
+      questions: 0,
+      duration: 0,
+      sections: 0,
+      detail: "Yeni denemeler çok yakında. Şimdiden listeye göz at.",
+    });
+  }
+  return <DenemeCarousel exams={slides} />;
 }
 
 function HowItWorks() {
