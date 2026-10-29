@@ -147,11 +147,8 @@ function uretilenGruplar() {
   return [...gruplar.values()];
 }
 
-export const GRUPLAR: Grup[] = [
-  ...ELLE_GRUPLAR.slice(0, -1),
-  ...uretilenGruplar(),
-  ...ELLE_GRUPLAR.slice(-1),
-];
+/** Harita oyunları her sınıfa uygun olduğu için en üstte. */
+export const GRUPLAR: Grup[] = [...ELLE_GRUPLAR.slice(-1), ...ELLE_GRUPLAR.slice(0, -1), ...uretilenGruplar()];
 
 /** "/oyunlar/harita-ve-olcek" ya da "harita-ve-olcek" → başlık */
 export function konuBasligi(konu: string): string {
