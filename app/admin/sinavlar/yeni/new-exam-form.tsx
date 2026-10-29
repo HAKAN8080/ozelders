@@ -279,7 +279,13 @@ export function NewExamForm() {
       ) : null}
 
       <div className="flex flex-wrap items-center justify-end gap-4">
-        {totalMissing ? <span className="text-[15px] text-destructive">{totalMissing} sorunun cevabı eksik</span> : null}
+        {!sections.length ? (
+          <span className="text-[15px] text-destructive">Önce soruları ekle: 1. adımda kitapçık PDF’ini seç ya da “Bölüm ekle” ile bölüm ekleyip cevapları yapıştır.</span>
+        ) : totalMissing ? (
+          <span className="text-[15px] text-destructive">{totalMissing} sorunun cevabı eksik</span>
+        ) : !title || !slug ? (
+          <span className="text-[15px] text-destructive">Sınav adı ve kısa ad gerekli.</span>
+        ) : null}
         <button
           type="button"
           onClick={submit}
