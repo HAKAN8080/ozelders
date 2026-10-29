@@ -16,6 +16,7 @@ const rhythm: Record<string, string> = {
   BASLANGIC: "haftada 1",
   STANDART: "haftada 2",
   YOGUN: "haftada 3",
+  SEZON: "aylık veli görüşmesi",
 };
 const featured = "STANDART";
 
