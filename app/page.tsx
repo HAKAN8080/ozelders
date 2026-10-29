@@ -65,13 +65,13 @@ function Hero() {
         <div className="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
           <p className={`${eyebrow} m-0 text-primary`}>3.–12. sınıf · tüm okul dersleri · LGS ve YKS hazırlık</p>
           <h1 className="m-0 font-serif text-4xl leading-[1.08] font-bold tracking-[-0.01em] sm:text-5xl lg:text-[56px]">
-            Hedef okuluna kaç net uzaktasın?
-            <span className="mt-3 block text-[0.62em] leading-[1.2] text-primary">Tek denemede öğren, doğru öğretmenle kapat.</span>
+            Oyna, kendini test et, doğru öğretmenle hızlan.
+            <span className="mt-3 block text-[0.62em] leading-[1.2] text-primary">Her sınıfta, her derste.</span>
           </h1>
           <p className="m-0 max-w-[34em] text-[19px] leading-relaxed text-[#3d4743]">
-            3. sınıftan 12. sınıfa, okul derslerinde de sınav yılında da: ücretsiz denemeyi çöz, eksik konularını
-            gör. LGS ya da YKS yılındaysan tahmini puanını ve hedefine kalan neti de. Eksiklerin için seçilmiş bir
-            öğretmenle birebir çalış.
+            3. sınıftan 12. sınıfa: konuları oyunlarla oynayarak pekiştir, ücretsiz denemelerle nerede olduğunu gör,
+            eksik kalan konular için seçilmiş bir öğretmenle birebir çalış. LGS ya da YKS yılındaysan tahmini puanını ve
+            hedefine kalan neti de görürsün.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
@@ -81,9 +81,12 @@ function Hero() {
               Ücretsiz denemeyi çöz
             </Link>
             <Link
-              href="#nasil"
+              href="/oyunlar"
               className="rounded-md border border-[#b9c7bf] bg-background px-5 py-4 text-[17px] font-semibold text-foreground hover:bg-primary-soft"
             >
+              Oyunlarla öğren
+            </Link>
+            <Link href="#nasil" className="px-2 py-4 text-[17px] font-semibold text-primary hover:underline">
               Nasıl çalışır?
             </Link>
           </div>
